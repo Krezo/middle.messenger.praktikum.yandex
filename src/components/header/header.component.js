@@ -6,7 +6,7 @@ import appStyles from '../../css/app.module.css';
 
 const component = new Component(
   (props) => `
-<header class="${classes.header_wrapper}">
+<nav class="${classes.header_wrapper}">
   <div class="${appStyles.container} ${classes.header}">
     <a href="/"><Logo /></a>
     <div class="${classes.log_reg_buttons}">
@@ -14,7 +14,7 @@ const component = new Component(
     <div><Button size="small" type="secondary" rounded>Регистрация</Button></div>
     </div>
   </div>
-</header>
+</nav>
 `
 );
 
