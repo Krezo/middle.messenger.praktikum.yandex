@@ -12,7 +12,7 @@ const defaultProps = {
 }
 
 const errorLayoutComponent = new Component((props) => `
-<div class="${styles.error_page}">
+<main class="${styles.error_page}">
   <Header>header</Header>
   <div class="${styles.error_page_inner}">
   <div class="${styles.statusCode}">${props.statusCode}</div>
@@ -25,7 +25,7 @@ const errorLayoutComponent = new Component((props) => `
   </a>
   </div>
   <Footer>footer</Footer>
-</div>
+</main>
 `, defaultProps);
 
 errorLayoutComponent.register('Header', headerComponent)

@@ -5,13 +5,13 @@ import footerComponent from '../../components/footer/footer.component';
 import styles from "./defaultLayout.module.css";
 
 const defaultLayoutComponent = new Component(() => `
-<div class="${styles.page}">
+<main class="${styles.page}">
   <Header>header</Header>
   <div class="${styles.page_inner}">
   <slot></slot>
   </div>
   <Footer>footer</Footer>
-</div>
+</main>
 `);
 
 defaultLayoutComponent.register('Header', headerComponent)
