@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "dev" : "npx parcel serve ./src/pages/**/*.html ./src/pages/index.html --no-cache",
-    "start" : "npx parcel build ./src/pages/**/*.html ./src/pages/index.html && node server.js"
+    "start" : "npx parcel build ./src/pages/**/*.html ./src/pages/index.html && node server.js",
+    "deploy" : "npx parcel build ./src/pages/**/*.html ./src/pages/index.html"
   },
   "engine": "16",
   "browserslist": "> 0.5%, last 2 versions, not dead",
