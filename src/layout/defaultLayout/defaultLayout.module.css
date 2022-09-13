@@ -1,0 +1,6 @@
+.page {
+  padding-top: var(--navbar-padding);
+}
+.page_inner {
+  min-height: 80vh;
+}

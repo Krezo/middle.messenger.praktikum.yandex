@@ -1,0 +1,24 @@
+import Component from '../../modules/component';
+import buttonComponent from '../button/buttonComponent';
+import logoComponent from '../logoComponent';
+import classes from './header.module.css';
+import appStyles from '../../css/app.module.css';
+
+const component = new Component(
+  (props) => `
+<header class="${classes.header_wrapper}">
+  <div class="${appStyles.container} ${classes.header}">
+    <a href="/"><Logo /></a>
+    <div class="${classes.log_reg_buttons}">
+    <div><Button size="small" type="primary" rounded>Войти</Button></div>
+    <div><Button size="small" type="secondary" rounded>Регистрация</Button></div>
+    </div>
+  </div>
+</header>
+`
+);
+
+component.register('Logo', logoComponent);
+component.register('Button', buttonComponent);
+
+export default component;
