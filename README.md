@@ -3,6 +3,7 @@
 Проект мессенджера Яндекс.Практикум
 
 Netlify: https://dynamic-kashata-8fad5b.netlify.app
+
 Figma: https://www.figma.com/file/81pEOmE0IPf2m6d1jedEfc/Yandex-Practicum-Messanger?node-id=0%3A1
 
 ## Запуск проекта ##
