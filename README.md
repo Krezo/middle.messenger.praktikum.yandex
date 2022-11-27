@@ -116,8 +116,8 @@ const app = new App(
   new Component((props) => {
     return `
     ...
-    <Button type="primary" class="${styles.edit_button}">СОХРАНИТЬ</Button>
-    <Button type="secondary" class="${styles.edit_button}">ОТМЕНА</Button>
+    <Button type="primary" class="${styles.editButton}">СОХРАНИТЬ</Button>
+    <Button type="secondary" class="${styles.editButton}">ОТМЕНА</Button>
    ...
  `;
   })
@@ -147,9 +147,9 @@ const app = new App(
     return `
     ...
     <div :for="setting in settings">
-      <div class="${styles.settings_form_field}">
-        <div class="${styles.settings_form_field_name}">{{setting.name}}</div>
-        <div class="${styles.settings_form_field_value}">{{setting.value}}</div>
+      <div class="${styles.settingsForm_field}">
+        <div class="${styles.settingsForm_field_name}">{{setting.name}}</div>
+        <div class="${styles.settingsForm_field_value}">{{setting.value}}</div>
       </div>
     </div>
     ...

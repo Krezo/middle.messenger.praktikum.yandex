@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url('./normalize.css');
+
+html {
+  font-size: 16px;
+  color: var(--text-base-color);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Montserrat', sans-serif;
+  padding: 0;
+  margin: 0;
+  --text-base-color: #363636;
+  --text-input-color: #868686;
+  --text-secondary-color: #868686;
+  --primary-color: #0087ff;
+  --primary-outline-color: #6ebbff;
+  --input-border-color: #dcdcdc;
+  --navbar-padding: 60px;
+}
+
+input[type='password'] {
+  /* font: small-caption; */
+  font-size: 1rem;
+}
+
+a {
+  text-decoration: none;
+}

@@ -1,0 +1,21 @@
+.headerWrapper {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.09);
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+}
+
+.header {
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.logRegButtons {
+  display: flex;
+}
+
+.logRegButtons>*:not(:last-child) {
+  margin-right: 16px;
+}

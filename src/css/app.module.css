@@ -1,0 +1,50 @@
+.container {
+  max-width: 1300px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.font_semibold {
+  font-weight: 600;
+}
+
+.font_bold {
+  font-weight: 700;
+}
+
+.text_primary {
+  color: var(--primary-color);
+}
+.bg_primary {
+  background: var(--primary-color);
+}
+
+.h2 {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.h3 {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+a.link {
+  font-weight: 600;
+  color: var(--primary-color);
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.flex {
+  display: flex;
+}
+
+.flex_col {
+  flex-direction: column;
+}
