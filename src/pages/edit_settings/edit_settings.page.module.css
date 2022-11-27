@@ -1,17 +1,18 @@
-.settings_page {
+.settingsPage {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 
-.edit_settings_form {
+.editSettingsForm {
   padding: 32px 27px;
   width: 440px;
   background: #ffffff;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12);
   border-radius: 6px;
-  & > *:not(:first-child) {
+
+  &>*:not(:first-child) {
     margin-top: 25px;
   }
 
@@ -20,25 +21,31 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    & > *:not(:first-child) {
+
+    &>*:not(:first-child) {
       margin-top: 20px;
     }
   }
-  &_inputs > * {
+
+  &_inputs>* {
     width: 100%;
+
     &:not(:first-child) {
       margin-top: 25px;
     }
   }
+
   &_avatar {
     display: block;
     border-radius: 50%;
     height: 136px;
     width: 136px;
     margin: 0 auto;
+
     &_wrapper {
       position: relative;
     }
+
     &_change_button {
       position: absolute;
       left: 50%;
@@ -47,28 +54,34 @@
       transform: translateX(-50%) translateY(-50%);
     }
   }
+
   &_login_btn {
     width: 100%;
   }
+
   &_field {
     display: flex;
     padding: 10px 0;
     font-weight: bold;
+
     &_name {
       width: 120px;
     }
+
     &_value {
       color: var(--text-secondary-color);
     }
   }
 }
 
-.back_to_chat {
+.backToChat {
   &_inner {
     display: flex;
     align-items: center;
   }
+
   padding: 34px;
+
   &_button {
     display: inline-flex;
     align-items: center;
@@ -78,17 +91,21 @@
     height: 24px;
     background: var(--primary-color);
     margin-right: 10px;
+
     img {
       fill: white;
       color: #fff;
     }
   }
 }
-.edit_button {
+
+.editButton {
   width: 100%;
 }
-.change_password {
+
+.changePassword {
   text-align: center;
+
   &_link {
     font-weight: 600;
     color: var(--primary-color);

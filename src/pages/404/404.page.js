@@ -1,4 +1,3 @@
-
 import errorLayout from '../../layout/errorLayout/errorLayout';
 import App from '../../modules/app';
 import Component from '../../modules/component';

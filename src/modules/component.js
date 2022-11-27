@@ -1,7 +1,5 @@
 import { createVNode, templateToVNode } from './vdom';
 import utils from "../utils/utils";
-
-
 export default class Component {
   $app;
   // Самозакрывающийс элемент

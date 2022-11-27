@@ -25,24 +25,24 @@ const state = {
 const app = new App(
   new Component((props) => {
     return `
-  <div class="${appStyle.container} ${styles.settings_page}">
-  <div class="${styles.back_to_chat}">
-    <a href="/" class="${styles.back_to_chat_inner} href="/">
-      <div class="${styles.back_to_chat_button}">
+  <div class="${appStyle.container} ${styles.settingsPage}">
+  <div class="${styles.backToChat}">
+    <a href="/" class="${styles.backToChat_inner} href="/">
+      <div class="${styles.backToChat_button}">
         <img src="${LeftArrow}" alt="back to chat" />
       </div>
       <h3 class="${[appStyle.h3, appStyle.text_primary].join(' ')}">Вернуться в чат</h3>
     </a>
   </div>
-  <form class="${styles.edit_settings_form}">
-    <div class="${styles.edit_settings_form_header}">
+  <form class="${styles.editSettingsForm}">
+    <div class="${styles.editSettingsForm_header}">
     <h2 class="${appStyle.h2}">{{title}}</h2>
     </div>
-    <div class="${styles.edit_settings_form_avatar_wrapper}">
-      <img class="${styles.edit_settings_form_avatar}" src="${avatarPlaceholder}" />
-      <Button size="small" type="secondary" class="${styles.edit_settings_form_avatar_change_button}">Сменить</Button>
+    <div class="${styles.editSettingsForm_avatar_wrapper}">
+      <img class="${styles.editSettingsForm_avatar}" src="${avatarPlaceholder}" />
+      <Button size="small" type="secondary" class="${styles.editSettingsForm_avatar_change_button}">Сменить</Button>
     </div>
-    <div class="${styles.edit_settings_form_inputs}">
+    <div class="${styles.editSettingsForm_inputs}">
     <Input id="avatar" type="file" style="display: none;" />
     <Input id="first_name" placeholder="Имя" value="{{settings.first_name}}"/>
     <Input id="second_name" placeholder="Фамилия" value="{{settings.second_name}}"/>
@@ -51,8 +51,8 @@ const app = new App(
     <Input id="email" placeholder="Email" value="{{settings.email}}"/>
     <Input id="phone" placeholder="Телефон" value="{{settings.phone}}"/>
     </div>
-    <Button type="primary" class="${styles.edit_button}">СОХРАНИТЬ</Button>
-    <Button type="secondary" class="${styles.edit_button}">ОТМЕНА</Button>
+    <Button type="primary" class="${styles.editButton}">СОХРАНИТЬ</Button>
+    <Button type="secondary" class="${styles.editButton}">ОТМЕНА</Button>
   </form>
   </div>
  `;

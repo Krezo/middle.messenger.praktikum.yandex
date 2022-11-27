@@ -1,6 +1,5 @@
 import Component from './component';
 import { createDOMNode } from './vdom';
-
 export default class App {
   layout = null;
   constructor(rootComponent) {

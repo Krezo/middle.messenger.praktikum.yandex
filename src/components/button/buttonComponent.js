@@ -10,7 +10,7 @@ export const state = { a: 1 }
 export default new Component((props) => {
   const btnSize = props.size ? classes[props.size] : '';
   const btnType = props.type ? classes[props.type] : '';
-  const btnRounded = ('rounded' in props) ? classes.rounded : '';
+  const btnRounded = props.rounded ? classes.rounded : '';
   return `
   <button class="${classes.btn} ${btnSize} ${btnType} ${btnRounded} ${props.class}">
   <slot></slot>

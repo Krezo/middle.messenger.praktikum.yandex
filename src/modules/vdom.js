@@ -1,4 +1,3 @@
-
 export const createVNode = (tagName, props = {}, children = []) => {
   return {
     tagName,
@@ -28,9 +27,9 @@ export const createDOMNode = vNode => {
   return node;
 };
 
-export const findTagNameVTree = (tagName, root) => {
-  return _findTagNameVTree(tagName, root, root);
-}
+// export const findTagNameVTree = (tagName, root) => {
+//   return _findTagNameVTree(tagName, root, root);
+// }
 
 export const findChildrenIndex = (parent, child) => {
   return parent.children.findIndex(parentChild => parentChild == child);

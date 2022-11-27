@@ -15,16 +15,16 @@ const state = {
 const app = new App(
   new Component((props) => {
     return `
-  <div class="container ${styles.register_page}">
-  <form class="${styles.register_form}">
-    <div class="${styles.register_form_header}">
-    <Logo class="${styles.register_form_logo}" />
+  <div class="container ${styles.registerPage}">
+  <form class="${styles.registerForm}">
+    <div class="${styles.registerForm_header}">
+    <Logo class="${styles.registerForm_logo}" />
     <h2 class="h2">{{title}}</h2>
-    <p class="${styles.register_form_tooltip}">
+    <p class="${styles.registerForm_tooltip}">
     {{tooltip}}
     </p>
     </div>
-    <div class="${styles.register_form_inputs}">
+    <div class="${styles.registerForm_inputs}">
     <Input id="first_name"  placeholder="Имя" />
     <Input id="second_name"  placeholder="Фамилия" />
     <Input id="login"  placeholder="Логин" />
@@ -32,7 +32,7 @@ const app = new App(
     <Input id="phone"  placeholder="Телефон" type="tel" />
     <Input id="password"  placeholder="Пароль" type="password" />
     </div>
-    <Button type="primary" class="${styles.register_form_login_btn}">РЕГИСТРАЦИЯ</Button>
+    <Button type="primary" class="${styles.registerForm_login_btn}">РЕГИСТРАЦИЯ</Button>
   </form>
   </div>
  `;

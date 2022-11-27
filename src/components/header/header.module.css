@@ -1,4 +1,4 @@
-.header_wrapper {
+.headerWrapper {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.09);
   position: absolute;
   width: 100%;
@@ -12,10 +12,10 @@
   justify-content: space-between;
 }
 
-.log_reg_buttons {
+.logRegButtons {
   display: flex;
 }
-.log_reg_buttons > *:not(:last-child) {
+
+.logRegButtons>*:not(:last-child) {
   margin-right: 16px;
 }
-

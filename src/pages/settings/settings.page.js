@@ -43,27 +43,27 @@ const state = {
 const app = new App(
   new Component((props) => {
     return `
-  <div class="${appStyle.container} ${styles.settings_page}">
-  <div class="${styles.back_to_chat}">
-    <a href="/" class="${styles.back_to_chat_inner} href="/">
-      <div class="${styles.back_to_chat_button}">
+  <div class="${appStyle.container} ${styles.settingsPage}">
+  <div class="${styles.backToChat}">
+    <a href="/" class="${styles.backToChat_inner} href="/">
+      <div class="${styles.backToChat_button}">
         <img src="${LeftArrow}" alt="back to chat" />
       </div>
       <h3 class="${[appStyle.h3, appStyle.text_primary].join(' ')}">Вернуться в чат</h3>
     </a>
   </div>
-  <form class="${styles.settings_form}">
-    <div class="${styles.settings_form_header}">
+  <form class="${styles.settingsForm}">
+    <div class="${styles.settingsForm_header}">
     <h2 class="${appStyle.h2}">{{title}}</h2>
     </div>
-    <img class="${styles.settings_form_avatar}" src="${avatarPlaceholder}" />
+    <img class="${styles.settingsForm_avatar}" src="${avatarPlaceholder}" />
     <div :for="setting in settings">
-      <div class="${styles.settings_form_field}">
-        <div class="${styles.settings_form_field_name}">{{setting.name}}</div>
-        <div class="${styles.settings_form_field_value}">{{setting.value}}</div>
+      <div class="${styles.settingsForm_field}">
+        <div class="${styles.settingsForm_field_name}">{{setting.name}}</div>
+        <div class="${styles.settingsForm_field_value}">{{setting.value}}</div>
       </div>
     </div>
-    <Button type="primary" class="${styles.edit_button}">РЕДАКТИРОВАТЬ</Button>
+    <Button type="primary" class="${styles.editButton}">РЕДАКТИРОВАТЬ</Button>
     <div class="${styles.change_password}">
       <a href="/" class="${styles.change_password_link}">Изменить пароль</a>
     </div>

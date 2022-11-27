@@ -15,22 +15,22 @@ const state = {
 const app = new App(
   new Component((props) => {
     return `
-  <div class="container ${styles.auth_page}">
-  <form class="${styles.auth_form}">
-    <div class="${styles.auth_form_header}">
-    <Logo class="${styles.auth_form_logo}" />
+  <div class="container ${styles.authPage}">
+  <form class="${styles.authForm}">
+    <div class="${styles.authForm_header}">
+    <Logo class="${styles.authForm_logo}" />
     <h2 class="h2">{{title}}</h2>
-    <p class="${styles.auth_form_tooltip}">
+    <p class="${styles.authForm_tooltip}">
     {{tooltip}}
     </p>
     </div>
-    <div class="${styles.auth_form_inputs}">
+    <div class="${styles.authForm_inputs}">
     <Input id="login"  placeholder="Логин" />
     <Input id="password"  placeholder="Пароль" type="password" />
     </div>
-    <Button type="primary" class="${styles.auth_form_login_btn}">ВОЙТИ</Button>
-    <div class="${styles.auth_form_register_link_wrapper}">
-      <a href="/register" class="${styles.auth_form_register_link}">Зарегистрироваться</a>
+    <Button type="primary" class="${styles.authForm_login_btn}">ВОЙТИ</Button>
+    <div class="${styles.authForm_register_link_wrapper}">
+      <a href="/register" class="${styles.authForm_register_link}">Зарегистрироваться</a>
     </div>
   </form>
   </div>

@@ -16,29 +16,29 @@ const state = {
 const app = new App(
   new Component((props) => {
     return `
-  <div class="${appStyle.container} ${styles.change_password_page}">
-  <div class="${styles.back_to_chat}">
-    <a href="/" class="${styles.back_to_chat_inner} href="/">
-      <div class="${styles.back_to_chat_button}">
+  <div class="${appStyle.container} ${styles.changePasswordPage}">
+  <div class="${styles.backToChat}">
+    <a href="/" class="${styles.backToChat_inner} href="/">
+      <div class="${styles.backToChat_button}">
         <img src="${LeftArrow}" alt="back to chat" />
       </div>
       <h3 class="${[appStyle.h3, appStyle.text_primary].join(' ')}">Вернуться в чат</h3>
     </a>
   </div>
-  <form class="${styles.change_password_form}">
-    <div class="${styles.change_password_form_header}">
+  <form class="${styles.changePasswordForm}">
+    <div class="${styles.changePasswordForm_header}">
     <h2 class="${appStyle.h2}">{{title}}</h2>
-    <p class="${styles.change_password_form_tooltip}">
+    <p class="${styles.changePasswordForm_tooltip}">
     {{tooltip}}
     </p>
     </div>
-    <div class="${styles.change_password_form_inputs}">
+    <div class="${styles.changePasswordForm_inputs}">
     <Input type="password"  placeholder="Старый пароль" />
     <Input type="password"  placeholder="Новый пароль" />
     </div>
-    <Button type="primary" class="${styles.change_password_form_login_btn}">СОХРАНИТЬ</Button>
+    <Button type="primary" class="${styles.changePasswordForm_login_btn}">СОХРАНИТЬ</Button>
     <div>
-      <a href="#"><Button type="secondary" class="${styles.change_password_form_login_btn}">ОТМЕНА</Button> </div>
+      <a href="#"><Button type="secondary" class="${styles.changePasswordForm_login_btn}">ОТМЕНА</Button> </div>
     </div>
   </form>
   </div>

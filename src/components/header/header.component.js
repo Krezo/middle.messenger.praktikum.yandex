@@ -6,10 +6,10 @@ import appStyles from '../../css/app.module.css';
 
 const component = new Component(
   (props) => `
-<nav class="${classes.header_wrapper}">
+<nav class="${classes.headerWrapper}">
   <div class="${appStyles.container} ${classes.header}">
     <a href="/"><Logo /></a>
-    <div class="${classes.log_reg_buttons}">
+    <div class="${classes.logRegButtons}">
     <div><Button size="small" type="primary" rounded>Войти</Button></div>
     <div><Button size="small" type="secondary" rounded>Регистрация</Button></div>
     </div>
