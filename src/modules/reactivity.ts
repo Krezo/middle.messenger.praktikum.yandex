@@ -8,6 +8,9 @@ const globalState: Record<string, any> = {};
 
 let isRenderFuncRunning: boolean = false;
 let rootRenderFunc: any = null;
+// Ключ для проверки является ли возвращаемый реактивный объект reactive/ref
+let isReactive = Symbol('isReactive');
+let isRef = Symbol('isRef');
 
 const setRootRenderFunc = (renderFunc: (...params: any) => void) => {
   rootRenderFunc = renderFunc;
@@ -21,6 +24,9 @@ let watchFunction: IWatchFunction;
 const ref = <T>(value: T) => {
   return new Proxy(observer(value), {
     get(target, prop) {
+      if (prop == isRef) {
+        return true;
+      }
       const propString = prop.toString();
       if (propString in target) {
         if (propString == 'value' && isWatchFunction) {
@@ -41,50 +47,58 @@ const ref = <T>(value: T) => {
   })
 }
 
-// Ключ для проверки является ли возвращаемый реактивный объект прокси
-let isProxy = Symbol('isProxy');
 
-const reactive = <T extends object>(value: T, deep = false) => {
-  // Копия настоящего объекта, для возможности обращение без .value
-  const refValue: Record<string | symbol, any> = {}
+const reactive = <T extends object>(value: T) => {
+  // Объект обертка для управления зависимостями
+  // Работаемт с простым proxy над target(value)
+  // Тригерем зависимости из objectObserver
+  const objectObserver: Record<string | symbol, any> = {}
 
+  // Если значение является объектом, то вызываем для него рекурсивно reactive
+  // Потом в геттере вернем его для реактивных объектов
   for (const key in value) {
     if (typeof value[key] === 'object') {
-      // Обрачиваем объект в observer, можно не оборачивать
-      // тогда пропадет возможность отслеживать изменения прокси объекта
-      refValue[key] = ref(reactive(value[key] as object))
+      objectObserver[key] = reactive(value[key] as object)
     } else
-      // Обычный observer
-      refValue[key] = ref(value[key])
+      // Не важно что будет в ref, объект нужен для тригера зависимостей
+      objectObserver[key] = ref(true);
   }
 
   return new Proxy(value, {
     get(target, prop) {
-      if (prop === isProxy) {
+      if (prop === isReactive) {
+        return true
+      }
+      // Возращаем reactive proxy
+      if (objectObserver[prop]?.[isReactive]) {
+        return objectObserver[prop];
+      }
+      // Добавляем зависимости
+      if (isWatchFunction) {
+        objectObserver[prop].deps.add(watchFunction)
+      }
+      return target[prop]
+    },
+    set(target, prop, newValue) {
+      if (prop in target) {
+        if (target[prop] !== newValue) {
+          target[prop] = newValue;
+          objectObserver[prop].deps.forEach(dep => dep(newValue, target[prop]))
+        }
+        return true
+      }
+      if (newValue?.[isReactive]) {
+        target[prop] = newValue
         return true;
       }
-      // Если объект Proxy(observer), то возвращаем observer value
-      if (refValue[prop]?.value?.[isProxy]) {
-        return refValue[prop].value;
+      if (newValue?.[isRef]) {
+        target[prop] = newValue.value;
+        objectObserver[prop] = newValue;
+        return true;
       }
-      const propString = prop.toString();
-      // Проверяем, можем ли привязать зависимость
-      if (propString in target && isWatchFunction && 'deps' in (refValue[propString] || {})) {
-        refValue[propString].deps.add(watchFunction)
-      }
-      return target[propString as keyof typeof target];
-    },
-    set(target, prop, newValue: any) {
-      const propString = prop.toString();
-      const oldValue = target[propString as keyof typeof target];
-      if (refValue[prop]?.value?.[isProxy]) {
-        refValue[prop].value = newValue;
-      } else
-        target[propString as keyof typeof target] = newValue;
-      if ('deps' in (refValue[propString] || {}) && oldValue !== newValue) {
-        refValue[propString].deps.forEach(dep => dep(newValue, oldValue))
-      }
-      return true;
+      target[prop] = newValue;
+      objectObserver[prop] = ref(newValue);
+      return true
     }
   })
 }
