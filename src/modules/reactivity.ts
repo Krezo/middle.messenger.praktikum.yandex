@@ -48,19 +48,19 @@ const ref = <T>(value: T) => {
 }
 
 
-const reactive = <T extends object>(value: T) => {
+const reactive = <T extends object>(value: T, deep: boolean = true) => {
   // Объект обертка для управления зависимостями
-  // Работаемт с простым proxy над target(value)
+  // Работаем с простым proxy над target(value)
   // Тригерем зависимости из objectObserver
   const objectObserver: Record<string | symbol, any> = {}
 
   // Если значение является объектом, то вызываем для него рекурсивно reactive
   // Потом в геттере вернем его для реактивных объектов
   for (const key in value) {
-    if (typeof value[key] === 'object') {
+    if (typeof value[key] === 'object' && deep) {
       objectObserver[key] = reactive(value[key] as object)
     } else
-      // Не важно что будет в ref, объект нужен для тригера зависимостей
+      // Не важно что будет в ref, объект нужен для хранения зависимостей
       objectObserver[key] = ref(true);
   }
 
@@ -80,6 +80,7 @@ const reactive = <T extends object>(value: T) => {
       return target[prop]
     },
     set(target, prop, newValue) {
+      // Вызываем все зависимости, если значение изменилось
       if (prop in target) {
         if (target[prop] !== newValue) {
           target[prop] = newValue;
@@ -87,15 +88,18 @@ const reactive = <T extends object>(value: T) => {
         }
         return true
       }
+      // Добавление реактивных данных
       if (newValue?.[isReactive]) {
         target[prop] = newValue
         return true;
       }
+      // Добавление ref
       if (newValue?.[isRef]) {
         target[prop] = newValue.value;
         objectObserver[prop] = newValue;
         return true;
       }
+      // Добавление обычных данных
       target[prop] = newValue;
       objectObserver[prop] = ref(newValue);
       return true
