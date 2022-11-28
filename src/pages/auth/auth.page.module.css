@@ -9,31 +9,13 @@
   align-items: center;
   margin-top: 100px;
   padding: 32px 27px;
-  max-width: 440px;
+  width: 440px;
   background: #ffffff;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12);
   border-radius: 6px;
 
   & > *:not(:first-child) {
     margin-top: 25px;
-  }
-
-  &Logo {
-    width: 56px;
-  }
-
-  &_register_link {
-    font-weight: 600;
-    color: var(--primary-color);
-
-    &_wrapper {
-      text-align: center;
-    }
-  }
-
-  &_tooltip {
-    font-weight: 500;
-    color: var(--text-secondary-color);
   }
 
   &_header {
@@ -47,15 +29,21 @@
     }
   }
 
-  &_inputs > * {
-    width: 100%;
-
-    &:not(:first-child) {
-      margin-top: 25px;
-    }
-  }
-
   &LoginBtn {
     width: 100%;
   }
+}
+.authFormInputs {
+  width: 100%;
+
+  & > *:not(:first-child) {
+    margin-top: 25px;
+  }
+}
+.authFormLogo {
+  width: 56px;
+}
+.authFormTooltip {
+  font-weight: 500;
+  color: var(--text-secondary-color);
 }

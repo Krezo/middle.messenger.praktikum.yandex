@@ -7,38 +7,59 @@ import { Button } from '../../components/button/buttonComponent';
 
 import style from './auth.page.module.css'
 import styles from '../../css/app.module.css';
+import { useForm } from '../../composibles/useForm';
+import { maxLenght, minLenght, login, password } from '../../modules/validatorRules';
 
 document.addEventListener('DOMContentLoaded', () => {
-  const login = ref('');
-  const password = ref('');
 
-  const setLogin = (newLogin: string) => {
-    login.value = newLogin
-  };
-
-  const setPassword = (newPassword: string) => {
-    password.value = newPassword
-  };
-
-  watchEffect(() => {
-    console.log('Login : ', login.value);
-    console.log('Password : ', password.value);
+  const { formData: authFormData, values: authFormValues, isValid: authFormIsValid } = useForm({
+    login: {
+      value: '',
+      validators: {
+        login,
+        ...minLenght(3)
+      },
+    },
+    password: {
+      value: '',
+      validators: {
+        password,
+        ...minLenght(8),
+        ...maxLenght(40)
+      },
+    },
   })
+
 
   createApp(document.getElementById('app'), () =>
     <DefaultLayout>
       <div className={style.authPage}>
-        <form className={style.authForm}>
+        <form className={style.authForm} onSubmit={(event: Event) => {
+          event.preventDefault();
+          console.log(authFormValues.value);
+        }}>
           <Logo className={style.authFormLogo} />
           <h2 className={styles.h2}>Авторизация</h2>
-          <p className={style.authForm_tooltip}>
+          <p className={style.authFormTooltip}>
             Введите логин и пароль для входа
           </p>
-          <div className={style.authForm_inputs}>
-            <Input setValue={setLogin} id="login" placeholder="Логин" />
-            <Input setValue={setPassword} id="password" placeholder="Пароль" type="password" />
+          <div className={style.authFormInputs}>
+            <Input
+              onBlur={() => authFormData.login.blur()}
+              toched={authFormData.login.toched}
+              setValue={(value: string) => authFormData.login.value = value}
+              errorMessage={authFormData.login.errorMessage}
+              id="login"
+              placeholder="Логин" />
+            <Input
+              onBlur={() => authFormData.password.blur()}
+              toched={authFormData.password.toched}
+              setValue={(value: string) => authFormData.password.value = value}
+              errorMessage={authFormData.password.errorMessage}
+              id="password"
+              placeholder="Пароль" type="password" />
           </div>
-          <Button primary className={style.authFormLoginBtn}>Войти</Button>
+          <Button type='submit' disabled={!authFormIsValid.value} primary className={style.authFormLoginBtn}>Войти</Button>
         </form>
       </div>
     </DefaultLayout>
