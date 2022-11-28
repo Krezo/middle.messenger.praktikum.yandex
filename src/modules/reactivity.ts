@@ -1,12 +1,9 @@
-import { IObserver, observer } from './observer';
+import { observer } from './observer';
 
 interface IWatchFunction<T = any> {
   (oldValue?: any, newValue?: any): void
 }
 
-const globalState: Record<string, any> = {};
-
-let isRenderFuncRunning: boolean = false;
 let rootRenderFunc: any = null;
 // Ключ для проверки является ли возвращаемый реактивный объект reactive/ref
 let isReactive = Symbol('isReactive');
@@ -135,10 +132,6 @@ const watchEffect = <T>(watchEffectFunction: () => any) => {
   watchDep(watchEffectFunction)
 }
 
-
-const render = computed;
-// const computedVal = (func: any) => computed(() => func).value;
-
 export {
   ref,
   computed,
@@ -146,16 +139,6 @@ export {
   watchEffect,
   rootRenderFunc,
   setRootRenderFunc,
-  render,
   IWatchFunction,
   reactive
 }
-
-
-
-
-
-
-
-
-

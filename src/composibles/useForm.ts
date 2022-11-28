@@ -21,9 +21,7 @@ interface FieldData extends Record<string, any> {
   validators?: { [key: string]: (value: string, formData?: InputFormData, ...params: any) => boolean | string }
 }
 
-export const useForm = (init: InputFormData, options: {
-  onBlur?: boolean
-} = {}) => {
+export const useForm = (init: InputFormData) => {
   const formData = reactive(init)
   for (const [key, value] of Object.entries(formData)) {
     const formField = formData[key]
