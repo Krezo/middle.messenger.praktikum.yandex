@@ -4,6 +4,9 @@
 }
 
 .registerForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-top: 100px;
   padding: 32px 27px;
   width: 440px;
@@ -11,39 +14,38 @@
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12);
   border-radius: 6px;
 
-  &>*:not(:first-child) {
+  & > *:not(:first-child) {
     margin-top: 25px;
   }
 
-  &_logo {
+  &Logo {
     width: 56px;
   }
 
-  &_tooltip {
-    font-weight: 500;
-    color: var(--text-secondary-color);
-  }
+  &RegisterLink {
+    font-weight: 600;
+    color: var(--primary-color);
 
-  &_header {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    &>*:not(:first-child) {
-      margin-top: 20px;
+    &Wrapper {
+      text-align: center;
     }
   }
 
-  &_inputs>* {
-    width: 100%;
+  &Tooltip {
+    font-weight: 500;
+    color: var(--text-secondary-color);
+    justify-content: center;
+    align-items: center;
+  }
 
-    &:not(:first-child) {
+  &Inputs {
+    width: 100%;
+    & > :not(:first-child) {
       margin-top: 25px;
     }
   }
 
-  &_login_btn {
+  &LoginBtn {
     width: 100%;
   }
 }
