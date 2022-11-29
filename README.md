@@ -11,29 +11,42 @@ Figma: https://www.figma.com/file/81pEOmE0IPf2m6d1jedEfc/Yandex-Practicum-Messan
 
 - `npm run start` - запуск проекта
 
+- `npm run build` - деплой
+
+- `node_modules/.bin/eslint .` - eslinter
+
+- `npx stylelint ./src/**/*.css` - stylelint
+
 ## Структура проекта ##
 **components/\*** - папка компонентов
 
-> **component_name.js** - Описание компонента
+> **component_name.tsx** - Описание компонента
 
 > **component_name.module.css** - Стили компонента (postcss-modules)
 
-
 **images/\*** - изображения используемые в проекте
+
+**css/\*** - глобальные стили
 
 **layout/\*** - layout (макеты) страниц
 
-> **layout_name.js** - Описание компонента макета
+> **layout_name.tsx** - Описание компонента макета
 
 > **layout_name.module.css** - Стили компонента макета (postcss-modules)
 
 **modules/\*** - модули
 
-> **app.js** - Модуль приложения
+> **vdom.ts** - Модуль для работы с VDOM
 
-> **component.js** - Модуль компонента
+> **fetch.ts** - Модуль для работы с XHR
 
-> **vdom.js** - Модуль для работы с VDOM
+> **components.ts** - Модуль для работы с компонентом (пока не реализовн)
+
+> **observer.ts** - Модуль для работы с паттерном Observer
+
+> **reactivity.ts** - Система реактивности
+
+> **validatorRules.ts** - Правила валидации
 
 **pages/\*** - страницы
 
@@ -45,123 +58,22 @@ Figma: https://www.figma.com/file/81pEOmE0IPf2m6d1jedEfc/Yandex-Practicum-Messan
 
 **utils/\*** - утилиы
 
-
-
 ## Шаблонизатор ##
 
-**Глоссарий**
+**Особенности**
 
+- Для рендера шаблонов используется синтаксис JSX. С помощью плагина `@babel/plugin-transform-react-jsx` меняем вызов `React.createElement` на свою функцию `h`
 
-> props - свойства компонента
+- Система реактивности (аналог Vue)
 
-> state - состояние компонента
+**Доработки**
 
-> slot - место, в котрое вставляются дочерние элементы
-
-> интерполяция - замена переменных в шаблоне компонента
-
-> Virtual DOM / VDOM - виртуальное дерево DOM елементов
-
-**Возможности**
-
-- Определеие layout (макета) страницы
-- Создание компонентов
-- Передача в компоненты props и определение их значений по умолчанию
-- Интерполяция state компонента
-- Передача дочерник элементов (элементы Virtual DOM) в элемент slot
-- Цикл for 
-
-**Использование**
-- Инициализация и монтирование приложения (должен быть хотя бы один корневой элемент в шаблоне)
-```
-const app = new App(
-  new Component((props) => {
-    return `<div>My App</div>`;
-  }, state)
-);
-
-app.mount(document.getElementById('app'));
-```
-
-- Создание компонента (должен быть хотя бы один корневой элемент в шаблоне)
-```
-new Component((props) => {
-    return `<div>My component</div>`;
-  }, 
-  // Состояние компонента
-  state, 
-  // Props по умолчанию
-  defaultProps)
-```
-- Регистрация компонента (для использования одного компонента в другом)
-```
-const defaultLayoutComponent = new Component(() => `
-<div class="${styles.page}">
-  <Header>header</Header>
-  <div class="${styles.page_inner}">
-  <slot></slot>
-  </div>
-  <Footer>footer</Footer>
-</div>
-`);
-
-defaultLayoutComponent.register('Header', headerComponent)
-defaultLayoutComponent.register('Footer', footerComponent)
-
-```
-
-- Передача props в компонент (как обычные HTML аттрибуты)
-```
-const app = new App(
-  new Component((props) => {
-    return `
-    ...
-    <Button type="primary" class="${styles.editButton}">СОХРАНИТЬ</Button>
-    <Button type="secondary" class="${styles.editButton}">ОТМЕНА</Button>
-   ...
- `;
-  })
-);
-
-app.register('Button', buttonComponent);
-```
-- Цикл :for
-```
-const state = {
-  settings: [
-  ...
-    {
-      name: 'Имя в чате',
-      value: 'Антон Безушко',
-    },
-    {
-      name: 'Имя',
-      value: 'Антон',
-    },
-    ...
-  ]
-};
-
-const app = new App(
-  new Component((props) => {
-    return `
-    ...
-    <div :for="setting in settings">
-      <div class="${styles.settingsForm_field}">
-        <div class="${styles.settingsForm_field_name}">{{setting.name}}</div>
-        <div class="${styles.settingsForm_field_value}">{{setting.value}}</div>
-      </div>
-    </div>
-    ...
- `;
-  }, state)
-);
-```
-
+- VDOM неправильно перерисовывает DOM дерево, функция `patchNode` перебираем своих потомков, а `patchChildren` меняет DOM, из-за чего цикл прекращает работу. Итог условный рендеринг использовать получится, если не менять структуру DOM. Универсально можно пользоваться `display: none;`
+- JSX ссылается на типы React из-за чего могут быть ошибки IDE в возвращаемых типах. Как их переопределить не знаю
+- Продумать жизненный цикл компонентов
+- Продумать возможность использовать в компонентах локальное состояние (сейчас функци ререндере рабаотает только при измененни в корневом шаблоне)
 
 **Алгоритм работы рендера страницы**
-- Создается экземпляр приложения с корневым компонентом (шаблон компонента может включать другие компоненты)
-- Вызывается рендер функция корневого компонента в которой возвращается его шаблон 
-- Шаблон преобразается в Virtual DOM, если элемент Virtual DOM является компонентом, то для него тоже вызывается функция рендера и т.д. 
-На выходе получается полное Virtual DOM дерево страницы
-- Приложение создание из Virtual DOM реальный DOm
+- createApp обораживает корневой компонент в `watch (reactive)` функцию и следит за изменениями состояния
+- При изменении перерисовывает VDOM
+- VDOM делает изменения в DOM 
