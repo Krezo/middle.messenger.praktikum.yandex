@@ -1,17 +1,17 @@
+// Components
 import { Logo } from '../../components/logoComponent';
 import { DefaultLayout } from '../../layout/defaultLayout/defaultLayout';
 import { createApp, h } from '../../modules/vdom';
 import { Input } from '../../components/input/input.component';
 import { Button } from '../../components/button/buttonComponent';
-
+// Styles
 import style from './register.page.module.css'
 import styles from '../../css/app.module.css';
-
+// Others
 import { name, login, minLenght, maxLenght, email, password, phone } from '../../modules/validatorRules';
 import { useForm } from '../../composibles/useForm';
 
 document.addEventListener('DOMContentLoaded', () => {
-
   const { formData: registerForm, values: registerFormValues, isValid } = useForm({
     firstname: {
       value: '',

@@ -1,8 +1,8 @@
-import { Logo } from '../../components/logoComponent';
+// Components
 import { DefaultLayout } from '../../layout/defaultLayout/defaultLayout';
-import { createApp, h } from '../../modules/vdom';
-
 import { Error } from '../../components/error/error';
+// Others
+import { createApp, h } from '../../modules/vdom';
 
 document.addEventListener('DOMContentLoaded', () => {
   createApp(document.getElementById('app'), () =>

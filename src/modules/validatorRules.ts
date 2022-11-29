@@ -8,6 +8,7 @@ const minLenght = (length: number) => ({
     value.length >= length ||
     `Длинна поля должна быть больше ${length}, сейчас ${value.length}`,
 })
+
 const maxLenght = (length: number) => ({
   maxLenght: (value: string) =>
     value.length < length ||

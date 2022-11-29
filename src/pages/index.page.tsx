@@ -1,14 +1,11 @@
 // Styles
 import style from './index.page.module.css';
 import styles from '../css/app.module.css';
-
 // Modules
 import { createApp, h } from '../modules/vdom';
 import { computed, reactive, ref, render, watch, watchEffect } from '../modules/reactivity';
-
 // Images
 import companionImagePlaceholder from '../images/avatar_placeholder.jpeg'
-
 // Components
 import { Button } from '../components/button/buttonComponent';
 import { Input } from '../components/input/input.component';

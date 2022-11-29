@@ -1,6 +1,6 @@
-import { observer } from './observer';
+import { IObserver, observer } from './observer';
 
-interface IWatchFunction<T = any> {
+interface IWatchFunction {
   (oldValue?: any, newValue?: any): void
 }
 
@@ -49,7 +49,7 @@ const reactive = <T extends object>(value: T, deep: boolean = true) => {
   // Объект обертка для управления зависимостями
   // Работаем с простым proxy над target(value)
   // Тригерем зависимости из objectObserver
-  const objectObserver: Record<string | symbol, any> = {}
+  const objectObserver: Record<string | symbol, any | object | IObserver> = {}
 
   // Если значение является объектом, то вызываем для него рекурсивно reactive
   // Потом в геттере вернем его для реактивных объектов
@@ -61,7 +61,7 @@ const reactive = <T extends object>(value: T, deep: boolean = true) => {
       objectObserver[key] = ref(true);
   }
 
-  return new Proxy(value, {
+  return new Proxy<any>(value, {
     get(target, prop) {
       if (prop === isReactive) {
         return true
@@ -74,14 +74,18 @@ const reactive = <T extends object>(value: T, deep: boolean = true) => {
       if (isWatchFunction) {
         objectObserver[prop].deps.add(watchFunction)
       }
-      return target[prop]
+      if (prop in target) {
+        return target[prop];
+      }
     },
     set(target, prop, newValue) {
       // Вызываем все зависимости, если значение изменилось
       if (prop in target) {
         if (target[prop] !== newValue) {
           target[prop] = newValue;
-          objectObserver[prop].deps.forEach(dep => dep(newValue, target[prop]))
+          if (objectObserver[prop][isRef]) {
+            (objectObserver[prop].deps as IObserver['deps']).forEach(dep => dep(newValue, target[prop]))
+          }
         }
         return true
       }
@@ -128,7 +132,7 @@ const watch = <T>(watch: () => T, watchFunc: IWatchFunction, options?: { immedia
 }
 
 // Функция выполняется при изменении любых внутенних observer
-const watchEffect = <T>(watchEffectFunction: () => any) => {
+const watchEffect = (watchEffectFunction: () => any) => {
   watchDep(watchEffectFunction)
 }
 

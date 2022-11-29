@@ -1,47 +1,103 @@
-import { Logo } from '../../components/logoComponent';
+// Components
 import { DefaultLayout } from '../../layout/defaultLayout/defaultLayout';
 import { createApp, h } from '../../modules/vdom';
 import { Input } from '../../components/input/input.component';
-import { computed, ref, watch, watchEffect } from '../../modules/reactivity';
 import { Button } from '../../components/button/buttonComponent';
-
+// Images
 import LeftArrow from '../../images/left_arrow.svg';
 import AvatarPlaceholder from '../../images/avatar_placeholder.jpeg';
-
+// Styles
 import style from './settings.page.module.css';
 import styles from '../../css/app.module.css';
+// Others
+import { ref } from '../../modules/reactivity';
 import { useForm } from '../../composibles/useForm';
-import { name } from '../../modules/validatorRules';
+import { name, login, minLenght, maxLenght, email, phone, password, confirmedPassword }
+  from '../../modules/validatorRules';
 
 type EditMode = 'none' | 'edit' | 'editPassword'
 
-
 document.addEventListener('DOMContentLoaded', () => {
 
-  const mode = ref<EditMode>('edit');
+  const mode = ref<EditMode>('editPassword');
 
-  const { formData, values, isValid } = useForm({
-    firstname: {
-      value: '',
-      validators: {
-        ...name('именем')
+  const {
+    formData: changeSettingsFormData,
+    isValid: changeSettingsFormIsValid,
+    values: changeSettingsFormValues } = useForm({
+      firstName: {
+        value: '',
+        validators: {
+          ...name('именем')
+        },
       },
-      blur,
-      toched: false,
-      valid: false,
-      errorMessage: ''
-    },
-    secondname: {
-      value: '',
-      validators: {
-        ...name('фамилией')
+      secondName: {
+        value: '',
+        validators: {
+          ...name('фамилией')
+        },
       },
-      blur,
-      toched: false,
-      valid: false,
-      errorMessage: ''
-    },
-  })
+      chatName: {
+        value: '',
+        validators: {
+          chatName: (value: string) => /^[^\W]+$/g.test(value) || 'Имя должно состояить из букв'
+        }
+      },
+      login: {
+        value: '',
+        validators: {
+          login,
+          ...minLenght(3)
+        },
+      },
+      email: {
+        value: '',
+        validators: {
+          email
+        },
+      },
+      phone: {
+        value: '',
+        validators: {
+          phone,
+          ...minLenght(10),
+          ...maxLenght(15),
+        },
+      },
+    })
+
+  const {
+    formData: changePasswordFormData,
+    isValid: changePasswordFormIsValid,
+    values: changePasswordFormValues } = useForm({
+      password: {
+        value: '',
+        validators: {
+          password,
+          ...minLenght(8),
+          ...maxLenght(40)
+        }
+      },
+      confirmPassword: {
+        value: '',
+        validators: {
+          password,
+          ...minLenght(8),
+          ...maxLenght(40),
+          ...confirmedPassword('password', 'confirmPassword'),
+        }
+      }
+    })
+
+  const onSubmitSettingsForm = (event: Event) => {
+    event.preventDefault();
+    if (mode.value === 'edit') {
+      console.log(changeSettingsFormValues.value);
+    }
+    if (mode.value === 'editPassword') {
+      console.log(changePasswordFormValues.value);
+    }
+  }
 
   createApp(document.getElementById('app'), () =>
     <DefaultLayout>
@@ -52,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <div className={[styles.h2, style.backToChatText].join(' ')}>Вернуться в чат</div>
         </a>
-        <form action="" className={style.settingsForm} >
+        <form action="" className={style.settingsForm} onSubmit={onSubmitSettingsForm}>
           <h2 className={styles.h2}>Настройки профиля</h2>
           <div className={style.avatar}>
             <img src={AvatarPlaceholder} alt="" />
@@ -97,35 +153,74 @@ document.addEventListener('DOMContentLoaded', () => {
           <div style={mode.value === 'edit' ? '' : 'display: none'} className={style.inputsEdit}>
             <Input
               placeholder='Имя'
-              onBlur={() => formData.firstname.blur()}
-              toched={formData.firstname.toched}
-              errorMessage={formData.firstname.errorMessage}
-              setValue={(value: string) => formData.firstname.value = value}
+              onBlur={() => changeSettingsFormData.firstName.blur()}
+              toched={changeSettingsFormData.firstName.toched}
+              errorMessage={changeSettingsFormData.firstName.errorMessage}
+              setValue={(value: string) => changeSettingsFormData.firstName.value = value}
             />
             <Input
               placeholder='Фамилия'
-              onBlur={() => formData.secondname.blur()}
-              toched={formData.secondname.toched}
-              errorMessage={formData.secondname.errorMessage}
-              setValue={(value: string) => formData.secondname.value = value}
+              onBlur={() => changeSettingsFormData.secondName.blur()}
+              toched={changeSettingsFormData.secondName.toched}
+              errorMessage={changeSettingsFormData.secondName.errorMessage}
+              setValue={(value: string) => changeSettingsFormData.secondName.value = value}
             />
-            <Input placeholder='Имя в чате  ' />
-            <Input placeholder='Логин' />
-            <Input placeholder='Email' />
-            <Input placeholder='Телефон' />
-            <Button primary>Сохранить</Button>
+            <Input
+              placeholder='Имя в чате'
+              onBlur={() => changeSettingsFormData.chatName.blur()}
+              toched={changeSettingsFormData.chatName.toched}
+              errorMessage={changeSettingsFormData.chatName.errorMessage}
+              setValue={(value: string) => changeSettingsFormData.chatName.value = value}
+            />
+            <Input
+              placeholder='Логин'
+              onBlur={() => changeSettingsFormData.login.blur()}
+              toched={changeSettingsFormData.login.toched}
+              errorMessage={changeSettingsFormData.login.errorMessage}
+              setValue={(value: string) => changeSettingsFormData.login.value = value}
+            />
+            <Input
+              placeholder='Email'
+              onBlur={() => changeSettingsFormData.email.blur()}
+              toched={changeSettingsFormData.email.toched}
+              errorMessage={changeSettingsFormData.email.errorMessage}
+              setValue={(value: string) => changeSettingsFormData.email.value = value}
+            />
+
+            <Input
+              placeholder='Телефон'
+              onBlur={() => changeSettingsFormData.phone.blur()}
+              toched={changeSettingsFormData.phone.toched}
+              errorMessage={changeSettingsFormData.phone.errorMessage}
+              setValue={(value: string) => changeSettingsFormData.phone.value = value}
+            />
+
+            <Button disabled={!changeSettingsFormIsValid.value} type='submit' primary>Сохранить</Button>
             <Button primary outline>Отмена</Button>
           </div>
           <div style={mode.value === 'editPassword' ? '' : 'display: none'} className={style.inputsEdit}>
             <div className={style.changePasswordTooltip}>Введите старый и затем новый пароль</div>
-            <Input placeholder='Старый пароль' />
-            <Input placeholder='Пароль' />
-            <Button primary>Сохранить</Button>
+            <Input
+              onBlur={() => changePasswordFormData.password.blur()}
+              toched={changePasswordFormData.password.toched}
+              errorMessage={changePasswordFormData.password.errorMessage}
+              setValue={(value: string) => changePasswordFormData.password.value = value}
+              type='password'
+              placeholder='Старый пароль'
+            />
+            <Input
+              onBlur={() => changePasswordFormData.confirmPassword.blur()}
+              toched={changePasswordFormData.confirmPassword.toched}
+              errorMessage={changePasswordFormData.confirmPassword.errorMessage}
+              setValue={(value: string) => changePasswordFormData.confirmPassword.value = value}
+              type='password'
+              placeholder='Пароль'
+            />
+            <Button disabled={!changePasswordFormIsValid.value} type='submit' primary>Сохранить</Button>
             <Button primary outline>Отмена</Button>
           </div>
         </form>
       </div>
-
     </DefaultLayout>
   ).mount();
 })

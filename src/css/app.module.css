@@ -6,18 +6,18 @@
   margin-right: auto;
 }
 
-.font_semibold {
+.fontSemibold {
   font-weight: 600;
 }
 
-.font_bold {
+.fontBold {
   font-weight: 700;
 }
 
-.text_primary {
+.textPrimary {
   color: var(--primary-color);
 }
-.bg_primary {
+.bgPrimary {
   background: var(--primary-color);
 }
 
@@ -46,6 +46,6 @@
   display: flex;
 }
 
-.flex_col {
+.flexCol {
   flex-direction: column;
 }

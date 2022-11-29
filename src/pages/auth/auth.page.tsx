@@ -1,12 +1,13 @@
+// Components
+import { Button } from '../../components/button/buttonComponent';
+import { Input } from '../../components/input/input.component';
 import { Logo } from '../../components/logoComponent';
 import { DefaultLayout } from '../../layout/defaultLayout/defaultLayout';
-import { createApp, h } from '../../modules/vdom';
-import { Input } from '../../components/input/input.component';
-import { ref, watchEffect } from '../../modules/reactivity';
-import { Button } from '../../components/button/buttonComponent';
-
+// Styles
 import style from './auth.page.module.css'
 import styles from '../../css/app.module.css';
+// Others
+import { createApp, h } from '../../modules/vdom';
 import { useForm } from '../../composibles/useForm';
 import { maxLenght, minLenght, login, password } from '../../modules/validatorRules';
 
