@@ -14,6 +14,7 @@ type Options = {
 }
 
 type HttpTransportOptions = Omit<Options, METHOD>
+type HTTPMethod = (url: string, options?: HttpTransportOptions) => Promise<XMLHttpRequest>
 
 class HTTPTransport {
   get(url: string, options: HttpTransportOptions = {}): Promise<XMLHttpRequest> {
@@ -21,7 +22,7 @@ class HTTPTransport {
     return this.request(queryUrl, { ...options, method: METHOD.GET });
   };
 
-  post(url: string, options: HttpTransportOptions = {}): Promise<XMLHttpRequest> {
+  post: HTTPMethod = (url, options) => {
     // Пока не реализовал доп. логику для работы с данными
     // не ясно в каком формате требуется отправлять данные API
     // как вариант передовавть и принимать все в JSON, но из форм придется брать 
@@ -29,7 +30,7 @@ class HTTPTransport {
     return this.request(url, { ...options, method: METHOD.POST });
   };
 
-  put(url: string, options: HttpTransportOptions = {}): Promise<XMLHttpRequest> {
+  put: HTTPMethod = (url, options) => {
     // Пока не реализовал доп. логику для работы с данными
     // не ясно в каком формате требуется отправлять данные API
     // как вариант передовавть и принимать все в JSON, но из форм придется брать 
@@ -37,7 +38,7 @@ class HTTPTransport {
     return this.request(url, { ...options, method: METHOD.PUT });
   };
 
-  delete(url: string, options: HttpTransportOptions = {}): Promise<XMLHttpRequest> {
+  delete: HTTPMethod = (url, options) => {
     // Пока не реализовал доп. логику для работы с данными
     // не ясно в каком формате требуется отправлять данные API
     // как вариант передовавть и принимать все в JSON, но из форм придется брать 

@@ -44,7 +44,7 @@ const Input = (props: IProps) => {
 
   const showErorr = errorMessage && toched;
 
-  return <div className={style.inputWrapper}>
+  return (<div className={style.inputWrapper}>
     <input
       onBlur={onBlur}
       id={props.id}
@@ -55,7 +55,7 @@ const Input = (props: IProps) => {
       onInput={setValue}
     />
     <div className={style.errorMessage} style={showErorr ? '' : 'display: none;'}>{errorMessage}</div>
-  </div>
+  </div>)
 }
 
 export {

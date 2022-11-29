@@ -6,12 +6,12 @@ import { h } from '../../modules/vdom';
 import { Header } from '../../components/header/header.component';
 
 const DefaultLayout = (props: IComponentProps) => {
-  return <main>
+  return (<div>
     <Header />
-    <div className={styles.container}>
+    <main>
       {props.children}
-    </div>
-  </main>
+    </main>
+  </div>)
 }
 
 export {

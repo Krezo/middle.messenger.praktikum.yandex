@@ -19,7 +19,7 @@ type EditMode = 'none' | 'edit' | 'editPassword'
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  const mode = ref<EditMode>('editPassword');
+  const mode = ref<EditMode>('none');
 
   const {
     formData: changeSettingsFormData,
@@ -100,127 +100,127 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   createApp(document.getElementById('app'), () =>
-    <DefaultLayout>
-      <div className={style.settingsPage}>
-        <a href='/' className={style.backToChat}>
-          <div className={style.backToChatArrow}>
-            <img src={LeftArrow} alt="left" />
+  (<DefaultLayout>
+    <div className={style.settingsPage}>
+      <a href='/' className={style.backToChat}>
+        <div className={style.backToChatArrow}>
+          <img src={LeftArrow} alt="left" />
+        </div>
+        <div className={[styles.h2, style.backToChatText].join(' ')}>Вернуться в чат</div>
+      </a>
+      <form action="" className={style.settingsForm} onSubmit={onSubmitSettingsForm}>
+        <h2 className={styles.h2}>Настройки профиля</h2>
+        <div className={style.avatar}>
+          <img src={AvatarPlaceholder} alt="" />
+          <div style={mode.value === 'edit' ? '' : 'display: none'}>
+            <Button primary outline small className={style.avatarChangeBtn} >Сменить</Button>
           </div>
-          <div className={[styles.h2, style.backToChatText].join(' ')}>Вернуться в чат</div>
-        </a>
-        <form action="" className={style.settingsForm} onSubmit={onSubmitSettingsForm}>
-          <h2 className={styles.h2}>Настройки профиля</h2>
-          <div className={style.avatar}>
-            <img src={AvatarPlaceholder} alt="" />
-            <div style={mode.value === 'edit' ? '' : 'display: none'}>
-              <Button primary outline small className={style.avatarChangeBtn} >Сменить</Button>
+        </div>
+        <div style={mode.value === 'none' ? '' : 'display: none'}>
+          <div className={style.inputs}>
+            <div>
+              <div>Имя в чате</div>
+              <div>Антон Безушко</div>
+            </div>
+            <div>
+              <div>Имя</div>
+              <div>Антон </div>
+            </div>
+            <div>
+              <div>Фамилия</div>
+              <div>Безушко</div>
+            </div>
+            <div>
+              <div>Имя в чате</div>
+              <div>Антон Безушко</div>
+            </div>
+            <div>
+              <div>Логин</div>
+              <div>abez</div>
+            </div>
+            <div>
+              <div>Email</div>
+              <div>bezushko.aiu@gmail.com</div>
+            </div>
+            <div>
+              <div>Телефон</div>
+              <div>8-123-123-12-12</div>
             </div>
           </div>
-          <div style={mode.value === 'none' ? '' : 'display: none'}>
-            <div className={style.inputs}>
-              <div>
-                <div>Имя в чате</div>
-                <div>Антон Безушко</div>
-              </div>
-              <div>
-                <div>Имя</div>
-                <div>Антон </div>
-              </div>
-              <div>
-                <div>Фамилия</div>
-                <div>Безушко</div>
-              </div>
-              <div>
-                <div>Имя в чате</div>
-                <div>Антон Безушко</div>
-              </div>
-              <div>
-                <div>Логин</div>
-                <div>abez</div>
-              </div>
-              <div>
-                <div>Email</div>
-                <div>bezushko.aiu@gmail.com</div>
-              </div>
-              <div>
-                <div>Телефон</div>
-                <div>8-123-123-12-12</div>
-              </div>
-            </div>
-            <Button primary className={style.editBtn} onClick={() => mode.value = 'edit'}>Редактировать</Button>
-            <div onClick={() => mode.value = 'editPassword'} className={[styles.link, style.editPswLink].join(' ')}>Изменить пароль</div>
-          </div>
-          <div style={mode.value === 'edit' ? '' : 'display: none'} className={style.inputsEdit}>
-            <Input
-              placeholder='Имя'
-              onBlur={() => changeSettingsFormData.firstName.blur()}
-              toched={changeSettingsFormData.firstName.toched}
-              errorMessage={changeSettingsFormData.firstName.errorMessage}
-              setValue={(value: string) => changeSettingsFormData.firstName.value = value}
-            />
-            <Input
-              placeholder='Фамилия'
-              onBlur={() => changeSettingsFormData.secondName.blur()}
-              toched={changeSettingsFormData.secondName.toched}
-              errorMessage={changeSettingsFormData.secondName.errorMessage}
-              setValue={(value: string) => changeSettingsFormData.secondName.value = value}
-            />
-            <Input
-              placeholder='Имя в чате'
-              onBlur={() => changeSettingsFormData.chatName.blur()}
-              toched={changeSettingsFormData.chatName.toched}
-              errorMessage={changeSettingsFormData.chatName.errorMessage}
-              setValue={(value: string) => changeSettingsFormData.chatName.value = value}
-            />
-            <Input
-              placeholder='Логин'
-              onBlur={() => changeSettingsFormData.login.blur()}
-              toched={changeSettingsFormData.login.toched}
-              errorMessage={changeSettingsFormData.login.errorMessage}
-              setValue={(value: string) => changeSettingsFormData.login.value = value}
-            />
-            <Input
-              placeholder='Email'
-              onBlur={() => changeSettingsFormData.email.blur()}
-              toched={changeSettingsFormData.email.toched}
-              errorMessage={changeSettingsFormData.email.errorMessage}
-              setValue={(value: string) => changeSettingsFormData.email.value = value}
-            />
+          <Button primary className={style.editBtn} onClick={() => mode.value = 'edit'}>Редактировать</Button>
+          <div onClick={() => mode.value = 'editPassword'} className={[styles.link, style.editPswLink].join(' ')}>Изменить пароль</div>
+        </div>
+        <div style={mode.value === 'edit' ? '' : 'display: none'} className={style.inputsEdit}>
+          <Input
+            placeholder='Имя'
+            onBlur={() => changeSettingsFormData.firstName.blur()}
+            toched={changeSettingsFormData.firstName.toched}
+            errorMessage={changeSettingsFormData.firstName.errorMessage}
+            setValue={(value: string) => changeSettingsFormData.firstName.value = value}
+          />
+          <Input
+            placeholder='Фамилия'
+            onBlur={() => changeSettingsFormData.secondName.blur()}
+            toched={changeSettingsFormData.secondName.toched}
+            errorMessage={changeSettingsFormData.secondName.errorMessage}
+            setValue={(value: string) => changeSettingsFormData.secondName.value = value}
+          />
+          <Input
+            placeholder='Имя в чате'
+            onBlur={() => changeSettingsFormData.chatName.blur()}
+            toched={changeSettingsFormData.chatName.toched}
+            errorMessage={changeSettingsFormData.chatName.errorMessage}
+            setValue={(value: string) => changeSettingsFormData.chatName.value = value}
+          />
+          <Input
+            placeholder='Логин'
+            onBlur={() => changeSettingsFormData.login.blur()}
+            toched={changeSettingsFormData.login.toched}
+            errorMessage={changeSettingsFormData.login.errorMessage}
+            setValue={(value: string) => changeSettingsFormData.login.value = value}
+          />
+          <Input
+            placeholder='Email'
+            onBlur={() => changeSettingsFormData.email.blur()}
+            toched={changeSettingsFormData.email.toched}
+            errorMessage={changeSettingsFormData.email.errorMessage}
+            setValue={(value: string) => changeSettingsFormData.email.value = value}
+          />
 
-            <Input
-              placeholder='Телефон'
-              onBlur={() => changeSettingsFormData.phone.blur()}
-              toched={changeSettingsFormData.phone.toched}
-              errorMessage={changeSettingsFormData.phone.errorMessage}
-              setValue={(value: string) => changeSettingsFormData.phone.value = value}
-            />
+          <Input
+            placeholder='Телефон'
+            onBlur={() => changeSettingsFormData.phone.blur()}
+            toched={changeSettingsFormData.phone.toched}
+            errorMessage={changeSettingsFormData.phone.errorMessage}
+            setValue={(value: string) => changeSettingsFormData.phone.value = value}
+          />
 
-            <Button disabled={!changeSettingsFormIsValid.value} type='submit' primary>Сохранить</Button>
-            <Button primary outline>Отмена</Button>
-          </div>
-          <div style={mode.value === 'editPassword' ? '' : 'display: none'} className={style.inputsEdit}>
-            <div className={style.changePasswordTooltip}>Введите старый и затем новый пароль</div>
-            <Input
-              onBlur={() => changePasswordFormData.password.blur()}
-              toched={changePasswordFormData.password.toched}
-              errorMessage={changePasswordFormData.password.errorMessage}
-              setValue={(value: string) => changePasswordFormData.password.value = value}
-              type='password'
-              placeholder='Старый пароль'
-            />
-            <Input
-              onBlur={() => changePasswordFormData.confirmPassword.blur()}
-              toched={changePasswordFormData.confirmPassword.toched}
-              errorMessage={changePasswordFormData.confirmPassword.errorMessage}
-              setValue={(value: string) => changePasswordFormData.confirmPassword.value = value}
-              type='password'
-              placeholder='Пароль'
-            />
-            <Button disabled={!changePasswordFormIsValid.value} type='submit' primary>Сохранить</Button>
-            <Button primary outline>Отмена</Button>
-          </div>
-        </form>
-      </div>
-    </DefaultLayout>
+          <Button disabled={!changeSettingsFormIsValid.value} type='submit' primary>Сохранить</Button>
+          <Button primary outline onClick={() => mode.value = 'none'}>Отмена</Button>
+        </div>
+        <div style={mode.value === 'editPassword' ? '' : 'display: none'} className={style.inputsEdit}>
+          <div className={style.changePasswordTooltip}>Введите старый и затем новый пароль</div>
+          <Input
+            onBlur={() => changePasswordFormData.password.blur()}
+            toched={changePasswordFormData.password.toched}
+            errorMessage={changePasswordFormData.password.errorMessage}
+            setValue={(value: string) => changePasswordFormData.password.value = value}
+            type='password'
+            placeholder='Старый пароль'
+          />
+          <Input
+            onBlur={() => changePasswordFormData.confirmPassword.blur()}
+            toched={changePasswordFormData.confirmPassword.toched}
+            errorMessage={changePasswordFormData.confirmPassword.errorMessage}
+            setValue={(value: string) => changePasswordFormData.confirmPassword.value = value}
+            type='password'
+            placeholder='Пароль'
+          />
+          <Button disabled={!changePasswordFormIsValid.value} type='submit' primary>Сохранить</Button>
+          <Button primary outline onClick={() => mode.value = 'none'}>Отмена</Button>
+        </div>
+      </form>
+    </div>
+  </DefaultLayout>)
   ).mount();
 })
