@@ -80,7 +80,6 @@ const reactive = <T extends object>(value: T, deep: boolean = true) => {
       }
     },
     set(target, prop, newValue) {
-      if (prop === 'errors') debugger
       // Вызываем все зависимости, если значение изменилось
       if (prop in target) {
         if (target[prop as keyof typeof target] !== newValue) {
