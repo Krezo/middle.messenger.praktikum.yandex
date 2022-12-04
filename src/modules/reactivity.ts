@@ -63,6 +63,7 @@ const reactive = <T extends object>(value: T, deep: boolean = true) => {
 
   return new Proxy<T>(value, {
     get(target, prop) {
+
       if (prop === isReactive) {
         return true
       }
@@ -86,8 +87,9 @@ const reactive = <T extends object>(value: T, deep: boolean = true) => {
           if (objectObserver[prop][isRef]) {
             (objectObserver[prop].deps as IObserver['deps']).forEach(dep => dep(newValue, target[prop as keyof typeof target]))
           }
-        return true
-      } 
+          return true
+        }
+      }
       // Добавление реактивных данных
       if (newValue?.[isReactive]) {
         target[prop as keyof typeof target] = newValue
@@ -104,8 +106,6 @@ const reactive = <T extends object>(value: T, deep: boolean = true) => {
       objectObserver[prop] = ref(newValue);
       return true
     }
-    return false;
-  }
   })
 }
 
