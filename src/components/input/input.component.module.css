@@ -1,9 +1,32 @@
+.inputWrapper {
+  position: relative;
+}
+.errorMessage {
+  position: absolute;
+  color: var(--input-error);
+  left: 0;
+  bottom: -20px;
+}
 .input {
-  padding: 14px 20px;
-  font-size: 16px;
+  padding: 12px 14px;
+  width: 100%;
+  font-size: 1rem;
   border: 1px solid var(--input-border-color);
   border-radius: 6px;
   &:focus {
-    outline: 1px solid var(--primary-color);
+    background-color: #fff;
+    border-color: var(--primary-color);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+  }
+}
+.rounded {
+  border-radius: 2rem;
+}
+.error {
+  border-color: var(--input-error);
+  &:focus {
+    border-color: var(--input-error);
+    box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
   }
 }

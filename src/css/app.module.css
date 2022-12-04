@@ -6,24 +6,24 @@
   margin-right: auto;
 }
 
-.font_semibold {
+.fontSemibold {
   font-weight: 600;
 }
 
-.font_bold {
+.fontBold {
   font-weight: 700;
 }
 
-.text_primary {
+.textPrimary {
   color: var(--primary-color);
 }
-.bg_primary {
+.bgPrimary {
   background: var(--primary-color);
 }
 
 .h2 {
   font-style: normal;
-  font-weight: 600;
+  font-weight: 800;
   font-size: 24px;
 }
 
@@ -33,8 +33,9 @@
   font-size: 20px;
 }
 
-a.link {
+.link {
   font-weight: 600;
+  cursor: pointer;
   color: var(--primary-color);
   &:hover {
     text-decoration: underline;
@@ -45,6 +46,6 @@ a.link {
   display: flex;
 }
 
-.flex_col {
+.flexCol {
   flex-direction: column;
 }

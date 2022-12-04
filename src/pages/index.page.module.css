@@ -1,0 +1,120 @@
+.mainPage {
+  display: flex;
+}
+.chatSidebar {
+  width: 400px;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+}
+.profileLink {
+  margin: 1rem;
+  text-align: right;
+}
+.companionBlock {
+  cursor: pointer;
+  user-select: none;
+  border-top: 1px solid #efefef;
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+}
+.companionBlockActive {
+  background: #eaeaea;
+}
+.companionImage {
+  border-radius: 50%;
+  height: 50px;
+  margin-right: 10px;
+  width: 50px;
+}
+.companionBody {
+  flex: 1;
+}
+.companionName {
+  font-weight: 700;
+}
+.companionMessage {
+  color: var(--text-secondary-color);
+}
+.companionMessageCount {
+  height: 20px;
+  width: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  font-variant-numeric: tabular-nums;
+  border-radius: 10px;
+  color: var(--white);
+  margin-top: auto;
+  background: var(--primary-color);
+}
+.companionMessageTime {
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 40px;
+}
+.messageSidebar {
+  position: relative;
+  padding: 0 10px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100vh;
+}
+.selectChatMessage {
+  color: var(--primary-color);
+  background: var(--white);
+  font-weight: 600;
+  border: 2px solid var(--primary-color);
+  border-radius: 2rem;
+  padding: 10px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.messageList {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: flex-end;
+  max-height: 200vh;
+  flex: 1;
+}
+.activeCompanionWrapper {
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+}
+.activeCompanion {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  margin: 0 10px;
+  border-bottom: 1px solid #efefef;
+}
+
+.messageItem {
+  position: relative;
+  background: var(--primary-color);
+  color: var(--white);
+  border-radius: 2rem;
+  padding: 10px 60px 10px 10px;
+  margin-bottom: 1rem;
+}
+.messageTime {
+  position: absolute;
+  bottom: 10px;
+  right: 7px;
+  font-size: 12px;
+}
+.messageInput {
+  margin-bottom: 10px;
+}
