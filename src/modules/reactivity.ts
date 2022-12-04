@@ -61,7 +61,7 @@ const reactive = <T extends object>(value: T, deep: boolean = true) => {
       objectObserver[key] = ref(true);
   }
 
-  return new Proxy<any>(value, {
+  return new Proxy<T>(value, {
     get(target, prop) {
       if (prop === isReactive) {
         return true
@@ -75,36 +75,37 @@ const reactive = <T extends object>(value: T, deep: boolean = true) => {
         objectObserver[prop].deps.add(watchFunction)
       }
       if (prop in target) {
-        return target[prop];
+        return target[prop as keyof typeof target];
       }
     },
     set(target, prop, newValue) {
       // Вызываем все зависимости, если значение изменилось
       if (prop in target) {
-        if (target[prop] !== newValue) {
-          target[prop] = newValue;
+        if (target[prop as keyof typeof target] !== newValue) {
+          target[prop as keyof typeof target] = newValue;
           if (objectObserver[prop][isRef]) {
-            (objectObserver[prop].deps as IObserver['deps']).forEach(dep => dep(newValue, target[prop]))
+            (objectObserver[prop].deps as IObserver['deps']).forEach(dep => dep(newValue, target[prop as keyof typeof target]))
           }
-        }
         return true
-      }
+      } 
       // Добавление реактивных данных
       if (newValue?.[isReactive]) {
-        target[prop] = newValue
+        target[prop as keyof typeof target] = newValue
         return true;
       }
       // Добавление ref
       if (newValue?.[isRef]) {
-        target[prop] = newValue.value;
+        target[prop as keyof typeof target] = newValue.value;
         objectObserver[prop] = newValue;
         return true;
       }
       // Добавление обычных данных
-      target[prop] = newValue;
+      target[prop as keyof typeof target] = newValue;
       objectObserver[prop] = ref(newValue);
       return true
     }
+    return false;
+  }
   })
 }
 

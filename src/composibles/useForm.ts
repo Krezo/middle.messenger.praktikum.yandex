@@ -14,14 +14,12 @@ interface FieldDataExt {
   reassign: () => void
 }
 
-export interface InputFormData extends FormData<FieldData & Partial<FieldDataExt>> { }
-
 interface FieldData extends Record<string, any> {
   value: string
-  validators?: { [key: string]: (value: string, formData?: InputFormData, ...params: any) => boolean | string }
+  validators?: { [key: string]: (value: string, formData?: FormData<FieldData & Partial<FieldDataExt>>, ...params: any) => boolean | string }
 }
 
-export const useForm = (init: InputFormData) => {
+export const useForm = (init: FormData<FieldData & Partial<FieldDataExt>>): FormData<FieldData & Required<FieldDataExt>> => {
   const formData = reactive(init)
   for (const [key, value] of Object.entries(formData)) {
     const formField = formData[key]

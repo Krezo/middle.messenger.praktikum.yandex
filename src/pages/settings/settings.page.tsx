@@ -12,7 +12,16 @@ import styles from '../../css/app.module.css';
 // Others
 import { ref } from '../../modules/reactivity';
 import { useForm } from '../../composibles/useForm';
-import { name, login, minLenght, maxLenght, email, phone, password, confirmedPassword }
+import {
+  name,
+  login,
+  minLenght,
+  maxLenght,
+  email,
+  phone,
+  password,
+  confirmedPassword
+}
   from '../../modules/validatorRules';
 
 type EditMode = 'none' | 'edit' | 'editPassword'
@@ -189,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           <Input
             placeholder='Телефон'
-            onBlur={() => changeSettingsFormData.phone.blur()}
+            onBlur={() => changeSettingsFormData.phone.blur()!}
             toched={changeSettingsFormData.phone.toched}
             errorMessage={changeSettingsFormData.phone.errorMessage}
             setValue={(value: string) => changeSettingsFormData.phone.value = value}

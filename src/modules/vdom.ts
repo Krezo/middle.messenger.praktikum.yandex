@@ -22,7 +22,7 @@ const h = (tagName: (...params: any[]) => void | string, props: {} = {}, ...chil
   return el
 }
 
-const renderDOM = (root: IVNode | string | number) => {
+const renderDOM = (root: IVNode | JSX.Element | string | number) => {
   if (typeof root === 'string') {
     return document.createTextNode(root)
   }
