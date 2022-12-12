@@ -1,5 +1,8 @@
+/* eslint-disable no-restricted-syntax */
 import { IObserver } from './observer';
-import { computed, render, setRootRenderFunc, watch } from './reactivity';
+import {
+  computed, render, setRootRenderFunc, watch,
+} from './reactivity';
 
 export interface IVNode {
   tagName: string,
@@ -8,8 +11,7 @@ export interface IVNode {
 }
 
 const h = (tagName: (...params: any[]) => void | string, props: {} = {}, ...children: (IVNode | string)[]) => {
-
-  if (typeof tagName === "function") {
+  if (typeof tagName === 'function') {
     return tagName({ ...props, ...{ children } }, children);
   }
 
@@ -17,56 +19,61 @@ const h = (tagName: (...params: any[]) => void | string, props: {} = {}, ...chil
     tagName,
     props,
     children: children.flat(),
-  }
+  };
 
-  return el
-}
+  return el;
+};
 
 const renderDOM = (root: IVNode | JSX.Element | string | number) => {
+  // Нод условного рендера
+  if (root === false) {
+    // Добавляем в vdom комментарий для слежения последовательности 
+    // условного рендера
+    return document.createComment('if');
+  }
   if (typeof root === 'string') {
-    return document.createTextNode(root)
+    return document.createTextNode(root);
   }
   if (typeof root === 'number') {
-    return document.createTextNode(root.toString())
+    return document.createTextNode(root.toString());
   }
 
   let domRoot: HTMLElement | SVGSVGElement | SVGLineElement | SVGPolygonElement;
 
   if (root.tagName === 'svg' || root.tagName === 'line' || root.tagName === 'polygon') {
-    domRoot = document.createElementNS("http://www.w3.org/2000/svg", root.tagName)
-  } else
-    domRoot = document.createElement(root.tagName);
+    domRoot = document.createElementNS('http://www.w3.org/2000/svg', root.tagName);
+  } else { domRoot = document.createElement(root.tagName); }
 
   for (const propName in root.props) {
     if (propName.startsWith('on')) {
-      domRoot.addEventListener(propName.replace('on', '').toLocaleLowerCase(), root.props[propName])
-      continue
+      domRoot.addEventListener(propName.replace('on', '').toLocaleLowerCase(), root.props[propName]);
+      continue;
     }
     if (!root.props[propName]) continue;
     if (root.tagName === 'input' && propName === 'value') {
-      (domRoot as HTMLInputElement).value = propName, root.props[propName]
-    }
-    else if (propName === 'className') {
-      domRoot.setAttribute('class', root.props[propName])
-    }
-    else if (propName === 'children') { }
-    else domRoot.setAttribute(propName, root.props[propName])
+      (domRoot as HTMLInputElement).value = propName, root.props[propName];
+    } else if (propName === 'className') {
+      domRoot.setAttribute('class', root.props[propName]);
+    } else if (propName === 'children') { } else domRoot.setAttribute(propName, root.props[propName]);
   }
-  root.children.forEach(child => {
-    if (!child) return;
-    domRoot.appendChild(renderDOM(child))
-  })
+  root.children.forEach((child) => {
+    // if (!child) return;
+    domRoot.appendChild(renderDOM(child));
+  });
   return domRoot;
-}
+};
 
 const patchNode = (node: HTMLElement, vNode: any, nextVNode: any) => {
+  // Пропускам обновление условного рендера
+  if (vNode === false && nextVNode === false) {
+    return
+  }
   // Удаляем ноду, если значение nextVNode не задано
   if (nextVNode === undefined) {
     node.remove();
     return;
   }
-
-  if (typeof vNode === "string" || typeof nextVNode === "string") {
+  if (typeof vNode === 'string' || typeof nextVNode === 'string') {
     // Заменяем ноду на новую, если как минимум одно из значений равно строке
     // и эти значения не равны друг другу
     if (vNode !== nextVNode) {
@@ -100,7 +107,7 @@ const patchNode = (node: HTMLElement, vNode: any, nextVNode: any) => {
 const patchProp = (node: HTMLElement, key: any, value: any, nextValue: any) => {
   // Если новое значение не задано, то удаляем атрибут
   if (typeof value === 'function') {
-    if (!nextValue) node.removeEventListener(key.replace('on'), value)
+    if (!nextValue) node.removeEventListener(key.replace('on'), value);
     return;
   }
   if (node.tagName === 'INPUT' && key === 'value') {
@@ -123,22 +130,20 @@ const patchProps = (node: HTMLElement, props: any, nextProps: any) => {
 
   // Объект с общими свойствами
   const mergedProps = { ...props, ..._nextProps };
-  Object.keys(mergedProps).forEach(key => {
+  Object.keys(mergedProps).forEach((key) => {
     // Если значение не изменилось, то ничего не обновляем
     if (props[key] !== _nextProps[key]) {
       patchProp(node, key, props[key], _nextProps[key]);
     }
   });
-
 };
 
-const patchChildren = (parent: HTMLElement, vChildren: any, nextVChildren: any) => {
 
+const patchChildren = (parent: HTMLElement, vChildren: IVNode[], nextVChildren: IVNode[]) => {
   parent.childNodes.forEach((childNode, i) => {
     patchNode(childNode as HTMLElement, vChildren[i], nextVChildren[i]);
   });
-
-  nextVChildren.slice(vChildren.length).forEach(vChild => {
+  nextVChildren.slice(vChildren.length).forEach((vChild) => {
     parent.appendChild(renderDOM(vChild));
   });
 };
@@ -146,10 +151,9 @@ const patchChildren = (parent: HTMLElement, vChildren: any, nextVChildren: any) 
 const mount = (target: HTMLElement, node: HTMLElement) => {
   target.replaceWith(node);
   return node;
-}
+};
 
 const createApp = (root: HTMLElement | null, vnodeRoot: () => IVNode | JSX.Element) => {
-
   // vnodeRoot всегда возвращает IVNode, JSX.Element чтобы не было ошибок при работе с JXS
   const rootVDOM = computed(() => (vnodeRoot() as IVNode));
 
@@ -157,23 +161,23 @@ const createApp = (root: HTMLElement | null, vnodeRoot: () => IVNode | JSX.Eleme
     mount: () => {
       if (!root) return;
 
-      let renderResult = rootVDOM;
+      const renderResult = rootVDOM;
 
       // Монтируем VDOM в DOM
-      const rootDOM = mount(root, renderDOM(renderResult.value) as HTMLElement)
+      const rootDOM = mount(root, renderDOM(renderResult.value) as HTMLElement);
 
       // Обновляем DOM
       watch(() => rootVDOM.value, (newVTree, oldVTree) => {
-        patchNode(rootDOM, oldVTree, newVTree)
-      })
-    }
-  }
-}
+        patchNode(rootDOM, oldVTree, newVTree);
+      });
+    },
+  };
+};
 
 export {
   mount,
   h,
   patchNode,
   renderDOM,
-  createApp
-}
+  createApp,
+};
