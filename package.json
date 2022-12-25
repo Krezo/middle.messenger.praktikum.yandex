@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "npx parcel serve ./src/pages/**/*.html ./src/pages/index.html --no-cache",
-    "start": "npx parcel build ./src/pages/**/*.html ./src/pages/index.html && node server.js",
-    "build": "npx parcel build ./src/pages/**/*.html ./src/pages/index.html"
+    "dev": "npx parcel serve ./src/index.html ./src/index.html --no-cache",
+    "start": "npx parcel build ../src/index.html ./src/index.html && node server.js",
+    "build": "npx parcel build ./src/index.html ./src/index.html"
   },
   "engines" : { "node" : ">=12" },
   "browserslist": "> 0.5%, last 2 versions, not dead",

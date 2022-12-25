@@ -1,69 +1,82 @@
 // Components
-import { Logo } from '../../components/logoComponent';
-import { DefaultLayout } from '../../layout/defaultLayout/defaultLayout';
-import { createApp, h } from '../../modules/vdom';
-import { Input } from '../../components/input/input.component';
-import { Button } from '../../components/button/buttonComponent';
+import { Logo } from '../../components/logoComponent'
+import { DefaultLayout } from '../../layout/defaultLayout/defaultLayout'
+import { h } from '../../modules/vdom'
+import { Input } from '../../components/input/input.component'
+import { Button } from '../../components/button/buttonComponent'
 // Styles
 import style from './register.page.module.css'
-import styles from '../../css/app.module.css';
+import styles from '../../css/app.module.css'
 // Others
-import { name, login, minLenght, maxLenght, email, password, phone } from '../../modules/validatorRules';
-import { useForm } from '../../composibles/useForm';
+import {
+  name,
+  login,
+  minLenght,
+  maxLenght,
+  email,
+  password,
+  phone,
+} from '../../modules/validatorRules'
+import { useForm } from '../../composibles/useForm'
 
-document.addEventListener('DOMContentLoaded', () => {
-  const { formData: registerForm, values: registerFormValues, isValid } = useForm({
-    firstname: {
-      value: '',
-      validators: {
-        ...name('именем')
-      },
+const {
+  formData: registerForm,
+  values: registerFormValues,
+  isValid,
+} = useForm({
+  firstname: {
+    value: '',
+    validators: {
+      ...name('именем'),
     },
-    secondname: {
-      value: '',
-      validators: {
-        ...name('фамилией')
-      },
+  },
+  secondname: {
+    value: '',
+    validators: {
+      ...name('фамилией'),
     },
-    login: {
-      value: '',
-      validators: {
-        login,
-        ...minLenght(3)
-      },
+  },
+  login: {
+    value: '',
+    validators: {
+      login,
+      ...minLenght(3),
     },
-    email: {
-      value: '',
-      validators: {
-        email
-      },
+  },
+  email: {
+    value: '',
+    validators: {
+      email,
     },
-    password: {
-      value: '',
-      validators: {
-        password,
-        ...minLenght(8),
-        ...maxLenght(40)
-      },
+  },
+  password: {
+    value: '',
+    validators: {
+      password,
+      ...minLenght(8),
+      ...maxLenght(40),
     },
-    phone: {
-      value: '',
-      validators: {
-        phone,
-        ...minLenght(10),
-        ...maxLenght(15),
-      },
+  },
+  phone: {
+    value: '',
+    validators: {
+      phone,
+      ...minLenght(10),
+      ...maxLenght(15),
     },
-  })
+  },
+})
 
-  createApp(document.getElementById('app'), () =>
-  (<DefaultLayout>
+export default () => (
+  <DefaultLayout>
     <div className={style.registerPage}>
-      <form className={style.registerForm}
+      <form
+        className={style.registerForm}
         onSubmit={(event: Event) => {
           event.preventDefault()
-          console.log(registerFormValues.value);
-        }}>
+          console.log(registerFormValues.value)
+        }}
+      >
         <Logo className={style.registerFormLogo} />
         <h2 className={styles.h2}>Регистрация</h2>
         <p className={style.registerFormTooltip}>
@@ -71,14 +84,17 @@ document.addEventListener('DOMContentLoaded', () => {
         </p>
         <div className={style.registerFormInputs}>
           <Input
-            setValue={(value: string) => registerForm.firstname.value = value}
+            setValue={(value: string) => (registerForm.firstname.value = value)}
             onBlur={() => registerForm.firstname.blur()}
             toched={registerForm.firstname.toched}
             errorMessage={registerForm.firstname.errorMessage}
             id="firstname"
-            placeholder="Имя" />
+            placeholder="Имя"
+          />
           <Input
-            setValue={(value: string) => registerForm.secondname.value = value}
+            setValue={(value: string) =>
+              (registerForm.secondname.value = value)
+            }
             onBlur={() => registerForm.secondname.blur()}
             toched={registerForm.secondname.toched}
             errorMessage={registerForm.secondname.errorMessage}
@@ -86,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder="Фамилия"
           />
           <Input
-            setValue={(value: string) => registerForm.login.value = value}
+            setValue={(value: string) => (registerForm.login.value = value)}
             onBlur={() => registerForm.login.blur()}
             toched={registerForm.login.toched}
             errorMessage={registerForm.login.errorMessage}
@@ -94,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder="Логин"
           />
           <Input
-            setValue={(value: string) => registerForm.email.value = value}
+            setValue={(value: string) => (registerForm.email.value = value)}
             onBlur={() => registerForm.email.blur()}
             toched={registerForm.email.toched}
             errorMessage={registerForm.email.errorMessage}
@@ -102,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder="Email"
           />
           <Input
-            setValue={(value: string) => registerForm.password.value = value}
+            setValue={(value: string) => (registerForm.password.value = value)}
             onBlur={() => registerForm.password.blur()}
             toched={registerForm.password.toched}
             errorMessage={registerForm.password.errorMessage}
@@ -110,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder="Пароль"
           />
           <Input
-            setValue={(value: string) => registerForm.phone.value = value}
+            setValue={(value: string) => (registerForm.phone.value = value)}
             onBlur={() => registerForm.phone.blur()}
             toched={registerForm.phone.toched}
             errorMessage={registerForm.phone.errorMessage}
@@ -118,9 +134,15 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder="Телефон"
           />
         </div>
-        <Button disabled={!isValid.value} primary className={style.registerFormLoginBtn} type='submit'>Регистрация</Button>
+        <Button
+          disabled={!isValid.value}
+          primary
+          className={style.registerFormLoginBtn}
+          type="submit"
+        >
+          Регистрация
+        </Button>
       </form>
     </div>
-  </DefaultLayout>)
-  ).mount();
-})
+  </DefaultLayout>
+)

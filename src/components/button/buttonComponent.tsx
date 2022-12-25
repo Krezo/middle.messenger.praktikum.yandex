@@ -1,8 +1,8 @@
-import { IComponentProps } from '../../modules/components';
+import { IComponentProps } from '../../modules/components'
 
-import style from './button.module.css';
+import style from './button.module.css'
 
-import { h } from '../../modules/vdom';
+import { h } from '../../modules/vdom'
 interface IProps extends IComponentProps {
   primary?: boolean
   outline?: boolean
@@ -19,8 +19,16 @@ interface IProps extends IComponentProps {
 
 function Button(props: IProps = {}) {
   const {
-    primary, small, type, disabled, outline, rounded, className, onClick, href,
-  } = props;
+    primary,
+    small,
+    type,
+    disabled,
+    outline,
+    rounded,
+    className,
+    onClick,
+    href,
+  } = props
 
   const btnClasses = [
     style.btn,
@@ -29,9 +37,9 @@ function Button(props: IProps = {}) {
     small ? style.small : '',
     rounded ? style.rounded : '',
     ...(className ?? '').split(' '),
-  ];
+  ]
 
-  const ButtonTag = props.link ? 'a' : 'button';
+  const ButtonTag = props.link ? 'a' : 'button'
 
   return (
     <ButtonTag
@@ -39,12 +47,11 @@ function Button(props: IProps = {}) {
       href={href}
       disabled={disabled}
       className={btnClasses.join(' ')}
-      onClick={props.onClick}>
+      onClick={props.onClick}
+    >
       {props.children}
     </ButtonTag>
-  );
+  )
 }
 
-export {
-  Button,
-};
+export { Button }

@@ -1,10 +1,8 @@
-import { ReactNode } from 'react';
+import { ReactNode } from 'react'
 
 interface IComponentProps {
-  children?: ReactNode
+  children?: any
   className?: string
 }
 
-export {
-  IComponentProps
-}
+export { IComponentProps }

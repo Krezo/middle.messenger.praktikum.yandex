@@ -1,21 +1,21 @@
-import { IComponentProps } from '../../modules/components';
-import { h } from '../../modules/vdom';
+import { IComponentProps } from '../../modules/components'
+import { h } from '../../modules/vdom'
 
-import style from "./input.component.module.css";
+import style from './input.component.module.css'
 interface IProps extends IComponentProps {
-  type?: string,
+  type?: string
   id?: string
-  placeholder?: string,
+  placeholder?: string
   errorMessage?: string | boolean
-  rounded?: boolean;
-  setValue?: (value: any) => void;
-  onKeyup?: (event: KeyboardEvent) => void,
-  onBlur?: () => void,
+  rounded?: boolean
+  setValue?: (value: any) => void
+  onKeyup?: (event: KeyboardEvent) => void
+  onBlur?: () => void
   toched?: boolean
 }
 
 const Input = (props: IProps) => {
-  const { rounded, className, errorMessage, toched } = props;
+  const { rounded, className, errorMessage, toched } = props
 
   const setValue = (event: KeyboardEvent) => {
     if (props.setValue) {
@@ -39,25 +39,30 @@ const Input = (props: IProps) => {
     style.input,
     rounded ? style.rounded : '',
     errorMessage && toched ? style.error : '',
-    ...(className ?? '').split(' ')
+    ...(className ?? '').split(' '),
   ]
 
-  const showErorr = errorMessage && toched;
+  const showErorr = errorMessage && toched
 
-  return (<div className={style.inputWrapper}>
-    <input
-      onBlur={onBlur}
-      id={props.id}
-      type={props.type ?? 'text'}
-      onKeyUp={keyUp}
-      className={inputClasses.join(' ')}
-      placeholder={props.placeholder ?? ''}
-      onInput={setValue}
-    />
-    <div className={style.errorMessage} style={showErorr ? '' : 'display: none;'}>{errorMessage}</div>
-  </div>)
+  return (
+    <div className={style.inputWrapper}>
+      <input
+        onBlur={onBlur}
+        id={props.id}
+        type={props.type ?? 'text'}
+        onKeyUp={keyUp}
+        className={inputClasses.join(' ')}
+        placeholder={props.placeholder ?? ''}
+        onInput={setValue}
+      />
+      <div
+        className={style.errorMessage}
+        style={showErorr ? '' : 'display: none;'}
+      >
+        {errorMessage}
+      </div>
+    </div>
+  )
 }
 
-export {
-  Input
-}
+export { Input }

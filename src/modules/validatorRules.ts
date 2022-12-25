@@ -16,13 +16,19 @@ const maxLenght = (length: number) => ({
 })
 
 const name = (nameType: string) => ({
-  name: (value: string) => /^[A-ZА-Я]{1}[a-zа-я-]*$/.test(value) || `Введенное поле не является ${nameType}`
+  name: (value: string) =>
+    /^[A-ZА-Я]{1}[a-zа-я-]*$/.test(value) ||
+    `Введенное поле не является ${nameType}`,
 })
 
 const email = (value: string) =>
-  /^[\w-\.]+@([\w-]+\.)+[\w-]{2,8}$/g.test(value) || 'Введенное поле не является email'
+  /^[\w-\.]+@([\w-]+\.)+[\w-]{2,8}$/g.test(value) ||
+  'Введенное поле не является email'
 
-const confirmedPassword = (passwordFieldName: string, ownPasswordFiledName: string) => {
+const confirmedPassword = (
+  passwordFieldName: string,
+  ownPasswordFiledName: string
+) => {
   let passwordIsWatched = false
   const confirmedPassword = (value: string, formData: InputFormData) => {
     const password = formData[passwordFieldName]
@@ -40,25 +46,36 @@ const confirmedPassword = (passwordFieldName: string, ownPasswordFiledName: stri
 }
 
 const password = (value: string) => {
-  const isLetterUppercase = /[A-Z]+/g.test(value);
-  if (!isLetterUppercase) return 'Должна быть хотя бы одна буква в верх. регистре'
-  const isHard = /[0-9]+/g.test(value);
+  const isLetterUppercase = /[A-Z]+/g.test(value)
+  if (!isLetterUppercase)
+    return 'Должна быть хотя бы одна буква в верх. регистре'
+  const isHard = /[0-9]+/g.test(value)
   if (!isHard) return 'Должна быть хотя бы одна цифра'
-  return true;
+  return true
 }
 
 const phone = (value: string) => {
-  const isOnlyNumber = /^\+*[0-9]+$/g.test(value);
+  const isOnlyNumber = /^\+*[0-9]+$/g.test(value)
   if (!isOnlyNumber) return 'Пароль может содержать только цифры'
-  return true;
+  return true
 }
 
 const login = (value: string) => {
-  const isOnlyNumber = /^[0-9]+$/g.test(value);
+  const isOnlyNumber = /^[0-9]+$/g.test(value)
   if (isOnlyNumber) return 'Логин должен содержать хотябы один символ'
-  const isSpecialCharaters = /[^\w\s\-]/g.test(value);
+  const isSpecialCharaters = /[^\w\s\-]/g.test(value)
   if (isSpecialCharaters) return 'Допустима только латиница, дефис, ниж.подч. '
-  return true;
+  return true
 }
 
-export { required, minLenght, email, confirmedPassword, password, name, login, maxLenght, phone }
+export {
+  required,
+  minLenght,
+  email,
+  confirmedPassword,
+  password,
+  name,
+  login,
+  maxLenght,
+  phone,
+}
