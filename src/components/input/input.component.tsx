@@ -6,6 +6,7 @@ interface IProps extends IComponentProps {
   type?: string
   id?: string
   placeholder?: string
+  value: string
   errorMessage?: string | boolean
   rounded?: boolean
   setValue?: (value: any) => void
@@ -15,7 +16,7 @@ interface IProps extends IComponentProps {
 }
 
 const Input = (props: IProps) => {
-  const { rounded, className, errorMessage, toched } = props
+  const { rounded, className, errorMessage, toched, value } = props
 
   const setValue = (event: KeyboardEvent) => {
     if (props.setValue) {
@@ -43,10 +44,10 @@ const Input = (props: IProps) => {
   ]
 
   const showErorr = errorMessage && toched
-
   return (
     <div className={style.inputWrapper}>
       <input
+        value={value}
         onBlur={onBlur}
         id={props.id}
         type={props.type ?? 'text'}
