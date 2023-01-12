@@ -1,4 +1,5 @@
-import { computed, reactive, watch } from '../modules/reactivity'
+import { computed, reactive, watch, Ref } from '../modules/reactivity'
+import { IObserver } from '../modules/observer'
 
 interface FormData<FieldData> {
   [key: string]: FieldData
@@ -14,20 +15,26 @@ interface FieldDataExt {
   reassign: () => void
 }
 
-interface FieldData extends Record<string, any> {
-  value: string
+interface FieldData<V> {
+  value: V
   validators?: {
     [key: string]: (
-      value: string,
-      formData?: FormData<FieldData & Partial<FieldDataExt>>,
-      ...params: any
+      value: V,
+      formData?: FormData<FieldData<V> & Required<FieldDataExt>>
     ) => boolean | string
   }
 }
 
-export const useForm = (
-  init: FormData<FieldData & Partial<FieldDataExt>>
-): FormData<FieldData & Required<FieldDataExt>> => {
+export const useForm = <
+  T extends FormData<FieldData<E> & Partial<FieldDataExt>>,
+  E = T[keyof T]['value']
+>(
+  init: T
+): {
+  formData: { [K in keyof T]: T[K] }
+  values: IObserver<{ [K in keyof T]: T[K]['value'] }>
+  isValid: Ref<boolean>
+} => {
   const formData = reactive(init)
   for (const [key, value] of Object.entries(formData)) {
     const formField = formData[key]

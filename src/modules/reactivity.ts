@@ -4,10 +4,15 @@ interface IWatchFunction {
   (oldValue?: any, newValue?: any): void
 }
 
+export interface Ref<T> extends IObserver<T> {}
+
 let rootRenderFunc: any = null
 // Ключ для проверки является ли возвращаемый реактивный объект reactive/ref
 let isReactive = Symbol('isReactive')
-let isRef = Symbol('isRef')
+export const isRef = Symbol('isRef')
+export const isValueRef = <T>(value: any): value is IObserver<T> => {
+  return value.isRef
+}
 
 const setRootRenderFunc = (renderFunc: (...params: any) => void) => {
   rootRenderFunc = renderFunc
@@ -44,7 +49,7 @@ const ref = <T>(value: T) => {
   })
 }
 
-const reactive = <T extends object>(value: T, deep: boolean = true) => {
+const reactive = <T extends object>(value: T, deep: boolean = true): T => {
   // Объект обертка для управления зависимостями
   // Работаем с простым proxy над target(value)
   // Тригерем зависимости из objectObserver
@@ -53,13 +58,12 @@ const reactive = <T extends object>(value: T, deep: boolean = true) => {
   // Если значение является объектом, то вызываем для него рекурсивно reactive
   // Потом в геттере вернем его для реактивных объектов
   for (const key in value) {
-    if (typeof value[key] === 'object' && deep) {
+    if (typeof value[key] === 'object' && value[key] !== null && deep) {
       objectObserver[key] = reactive(value[key] as object)
     }
     // Не важно что будет в ref, объект нужен для хранения зависимостей
     else objectObserver[key] = ref(true)
   }
-
   return new Proxy<any>(value, {
     get(target, prop) {
       if (prop === isReactive) {

@@ -7,69 +7,143 @@ enum METHOD {
   DELETE = 'DELETE',
 }
 
+interface XMLHttpRequestWithResponseType<T> extends XMLHttpRequest {
+  readonly response: T
+}
+
+const isErorStatusCode = (code: number) => {
+  if (String(code)[0] === '4') {
+    return true
+  }
+  if (String(code)[0] === '5') {
+    return true
+  }
+  return false
+}
+
+export class HTTPTransportResponseError<T = any> extends Error {
+  constructor(public status: number, public response: T) {
+    super('HTTPTransportResponseError')
+  }
+}
+
 type Options = {
-  method?: METHOD,
+  method?: METHOD
+  withCredentials?: boolean
   headers?: { [key: string]: string }
   data?: any
+  formData?: FormData
+  responseType?: XMLHttpRequestResponseType
+  params?: Record<string, unknown>
 }
 
-type HttpTransportOptions = Omit<Options, METHOD>
-type HTTPMethod = (url: string, options?: HttpTransportOptions) => Promise<XMLHttpRequest>
+type HttpTransportOptions = Omit<Options, 'method'>
 
 class HTTPTransport {
-  get(url: string, options: HttpTransportOptions = {}): Promise<XMLHttpRequest> {
-    const queryUrl = [url, queryStringify(options?.data || {})].join('?')
-    return this.request(queryUrl, { ...options, method: METHOD.GET });
-  };
+  private defaultResponseType: XMLHttpRequestResponseType = 'json'
 
-  post: HTTPMethod = (url, options) => {
+  constructor(
+    private baseUrl: string = '',
+    private options: HttpTransportOptions = {
+      responseType: 'json',
+    }
+  ) {
+    this.baseUrl = baseUrl
+  }
+  get<T>(url: string, options?: HttpTransportOptions) {
+    const queryUrl = [
+      this.baseUrl + url,
+      queryStringify(options?.params || {}),
+    ].join('?')
+    return this.request<T>(queryUrl, {
+      ...(this.options || {}),
+      ...options,
+      method: METHOD.GET,
+    })
+  }
+
+  post<T>(url: string, options?: HttpTransportOptions) {
     // Пока не реализовал доп. логику для работы с данными
     // не ясно в каком формате требуется отправлять данные API
-    // как вариант передовавть и принимать все в JSON, но из форм придется брать 
+    // как вариант передовавть и принимать все в JSON, но из форм придется брать
     // например изображение аватара
-    return this.request(url, { ...options, method: METHOD.POST });
-  };
+    console.log(this.baseUrl + url)
+    return this.request<T>(this.baseUrl + url, {
+      ...(this.options || {}),
+      ...options,
+      method: METHOD.POST,
+    })
+  }
 
-  put: HTTPMethod = (url, options) => {
+  put<T>(url: string, options?: HttpTransportOptions) {
     // Пока не реализовал доп. логику для работы с данными
     // не ясно в каком формате требуется отправлять данные API
-    // как вариант передовавть и принимать все в JSON, но из форм придется брать 
+    // как вариант передовавть и принимать все в JSON, но из форм придется брать
     // например изображение аватара
-    return this.request(url, { ...options, method: METHOD.PUT });
-  };
+    return this.request<T>(this.baseUrl + url, {
+      ...(this.options || {}),
+      ...options,
+      method: METHOD.PUT,
+    })
+  }
 
-  delete: HTTPMethod = (url, options) => {
+  delete<T>(url: string, options?: HttpTransportOptions) {
     // Пока не реализовал доп. логику для работы с данными
     // не ясно в каком формате требуется отправлять данные API
-    // как вариант передовавть и принимать все в JSON, но из форм придется брать 
+    // как вариант передовавть и принимать все в JSON, но из форм придется брать
     // например изображение аватара
-    return this.request(url, { ...options, method: METHOD.DELETE });
-  };
+    return this.request<T>(this.baseUrl + url, {
+      ...(this.options || {}),
+      ...options,
+      method: METHOD.DELETE,
+    })
+  }
 
-  request(url: string, options: Options = { method: METHOD.GET }): Promise<XMLHttpRequest> {
-    const { method, data } = options;
+  request<T>(
+    url: string,
+    options: Options = { method: METHOD.GET }
+  ): Promise<XMLHttpRequestWithResponseType<T>> {
+    const { method, formData, data, headers, withCredentials } = options
 
     return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open(method ?? METHOD.GET, url);
+      const xhr = new XMLHttpRequest()
+
+      xhr.responseType = options.responseType ?? this.defaultResponseType
+
+      xhr.open(method ?? METHOD.GET, url)
+
+      for (const headerKey in headers) {
+        xhr.setRequestHeader(headerKey, headers[headerKey])
+      }
+
+      if (withCredentials) {
+        xhr.withCredentials = withCredentials
+      }
 
       xhr.onload = function () {
-        resolve(xhr);
-      };
-
-      xhr.onabort = reject;
-      xhr.onerror = reject;
-      xhr.ontimeout = reject;
-
-      if (method === METHOD.GET || !data) {
-        xhr.send();
-      } else {
-        xhr.send(data);
+        if (isErorStatusCode(xhr.status)) {
+          reject(new HTTPTransportResponseError(xhr.status, xhr.response))
+        }
+        resolve(xhr)
       }
-    });
-  };
+
+      xhr.onabort = reject
+      xhr.onerror = reject
+      xhr.ontimeout = reject
+
+      if (formData) {
+        // xhr.setRequestHeader('Content-Type', 'multipart/form-data')
+        xhr.send(formData)
+        return
+      }
+      if (typeof data === 'object') {
+        xhr.setRequestHeader('Content-Type', 'application/json')
+        xhr.send(JSON.stringify({ ...data }))
+        return
+      }
+      xhr.send()
+    })
+  }
 }
 
-export {
-  HTTPTransport
-}
+export { HTTPTransport }

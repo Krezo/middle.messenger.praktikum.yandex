@@ -16,6 +16,11 @@ import {
   password,
 } from '../../modules/validatorRules'
 import { watchEffect } from '../../modules/reactivity'
+import { RouterLink } from '../../modules/router/index'
+import AuthService from '../../services/authService'
+import { authStore } from '../../store/authStore'
+
+const authService = new AuthService()
 
 const {
   formData: authFormData,
@@ -23,14 +28,14 @@ const {
   isValid: authFormIsValid,
 } = useForm({
   login: {
-    value: '',
+    value: 'abez',
     validators: {
       // login,
       ...minLenght(3),
     },
   },
   password: {
-    value: '',
+    value: '123123123123A',
     validators: {
       // password,
       ...minLenght(8),
@@ -39,29 +44,26 @@ const {
   },
 })
 
-watchEffect(() => {
-  console.log(authFormData.login.valid)
-})
+const signin = (event: Event) => {
+  event.preventDefault()
+  authService.signin(authFormValues.value)
+}
 
 export default () => (
   <DefaultLayout>
     <div className={style.authPage}>
-      <form
-        className={style.authForm}
-        onSubmit={(event: Event) => {
-          event.preventDefault()
-          console.log(authFormValues.value)
-        }}
-      >
-        <Logo className={style.authFormLogo} />
+      <form className={style.authForm} onSubmit={signin}>
+        {/* <Logo className={style.authFormLogo} /> */}
         <h2 className={styles.h2}>Авторизация</h2>
         <p className={style.authFormTooltip}>
           Введите логин и пароль для входа
         </p>
+        <div className={style.errorMessage}>{authStore.signinError}</div>
         <div className={style.authFormInputs}>
           <Input
             onBlur={() => authFormData.login.blur()}
             toched={authFormData.login.toched}
+            value={authFormData.login.value}
             setValue={(value: string) => (authFormData.login.value = value)}
             errorMessage={authFormData.login.errorMessage}
             id="login"
@@ -70,6 +72,7 @@ export default () => (
           <Input
             onBlur={() => authFormData.password.blur()}
             toched={authFormData.password.toched}
+            value={authFormData.password.value}
             setValue={(value: string) => (authFormData.password.value = value)}
             errorMessage={authFormData.password.errorMessage}
             id="password"
@@ -81,10 +84,16 @@ export default () => (
           type="submit"
           disabled={!authFormIsValid.value}
           primary
+          loading={authStore.signinLoading}
           className={style.authFormLoginBtn}
         >
           Войти
         </Button>
+        <div>
+          <RouterLink className={styles.link} href="/sign-up">
+            Регистрация
+          </RouterLink>
+        </div>
       </form>
     </div>
   </DefaultLayout>

@@ -1,19 +1,28 @@
 import { IComponentProps } from '../../components'
 import { h } from '../../vdom'
-import { activePage } from '../index'
+import { Router, activePage } from '../index'
 
 interface RouteComponentProps extends IComponentProps {
   page: (props: RouteComponentProps) => JSX.Element
-  route: string
+  path: string
+  title: string
 }
 
+const pageIsActive = (route: string) => {
+  return activePage.value === route
+}
 const RouteComponent = (props: RouteComponentProps) => {
-  const { route, page } = props
-
-  const isActivePage = activePage.value === route
-  // Хочется реализовать условный рендеринг, но проблема в том,
-  // что реактивные данные не навешиваются на root-рендер функцию, если
-  // использывать условный рендер, поэтому реализовано скрытием в DOM
+  const { path, title, page } = props
+  // Проверяем активна ли сейчас страница
+  const isActivePage = pageIsActive(path)
+  new Router().addRoute({
+    path,
+    title,
+  })
+  if (isActivePage) {
+    document.title = title
+  }
+  // Скрываем/отображаем страницу
   const display = isActivePage ? 'block' : 'none'
   return <div style={`display : ${display}`}>{page(props)}</div>
 }

@@ -1,11 +1,23 @@
 .inputWrapper {
   position: relative;
 }
+label.inputWrapper {
+  display: block;
+  background-color: var(--white);
+  border: 2px dashed var(--primary-color);
+  color: var(--primary-color);
+  font-weight: 600;
+  text-align: center;
+  padding: 2rem 1rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
 .errorMessage {
+  font-weight: 400;
   position: absolute;
   color: var(--input-error);
   left: 0;
-  bottom: -20px;
+  bottom: -24px;
 }
 .input {
   padding: 12px 14px;
@@ -24,9 +36,21 @@
   border-radius: 2rem;
 }
 .error {
-  border-color: var(--input-error);
+  border-color: var(--input-error) !important;
   &:focus {
     border-color: var(--input-error);
     box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
   }
+}
+.fileIcon {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.avatarLabel {
+  margin-bottom: 1rem;
+}
+.fileFormat {
+  font-weight: 400;
+  color: var(--text-input-color);
 }

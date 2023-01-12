@@ -1,7 +1,8 @@
 import { ReactNode } from 'react'
+import { IVNode } from './vdom'
 
 interface IComponentProps {
-  children?: any
+  children?: any | IVNode[]
   className?: string
 }
 

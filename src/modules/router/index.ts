@@ -5,19 +5,38 @@ import { ref } from '../reactivity'
 
 const activePage = ref(window.location.pathname)
 
+interface IRoute {
+  path: string
+  title: string
+}
+
 class Router {
-  private __instance: Router
+  static __instance: Router
+  private routeList = new Map<string, IRoute>()
   constructor() {
-    if (this.__instance) {
-      return this.__instance
+    if (Router.__instance) {
+      return Router.__instance
     }
     window.addEventListener('popstate', (event) => {
       activePage.value = (event.currentTarget as Document).location.pathname
     })
-    this.__instance = this
+    Router.__instance = this
+  }
+  addRoute(route: IRoute) {
+    if (!this.routeList.has(route.path)) {
+      this.routeList.set(route.path, route)
+    }
+  }
+  routeExist(path: string) {
+    return this.routeList.has(path)
   }
   go(href = '') {
-    window.history.pushState({}, 'Title', href)
+    const route = this.routeList.get(href)
+    if (!route) {
+      console.warn('Route not exists')
+      return
+    }
+    window.history.pushState({}, route.title, href)
     activePage.value = href
   }
   back() {

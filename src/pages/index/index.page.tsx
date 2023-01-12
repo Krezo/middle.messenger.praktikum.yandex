@@ -10,6 +10,7 @@ import { Input } from '../../components/input/input.component'
 import { useForm } from '../../composibles/useForm'
 import RouterLink from '../../modules/router/components/RouterLink'
 import { h } from '../../modules/vdom'
+import AuthService from '../../services/authService'
 
 interface IMessage {
   text: string
@@ -128,88 +129,94 @@ watch(
   { immediate: true }
 )
 
-export default () => (
-  <main>
-    <div className={style.mainPage}>
-      <div className={style.chatSidebar}>
-        <div className={style.profileLink}>
-          <RouterLink href="/settings" className={styles.link}>
-            Профиль
-          </RouterLink>
-        </div>
-        {companionList.map((companion, index) => (
-          <div
-            onClick={() => selectActiveComponent(index)}
-            className={[
-              style.companionBlock,
-              index == activeCompanionIndex.value &&
-              isActiveCompanionSelect.value
-                ? style.companionBlockActive
-                : '',
-            ].join(' ')}
-          >
-            <img
-              className={style.companionImage}
-              src={companion.image}
-              alt=""
-            />
-            <div className={style.companionBody}>
-              <div className={style.companionName}>{companion.name}</div>
-              <div className={style.companionMessage}>
-                {companion.messages[companion.messages.length - 1].text}
-              </div>
-            </div>
-            <div className={style.companionMessageTime}>
-              {getMessageTime(
-                companion.messages[companion.messages.length - 1].time
-              )}
-              <div className={style.companionMessageCount}>
-                {companion.unreadMessageCount.toString()}
-              </div>
-            </div>
+const authService = new AuthService()
+
+export default () => {
+  return (
+    <main>
+      <div className={style.mainPage}>
+        <div className={style.chatSidebar}>
+          <div className={style.profileLink}>
+            <RouterLink href="/settings" className={styles.link}>
+              Профиль
+            </RouterLink>
           </div>
-        ))}
-      </div>
-      <div
-        className={style.messageSidebar}
-        style={isActiveCompanionSelect.value ? '' : 'display: none;'}
-      >
-        <div className={style.activeCompanionWrapper}>
-          <div className={style.activeCompanion}>
-            <div className={style.companionName}>
-              {activeCompanion.value.name}
-            </div>
-            <div className={styles.link}>Удалить чат</div>
-          </div>
-        </div>
-        <div className={style.messageList}>
-          {activeCompanion.value.messages.map((message) => (
-            <div className={style.messageItem}>
-              {message.text}
-              <div className={style.messageTime}>
-                {getMessageTime(message.time)}
+          {companionList.map((companion, index) => (
+            <div
+              onClick={() => selectActiveComponent(index)}
+              className={[
+                style.companionBlock,
+                index == activeCompanionIndex.value &&
+                isActiveCompanionSelect.value
+                  ? style.companionBlockActive
+                  : '',
+              ].join(' ')}
+            >
+              <img
+                className={style.companionImage}
+                src={companion.image}
+                alt=""
+              />
+              <div className={style.companionBody}>
+                <div className={style.companionName}>{companion.name}</div>
+                <div className={style.companionMessage}>
+                  {companion.messages[companion.messages.length - 1].text}
+                </div>
+              </div>
+              <div className={style.companionMessageTime}>
+                {getMessageTime(
+                  companion.messages[companion.messages.length - 1].time
+                )}
+                <div className={style.companionMessageCount}>
+                  {companion.unreadMessageCount.toString()}
+                </div>
               </div>
             </div>
           ))}
         </div>
-        <Input
-          onKeyup={sendMessage}
-          onBlur={() => messageFormData.message.blur()}
-          toched={messageFormData.message.toched}
-          errorMessage={messageFormData.message.errorMessage}
-          setValue={(value: string) => (messageFormData.message.value = value)}
-          className={style.messageInput}
-          rounded
-        />
-      </div>
-      <div
-        className={style.messageSidebar}
-        style={isActiveCompanionSelect.value ? 'display: none;' : ''}
-      >
-        <div className={style.selectChatMessage}>
-          Выберите чат для того, чтобы написать сообщение
+        <div
+          className={style.messageSidebar}
+          style={isActiveCompanionSelect.value ? '' : 'display: none;'}
+        >
+          <div className={style.activeCompanionWrapper}>
+            <div className={style.activeCompanion}>
+              <div className={style.companionName}>
+                {activeCompanion.value.name}
+              </div>
+              <div className={styles.link}>Удалить чат</div>
+            </div>
+          </div>
+          <div className={style.messageList}>
+            {activeCompanion.value.messages.map((message) => (
+              <div className={style.messageItem}>
+                {message.text}
+                <div className={style.messageTime}>
+                  {getMessageTime(message.time)}
+                </div>
+              </div>
+            ))}
+          </div>
+          <Input
+            onKeyup={sendMessage}
+            onBlur={() => messageFormData.message.blur()}
+            toched={messageFormData.message.toched}
+            errorMessage={messageFormData.message.errorMessage}
+            setValue={(value: string) =>
+              (messageFormData.message.value = value)
+            }
+            className={style.messageInput}
+            rounded
+          />
+        </div>
+        <div
+          className={style.messageSidebar}
+          style={isActiveCompanionSelect.value ? 'display: none;' : ''}
+        >
+          <div className={style.selectChatMessage}>
+            Выберите чат для того, чтобы написать сообщение
+          </div>
         </div>
       </div>
-    </div>
-  </main>
-)
+    </main>
+  )
+}

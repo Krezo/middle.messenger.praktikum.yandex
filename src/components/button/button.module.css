@@ -15,6 +15,7 @@
   border: 1px;
   border-style: solid;
   border-color: transparent;
+
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -54,4 +55,8 @@
 
 .small {
   padding: 7px 15px;
+}
+
+.spinner {
+  margin-left: 1em;
 }

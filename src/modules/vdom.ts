@@ -26,9 +26,9 @@ const h = (
   return el
 }
 
-const renderDOM = (root: IVNode | JSX.Element | string | number) => {
+const renderDOM = (root: IVNode | JSX.Element | string | number | null) => {
   // Нод условного рендера
-  if (root === false) {
+  if (typeof root === 'boolean') {
     // Добавляем в vdom комментарий для слежения последовательности
     // условного рендера
     return document.createComment('if')
@@ -36,8 +36,12 @@ const renderDOM = (root: IVNode | JSX.Element | string | number) => {
   if (typeof root === 'string') {
     return document.createTextNode(root)
   }
+
   if (typeof root === 'number') {
     return document.createTextNode(root.toString())
+  }
+  if (root === null) {
+    return document.createTextNode('')
   }
 
   let domRoot: HTMLElement | SVGSVGElement | SVGLineElement | SVGPolygonElement
@@ -64,9 +68,15 @@ const renderDOM = (root: IVNode | JSX.Element | string | number) => {
     }
     if (!root.props[propName]) continue
     if (root.tagName === 'input' && propName === 'value') {
-      ;((domRoot as HTMLInputElement).value = propName), root.props[propName]
+      ;(domRoot as HTMLInputElement).value = root.props[propName]
     } else if (propName === 'className') {
-      domRoot.setAttribute('class', root.props[propName])
+      domRoot.setAttribute(
+        'class',
+        (root.props[propName] as string)
+          .split(' ')
+          .filter((v) => !!v)
+          .join(' ')
+      )
     } else if (propName === 'children') {
     } else domRoot.setAttribute(propName, root.props[propName])
   }
@@ -87,11 +97,17 @@ const patchNode = (node: HTMLElement, vNode: any, nextVNode: any) => {
     node.remove()
     return
   }
-  if (typeof vNode === 'string' || typeof nextVNode === 'string') {
+
+  if (
+    typeof vNode === 'string' ||
+    typeof nextVNode === 'number' ||
+    vNode === null ||
+    nextVNode === null
+  ) {
     // Заменяем ноду на новую, если как минимум одно из значений равно строке
     // и эти значения не равны друг другу
-    if (vNode !== nextVNode) {
-      const nextNode = renderDOM(nextVNode)
+    if (vNode !== nextVNode && nextVNode !== null) {
+      const nextNode = renderDOM(nextVNode.toString())
       node.replaceWith(nextNode)
       return nextNode
     }
@@ -102,7 +118,7 @@ const patchNode = (node: HTMLElement, vNode: any, nextVNode: any) => {
   }
 
   // Заменяем ноду на новую, если теги не равны
-  if (vNode.tagName !== nextVNode.tagName) {
+  if (vNode?.tagName !== nextVNode?.tagName) {
     const nextNode = renderDOM(nextVNode)
     node.replaceWith(nextNode)
     return nextNode
