@@ -15,6 +15,10 @@ function queryStringify(data: object, prefix?: string): string {
   return str.join('&')
 }
 
+const isSetEquals = (a: Set<unknown>, b: Set<unknown>) => {
+  return a.size === b.size && [...a].every((x) => b.has(x))
+}
+
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
@@ -30,4 +34,4 @@ const createFormData = (data: Record<string, any>): FormData => {
   return formData
 }
 
-export { queryStringify, capitalizeFirstLetter, createFormData }
+export { queryStringify, capitalizeFirstLetter, createFormData, isSetEquals }

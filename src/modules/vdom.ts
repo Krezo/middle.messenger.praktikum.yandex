@@ -1,11 +1,17 @@
 /* eslint-disable no-restricted-syntax */
 import {
   IComponentVNode,
+  ILifeCycleComponent,
+  clearHooksStack,
   createComponentNode,
+  endListenHooks,
+  getHooks,
   isComponentNode,
+  registerLifeCycleHooks,
+  startListenHooks,
 } from './components'
-import { IObserver } from './observer'
-import { computed, render, setRootRenderFunc, watch } from './reactivity'
+
+import { computed, watch } from './reactivity'
 
 export type ChildrendVNode = IVNode | any
 export type VNodeProps = Record<string, any>
@@ -35,8 +41,16 @@ const h = (
 ): IVNode | IComponentVNode => {
   if (typeof tagName === 'function') {
     const componentProps = { ...props, ...{ children } }
+    startListenHooks()
     const componentRender = tagName(componentProps, children)
-    return createComponentNode(tagName, componentProps, [componentRender])
+    const hooks = getHooks()
+    const component = createComponentNode(tagName, componentProps, [
+      componentRender,
+    ])
+    registerLifeCycleHooks(component, hooks)
+    endListenHooks()
+
+    return component
   }
   return createVNode(tagName, props, children)
 }
@@ -50,7 +64,10 @@ const isSvg = (node: IVNode | IComponentVNode) => {
   )
 }
 
-const renderDOM = (root: IVNode | IComponentVNode | string | number | null) => {
+const renderDOM = (
+  root: IVNode | IComponentVNode | string | number | null,
+  component?: IComponentVNode
+): Node => {
   // Нод условного рендера
   if (typeof root === 'boolean') {
     // Добавляем в vdom комментарий для слежения последовательности
@@ -71,7 +88,9 @@ const renderDOM = (root: IVNode | IComponentVNode | string | number | null) => {
   let domRoot: HTMLElement | SVGElement
 
   if (isComponentNode(root)) {
-    console.log(root)
+    if (!root.domNode) {
+      return renderDOM(root.children[0], root)
+    }
     return renderDOM(root.children[0])
   }
 
@@ -106,14 +125,29 @@ const renderDOM = (root: IVNode | IComponentVNode | string | number | null) => {
     } else if (propName === 'children') {
     } else domRoot.setAttribute(propName, root.props[propName])
   }
+
   root.children.forEach((child) => {
-    // if (!child) return
     domRoot.appendChild(renderDOM(child))
   })
+
+  if (component) {
+    component.domNode = domRoot
+    if (component.onMounted) {
+      component.onMounted(component as ILifeCycleComponent)
+    }
+  }
   return domRoot
 }
 
-const patchNode = (node: HTMLElement, vNode: any, nextVNode: any) => {
+const patchNode = (
+  node: HTMLElement,
+  vNode: any,
+  nextVNode: any,
+  component?: ILifeCycleComponent,
+  nextComponent?: ILifeCycleComponent,
+  componentOldProps?: VNodeProps,
+  componentNewProps?: VNodeProps
+) => {
   // Пропускам обновление условного рендера
   if (vNode === false && nextVNode === false) {
     return
@@ -143,8 +177,47 @@ const patchNode = (node: HTMLElement, vNode: any, nextVNode: any) => {
     return node
   }
 
-  if (isComponentNode(vNode) && isComponentNode(nextVNode)) {
-    patchNode(node, vNode.children[0], nextVNode.children[0])
+  const vNodeIsComponentNode = isComponentNode(vNode)
+  const nextVNodeComponentNode = isComponentNode(nextVNode)
+  const canUpdateComponent = vNodeIsComponentNode && nextVNodeComponentNode
+
+  if (vNodeIsComponentNode) {
+    if (vNode.props?.messages) {
+      // console.log(vNode.props?.messages)
+      // debugger
+    }
+  }
+
+  if (vNodeIsComponentNode && nextVNodeComponentNode) {
+    patchNode(
+      node,
+      vNode.children[0],
+      nextVNode.children[0],
+      vNode as ILifeCycleComponent,
+      nextVNode as ILifeCycleComponent,
+      vNode.props,
+      nextVNode.props
+    )
+    return
+  }
+
+  if (vNodeIsComponentNode) {
+    patchNode(
+      node,
+      vNode.children[0],
+      nextVNode,
+      nextVNode as ILifeCycleComponent
+    )
+    return
+  }
+
+  if (nextVNodeComponentNode) {
+    patchNode(
+      node,
+      vNode,
+      nextVNode.children[0],
+      nextVNode as ILifeCycleComponent
+    )
     return
   }
 
@@ -156,10 +229,18 @@ const patchNode = (node: HTMLElement, vNode: any, nextVNode: any) => {
   }
 
   // Патчим свойства (реализация будет далее)
-  patchProps(node, vNode.props, nextVNode.props)
+  const propIsDiff = patchProps(node, vNode.props, nextVNode.props)
 
   // Патчим детей (реализация будет далее)
   patchChildren(node, vNode.children, nextVNode.children)
+
+  if (component && nextComponent && componentOldProps) {
+    if (component.onUpdate) {
+      // Передаем ноду, иначе при след. вызовах теряем
+      nextComponent.domNode = component.domNode
+      component.onUpdate(component, componentOldProps, componentNewProps)
+    }
+  }
 
   // Возвращаем обновленный DOM-элемент
   return node
@@ -204,15 +285,20 @@ const patchProp = (
 
 const patchProps = (node: HTMLElement, props: any, nextProps: any) => {
   const _nextProps = nextProps ?? {}
+  let diffPropsCount = 0
 
   // Объект с общими свойствами
   const mergedProps = { ...props, ..._nextProps }
   Object.keys(mergedProps).forEach((key) => {
     // Если значение не изменилось, то ничего не обновляем
     if (props[key] !== _nextProps[key]) {
+      if (typeof props[key] !== 'function') {
+        diffPropsCount++
+      }
       patchProp(node, key, props[key], _nextProps[key])
     }
   })
+  return diffPropsCount > 0
 }
 
 const patchChildren = (
@@ -222,21 +308,13 @@ const patchChildren = (
 ) => {
   // Создаем копию элементов родителя и передаем их в patchNode
   ;[...Array.from(parent.childNodes)].forEach((childNode, i) => {
-    const childNodeKey = nextVChildren[i]?.props?.key
-    // if (childNodeKey) {
-    //   debugger
-    // }
     patchNode(childNode as HTMLElement, vChildren[i], nextVChildren[i])
   })
   // Проверяем что передали массив
   if (!Array.isArray(nextVChildren)) {
     return
   }
-  nextVChildren.slice(vChildren.length).forEach((vChild, i) => {
-    // const childNodeKey = nextVChildren[i]?.props?.key
-    // if (childNodeKey) {
-    //   debugger
-    // }
+  nextVChildren.slice(vChildren.length).forEach((vChild) => {
     parent.appendChild(renderDOM(vChild))
   })
 }
@@ -266,6 +344,7 @@ const createApp = (
       watch(
         () => rootVDOM.value,
         (newVTree, oldVTree) => {
+          clearHooksStack()
           patchNode(rootDOM, oldVTree, newVTree)
         }
       )
