@@ -1,32 +1,47 @@
 /* eslint-disable no-restricted-syntax */
+import {
+  IComponentVNode,
+  createComponentNode,
+  isComponentNode,
+} from './components'
 import { IObserver } from './observer'
 import { computed, render, setRootRenderFunc, watch } from './reactivity'
 
+export type ChildrendVNode = IVNode | any
+export type VNodeProps = Record<string, any>
+
 export interface IVNode {
   tagName: string
-  props: Record<string, any>
-  children: (IVNode | string)[]
+  props: VNodeProps
+  children: ChildrendVNode[]
 }
 
-const h = (
-  tagName: (...params: any[]) => void | string,
-  props: {} = {},
-  ...children: (IVNode | string)[]
+const createVNode = (
+  tagName: string,
+  props: VNodeProps,
+  children: ChildrendVNode[]
 ) => {
-  if (typeof tagName === 'function') {
-    return tagName({ ...props, ...{ children } }, children)
-  }
-
-  const el = {
+  return {
     tagName,
     props,
     children: children.flat(),
   }
-
-  return el
 }
 
-const isSvg = (node: IVNode) => {
+const h = (
+  tagName: ((props: VNodeProps, children: ChildrendVNode) => IVNode) | string,
+  props: VNodeProps = {},
+  ...children: ChildrendVNode[]
+): IVNode | IComponentVNode => {
+  if (typeof tagName === 'function') {
+    const componentProps = { ...props, ...{ children } }
+    const componentRender = tagName(componentProps, children)
+    return createComponentNode(tagName, componentProps, [componentRender])
+  }
+  return createVNode(tagName, props, children)
+}
+
+const isSvg = (node: IVNode | IComponentVNode) => {
   return (
     node.tagName === 'svg' ||
     node.tagName === 'line' ||
@@ -35,7 +50,7 @@ const isSvg = (node: IVNode) => {
   )
 }
 
-const renderDOM = (root: IVNode | string | number | null) => {
+const renderDOM = (root: IVNode | IComponentVNode | string | number | null) => {
   // Нод условного рендера
   if (typeof root === 'boolean') {
     // Добавляем в vdom комментарий для слежения последовательности
@@ -54,6 +69,11 @@ const renderDOM = (root: IVNode | string | number | null) => {
   }
 
   let domRoot: HTMLElement | SVGElement
+
+  if (isComponentNode(root)) {
+    console.log(root)
+    return renderDOM(root.children[0])
+  }
 
   if (isSvg(root)) {
     domRoot = document.createElementNS(
@@ -121,6 +141,11 @@ const patchNode = (node: HTMLElement, vNode: any, nextVNode: any) => {
     // Если два значения - это строки и они равны,
     // просто возвращаем текущую ноду
     return node
+  }
+
+  if (isComponentNode(vNode) && isComponentNode(nextVNode)) {
+    patchNode(node, vNode.children[0], nextVNode.children[0])
+    return
   }
 
   // Заменяем ноду на новую, если теги не равны
@@ -195,18 +220,23 @@ const patchChildren = (
   vChildren: IVNode[],
   nextVChildren: IVNode[]
 ) => {
-  parent.childNodes.forEach((childNode, i) => {
-    if ((childNode as HTMLElement)?.classList) {
-      if ((childNode as HTMLElement).classList.contains('WVfb4W-messageItem')) {
-        debugger
-      }
-    }
+  // Создаем копию элементов родителя и передаем их в patchNode
+  ;[...Array.from(parent.childNodes)].forEach((childNode, i) => {
+    const childNodeKey = nextVChildren[i]?.props?.key
+    // if (childNodeKey) {
+    //   debugger
+    // }
     patchNode(childNode as HTMLElement, vChildren[i], nextVChildren[i])
   })
+  // Проверяем что передали массив
   if (!Array.isArray(nextVChildren)) {
     return
   }
-  nextVChildren.slice(vChildren.length).forEach((vChild) => {
+  nextVChildren.slice(vChildren.length).forEach((vChild, i) => {
+    // const childNodeKey = nextVChildren[i]?.props?.key
+    // if (childNodeKey) {
+    //   debugger
+    // }
     parent.appendChild(renderDOM(vChild))
   })
 }
@@ -236,7 +266,6 @@ const createApp = (
       watch(
         () => rootVDOM.value,
         (newVTree, oldVTree) => {
-          console.log('Re-render')
           patchNode(rootDOM, oldVTree, newVTree)
         }
       )
