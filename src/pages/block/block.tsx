@@ -1,5 +1,5 @@
-import Block from '../../modules/block';
-import { h, renderDOM } from '../../modules/vdom';
+import Block from '../../modules/block'
+import { h, renderDOM } from '../../modules/vdom'
 
 type IButtonProps = {
   type: string
@@ -8,17 +8,24 @@ type IButtonProps = {
 
 class Button extends Block<IButtonProps> {
   constructor(props: IButtonProps) {
-    super("button", props)
+    super('button', props)
   }
   render() {
-    const { type, onClick } = this.props;
-    return renderDOM(<button className={`btn-${type}`} onClick={onClick}>Button</button>)
+    const { type, onClick } = this.props
+    return renderDOM(
+      <button className={`btn-${type}`} onClick={onClick}>
+        Button
+      </button>
+    )
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const buttonEl = document.getElementById('button');
-  const button = new Button({ type: 'primary', onClick: () => alert('onClick') });
+  const buttonEl = document.getElementById('button')
+  const button = new Button({
+    type: 'primary',
+    onClick: () => alert('onClick'),
+  })
   buttonEl?.replaceWith(button.render())
   setTimeout(() => button.setProps({ type: 'secondary' }), 1000)
 })

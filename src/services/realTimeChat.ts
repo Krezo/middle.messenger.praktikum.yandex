@@ -18,6 +18,22 @@ export default class RealTimeChat {
     return response.token
   }
   public loadMessage(content: number = 0, type = 'get old') {
+    return new Promise((res, rej) => {
+      const intervalId = setInterval(() => {
+        if (this.ws.readyState === this.ws.OPEN) {
+          this.ws.send(
+            JSON.stringify({
+              content,
+              type,
+            })
+          )
+          clearInterval(intervalId)
+          res(true)
+        }
+      }, 100)
+    })
+  }
+  public sendMessage(content: string, type = 'message') {
     const intervalId = setInterval(() => {
       if (this.ws.readyState === this.ws.OPEN) {
         this.ws.send(
@@ -26,21 +42,6 @@ export default class RealTimeChat {
             type,
           })
         )
-        clearInterval(intervalId)
-      }
-    }, 100)
-  }
-  public sendMessage(content: string, type = 'message') {
-    const intervalId = setInterval(() => {
-      if (this.ws.readyState === this.ws.OPEN) {
-        this.ws.addEventListener('open', () => {
-          this.ws.send(
-            JSON.stringify({
-              content,
-              type,
-            })
-          )
-        })
         clearInterval(intervalId)
       }
     }, 100)

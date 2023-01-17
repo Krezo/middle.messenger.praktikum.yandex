@@ -22,17 +22,32 @@ import UserService from '../../services/userService'
 import { IUser, IUserWithRole, UserRoles } from '../../types/user'
 import { apiResourceUrl } from '../../consts'
 import { Message } from '../../types/chat'
+import { MessageList } from '../../components/messageList/messageList.component'
 
 const aciveChatIndex = ref(-1)
+const loadingMessages = ref(false)
 
 const activeChat = computed(() => {
   if (aciveChatIndex.value > -1) {
-    const chat = chatStore.chats[aciveChatIndex.value]
-    console.log(chat)
-    chatStore.chatMessages[chat.id].rtChat.loadMessage()
-    return chat
+    return chatStore.chats[aciveChatIndex.value]
   }
 })
+
+watch(
+  () => activeChat.value,
+  (chat) => {
+    if (chat) {
+      chatStore.activeChatMessages = []
+      loadingMessages.value = true
+      chatStore.chats
+        .find((_chat) => _chat.id === chat.id)!
+        .rtChat.loadMessage()
+        .then(() => {
+          loadingMessages.value = false
+        })
+    }
+  }
+)
 
 watchEffect(() => {
   // console.log(chatStore.activeChatMessages.value)
@@ -54,21 +69,20 @@ const getMessageTime = (date: Date) => {
 const deleteChat = async () => {
   if (confirm('Вы действительно хотите удалить чат')) {
     await chatService.deleteChat(chatStore.chats[aciveChatIndex.value].id)
-    isActiveChatSelect.value = false
+    aciveChatIndex.value = -1
   }
 }
 
 const sendMessage = (event: KeyboardEvent) => {
-  if (event.code === 'Enter') {
-    console.log((event.target as HTMLInputElement).value)
+  if (event.code === 'Enter' && activeChat.value) {
+    const content = (event.target as HTMLInputElement).value
+    activeChat.value.rtChat.sendMessage(content)
+    ;(event.target as HTMLInputElement).value = ''
+    messageFormData.message.value = ''
   }
 }
 
-const {
-  formData: messageFormData,
-  values,
-  isValid,
-} = useForm({
+const { formData: messageFormData } = useForm({
   message: {
     value: '',
     validators: {
@@ -122,6 +136,10 @@ const createChat = async (event: Event) => {
     createChatModalOpen.value = false
   })
 }
+
+const activeChatMessages = computed(() => {
+  return chatStore.activeChatMessages
+})
 
 const addUserToChat = async (event: Event) => {
   if (!activeChat.value) return
@@ -354,7 +372,9 @@ export default () => {
                 <div className={style.companionBody}>
                   <div className={style.companionName}>{chat.title}</div>
                   <div className={style.companionMessage}>
-                    {!!chat.last_message || 'Чат пуст'}
+                    {!!chat.last_message
+                      ? chat.last_message.content
+                      : 'Чат пуст'}
                   </div>
                 </div>
                 {/* <div className={style.companionMessageTime}>
@@ -367,46 +387,17 @@ export default () => {
                 </div> */}
               </div>
             ))}
-            {/* {companionList.map((companion, index) => (
-            <div
-              onClick={() => selectActiveComponent(index)}
-              className={[
-                style.companionBlock,
-                index == aciveChatIndex.value &&
-                isActiveChatSelect.value
-                  ? style.companionBlockActive
-                  : '',
-              ].join(' ')}
-            >
-              <img
-                className={style.companionImage}
-                src={companion.image}
-                alt=""
-              />
-              <div className={style.companionBody}>
-                <div className={style.companionName}>{companion.name}</div>
-                <div className={style.companionMessage}>
-                  {companion.messages[companion.messages.length - 1].text}
-                </div>
-              </div>
-              <div className={style.companionMessageTime}>
-                {getMessageTime(
-                  companion.messages[companion.messages.length - 1].time
-                )}
-                <div className={style.companionMessageCount}>
-                  {companion.unreadMessageCount.toString()}
-                </div>
-              </div>
-            </div>
-          ))} */}
           </div>
         </div>
+        {!!loadingMessages.value}
+        {!!chatStore.loadMessagesTriger}
+        {!!activeChatMessages.value}
         {aciveChatIndex.value > -1 && (
           <div className={style.messageSidebar}>
             <div className={style.activeChatWrapper}>
               <div className={style.activeChat}>
                 <div className={style.companionName}>
-                  {activeChat.value.title}
+                  {activeChat.value ? activeChat.value.title : ''}
                 </div>
                 <div className={style.funcBlock}>
                   <span onClick={openChatUsersModal} className={styles.link}>
@@ -418,16 +409,13 @@ export default () => {
                 </div>
               </div>
             </div>
-            <div className={style.messageList}>
-              {!!chatStore.activeChatMessages}
-              {chatStore.activeChatMessages.map((message) => (
-                <div className={style.messageItem}>
-                  <div className={style.messageTime}>{message.content}</div>
-                </div>
-              ))}
-            </div>
+            <MessageList
+              messages={activeChat.value!.messages}
+              loading={loadingMessages.value}
+            />
             <Input
               id="message"
+              value={messageFormData.message.value}
               onKeyup={sendMessage}
               onBlur={() => messageFormData.message.blur()}
               toched={messageFormData.message.toched}

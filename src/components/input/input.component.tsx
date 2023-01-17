@@ -85,7 +85,7 @@ const Input = (props: IProps) => {
     >
       {!isFileInput && <label for={id}>{label || ''}</label>}
       <input
-        value={isFileInput ? '' : value}
+        value={isFileInput ? null : value}
         onBlur={onBlur}
         id={id}
         type={props.type ?? 'text'}

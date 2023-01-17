@@ -20,8 +20,6 @@ export interface GetChatMethodParams {
   title?: number
 }
 
-type GetChatMethodsResponse = Chat[]
-
 interface DeleteChatMethodResponse {
   userId: number
   result: {
@@ -49,7 +47,7 @@ interface CreateTokenResponse {
  */
 export default class ChatApi {
   getChats(params?: GetChatMethodParams) {
-    return chatApiInstance.get<GetChatMethodsResponse>('/', {
+    return chatApiInstance.get<Chat[]>('/', {
       params,
     })
   }

@@ -1,20 +1,22 @@
+interface LastMessage {
+  user: {
+    first_name: string
+    second_name: string
+    avatar: string
+    email: string
+    login: string
+    phone: string
+  }
+  time: Date
+  content: string
+}
+
 export interface Chat {
   id: number
   title: string
   avatar: string
   unread_count: number
-  last_message: {
-    user: {
-      first_name: string
-      second_name: string
-      avatar: string
-      email: string
-      login: string
-      phone: string
-    }
-    time: Date
-    content: string
-  }
+  last_message: LastMessage
 }
 
 export enum MessageType {
@@ -22,8 +24,8 @@ export enum MessageType {
 }
 
 export interface Message {
-  id: string
-  time: Date
+  id: number
+  time: string
   user_id: string
   content: string
   type: MessageType

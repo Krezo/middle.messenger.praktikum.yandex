@@ -6,7 +6,7 @@ import { HTTPTransportResponseError } from '../modules/fetch'
 import { ref } from '../modules/reactivity'
 import { Router } from '../modules/router/index'
 import { authStore } from '../store/authStore'
-import { chatStore } from '../store/chatStore'
+import { ChatElement, chatStore } from '../store/chatStore'
 import { userStore } from '../store/userStore'
 import { IApiError } from '../types/apiError'
 import { Message } from '../types/chat'
@@ -38,26 +38,36 @@ export default class ChatService {
       this.store.getChatError = ''
       this.store.loadingChats = true
       const { response } = await this.api.getChats(params)
-      response.forEach(async (chat) => {
+      const chats: ChatElement[] = []
+      for (const chat of response) {
         const token = await RealTimeChat.createToken(chat.id)
         if (userStore.user.id) {
           const rtChat = new RealTimeChat(userStore.user.id, chat.id, token)
-
-          chatStore.chatMessages[chat.id] = {
+          const chatInstace: ChatElement = {
+            ...chat,
+            messages: new Map<number, Message>(),
             rtChat,
           }
+          chats.push(chatInstace)
 
           rtChat.ws.addEventListener(
             'message',
             (event: MessageEvent<string>) => {
-              const messages: Message[] = JSON.parse(event.data)
-              chatStore.activeChatMessages = messages
-              console.log('Message', chatStore.activeChatMessages)
+              const messageData: Message[] | Message = JSON.parse(event.data)
+              if (Array.isArray(messageData)) {
+                messageData.forEach((messageData) => {
+                  chatInstace.messages.set(messageData.id, messageData)
+                })
+              } else {
+                chatInstace.messages.set(messageData.id, messageData)
+              }
+
+              this.store.loadMessagesTriger = !this.store.loadMessagesTriger
             }
           )
         }
-      })
-      this.store.chats = response
+      }
+      this.store.chats = chats
     } catch (error) {
       if (error instanceof HTTPTransportResponseError) {
         const responseError: IApiError = error.response

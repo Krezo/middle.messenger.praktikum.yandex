@@ -2,15 +2,14 @@ import { Ref, reactive, ref } from '../modules/reactivity'
 import RealTimeChat from '../services/realTimeChat'
 import { Chat, Message } from '../types/chat'
 
+export interface ChatElement extends Chat {
+  messages: Map<number, Message>
+  rtChat: RealTimeChat
+}
+
 interface IChatStore {
   /** Список чатов */
-  chats: Chat[]
-  chatMessages: Record<
-    string,
-    {
-      rtChat: RealTimeChat
-    }
-  >
+  chats: ChatElement[]
   activeChatId: number
   activeChatMessages: Message[]
   /** Ошибка получения чатов */
@@ -37,6 +36,7 @@ interface IChatStore {
   getChatUsersError: string
   /** Флаг получения списка пользователей чата*/
   loadingGetChatUsers: boolean
+  loadMessagesTriger: boolean
 }
 // Хранилище для данных аутентификации
 const chatStore = reactive<IChatStore>({
@@ -56,6 +56,7 @@ const chatStore = reactive<IChatStore>({
   loadingGetChatUsers: false,
   deleteUserFromChatError: '',
   loadingdeleteUserFromChat: false,
+  loadMessagesTriger: false,
 })
 
 export { chatStore }
