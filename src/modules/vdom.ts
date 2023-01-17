@@ -26,7 +26,16 @@ const h = (
   return el
 }
 
-const renderDOM = (root: IVNode | JSX.Element | string | number | null) => {
+const isSvg = (node: IVNode) => {
+  return (
+    node.tagName === 'svg' ||
+    node.tagName === 'line' ||
+    node.tagName === 'polygon' ||
+    node.tagName === 'path'
+  )
+}
+
+const renderDOM = (root: IVNode | string | number | null) => {
   // Нод условного рендера
   if (typeof root === 'boolean') {
     // Добавляем в vdom комментарий для слежения последовательности
@@ -44,12 +53,9 @@ const renderDOM = (root: IVNode | JSX.Element | string | number | null) => {
     return document.createTextNode('')
   }
 
-  let domRoot: HTMLElement | SVGSVGElement | SVGLineElement | SVGPolygonElement
-  if (
-    root.tagName === 'svg' ||
-    root.tagName === 'line' ||
-    root.tagName === 'polygon'
-  ) {
+  let domRoot: HTMLElement | SVGElement
+
+  if (isSvg(root)) {
     domRoot = document.createElementNS(
       'http://www.w3.org/2000/svg',
       root.tagName
@@ -134,12 +140,26 @@ const patchNode = (node: HTMLElement, vNode: any, nextVNode: any) => {
   return node
 }
 
-const patchProp = (node: HTMLElement, key: any, value: any, nextValue: any) => {
+const patchProp = (
+  node: HTMLElement,
+  key: string,
+  value: any,
+  nextValue: any
+) => {
   // Если новое значение не задано, то удаляем атрибут
   if (typeof value === 'function') {
-    if (!nextValue) node.removeEventListener(key.replace('on'), value)
+    const eventKey = key.replace('on', '').toLowerCase()
+    if (!nextValue) {
+      node.removeEventListener(eventKey, value)
+    } else {
+      if (value !== nextValue) {
+        node.removeEventListener(eventKey, value)
+        node.addEventListener(eventKey, nextValue)
+      }
+    }
     return
   }
+
   if (node.tagName === 'INPUT' && key === 'value') {
     ;(node as HTMLInputElement).value = nextValue
     return
@@ -152,7 +172,9 @@ const patchProp = (node: HTMLElement, key: any, value: any, nextValue: any) => {
   // Для className DOM атрибут class
   if (key === 'className') {
     node.setAttribute('class', nextValue)
-  } else node.setAttribute(key, nextValue)
+  } else {
+    node.setAttribute(key, nextValue)
+  }
 }
 
 const patchProps = (node: HTMLElement, props: any, nextProps: any) => {
@@ -174,6 +196,11 @@ const patchChildren = (
   nextVChildren: IVNode[]
 ) => {
   parent.childNodes.forEach((childNode, i) => {
+    if ((childNode as HTMLElement)?.classList) {
+      if ((childNode as HTMLElement).classList.contains('WVfb4W-messageItem')) {
+        debugger
+      }
+    }
     patchNode(childNode as HTMLElement, vChildren[i], nextVChildren[i])
   })
   if (!Array.isArray(nextVChildren)) {

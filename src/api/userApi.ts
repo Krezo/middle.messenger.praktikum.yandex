@@ -37,13 +37,12 @@ export interface IUserParams {
 export interface IUserOk extends IUser {}
 export interface IUserError extends IUser {}
 
-export interface IUserSearchParams {
-  login: string
-}
 export interface IUserSearchResponseOk extends IUser {}
 
 export interface IUserChangeProfileResponse extends IUser {}
-
+export interface IGetTokenResponse {
+  token: string
+}
 /**
  * Клас для работы с запросами API пользователя
  *
@@ -73,11 +72,14 @@ export default class UserApi {
       },
     })
   }
-  userSearch({ login }: IUserSearchParams) {
-    return userApiInstance.post('/password', {
+  userSearch(login: string) {
+    return userApiInstance.post<IUser[]>('/search', {
       data: {
         login,
       },
     })
+  }
+  token(chatId: string) {
+    return userApiInstance.get<IGetTokenResponse>(`/token/${chatId}`, {})
   }
 }

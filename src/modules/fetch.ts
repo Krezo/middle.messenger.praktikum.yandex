@@ -34,7 +34,7 @@ type Options = {
   data?: any
   formData?: FormData
   responseType?: XMLHttpRequestResponseType
-  params?: Record<string, unknown>
+  params?: Record<string, any>
 }
 
 type HttpTransportOptions = Omit<Options, 'method'>

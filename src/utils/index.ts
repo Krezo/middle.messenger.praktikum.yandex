@@ -24,11 +24,6 @@ const createFormData = (data: Record<string, any>): FormData => {
   for (const key in data) {
     if (Object.prototype.hasOwnProperty.call(data, key)) {
       const item = data[key]
-      // const fileData = item.arrayBuffer()
-      // if (item instanceof File) {
-      //   formData.append(key, fileData, data.name)
-      //   continue
-      // }
       formData.append(key, item)
     }
   }

@@ -32,6 +32,9 @@
   color: #fff;
   background: var(--primary-color);
   border-color: var(--primary-color);
+  &:hover {
+    background: var(--primary-button-hover-color);
+  }
 }
 
 .outline {

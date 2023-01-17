@@ -1,7 +1,7 @@
-import { IObserver, observer } from './observer'
+import { IObserver, isObserver, observer } from './observer'
 
-interface IWatchFunction {
-  (oldValue?: any, newValue?: any): void
+interface IWatchFunction<T> {
+  (oldValue?: T, newValue?: T): void
 }
 
 export interface Ref<T> extends IObserver<T> {}
@@ -20,7 +20,7 @@ const setRootRenderFunc = (renderFunc: (...params: any) => void) => {
 
 // Отслеживание зависимостей observer
 let isWatchFunction: boolean = false
-let watchFunction: IWatchFunction
+let watchFunction: IWatchFunction<unknown>
 
 // Реализация Proxy обертки на observer для автоматического определения зависимостей
 const ref = <T>(value: T) => {
@@ -58,7 +58,12 @@ const reactive = <T extends object>(value: T, deep: boolean = true): T => {
   // Если значение является объектом, то вызываем для него рекурсивно reactive
   // Потом в геттере вернем его для реактивных объектов
   for (const key in value) {
-    if (typeof value[key] === 'object' && value[key] !== null && deep) {
+    if (
+      typeof value[key] === 'object' &&
+      !Array.isArray(value[key]) &&
+      value[key] !== null &&
+      deep
+    ) {
       objectObserver[key] = reactive(value[key] as object)
     }
     // Не важно что будет в ref, объект нужен для хранения зависимостей
@@ -116,7 +121,7 @@ const reactive = <T extends object>(value: T, deep: boolean = true): T => {
 // Вспомогательная функция для привязки зависимостей observer
 const watchDep = (
   watch: (...params: any) => void,
-  watchFunc?: IWatchFunction
+  watchFunc?: IWatchFunction<unknown>
 ) => {
   isWatchFunction = true
   watchFunction = watchFunc ? watchFunc : watch
@@ -134,7 +139,7 @@ const computed = <T>(computedFunc: () => T) => {
 // Функция отслеживания изменений watch параметра
 const watch = <T>(
   watch: () => T,
-  watchFunc: IWatchFunction,
+  watchFunc: IWatchFunction<T>,
   options?: { immediate: boolean }
 ) => {
   watchDep(watch, watchFunc)
@@ -146,6 +151,13 @@ const watch = <T>(
 // Функция выполняется при изменении любых внутенних observer
 const watchEffect = (watchEffectFunction: () => any) => {
   watchDep(watchEffectFunction)
+}
+
+const isObserveArray = (object: any): object is IObserver<[]> => {
+  if (isObserver(object)) {
+    return Array.isArray(object.value)
+  }
+  return false
 }
 
 export {

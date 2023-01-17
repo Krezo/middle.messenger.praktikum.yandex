@@ -85,4 +85,24 @@ export default class UserService {
       this.store.loadingChangePassword = false
     }
   }
+
+  /**
+   * Поиск пользователей
+   */
+  async search(login: string) {
+    this.store.loadingSearchUser = true
+    this.store.searchUserError = ''
+    try {
+      const { response } = await this.api.userSearch(login)
+      return response
+    } catch (error) {
+      if (error instanceof HTTPTransportResponseError) {
+        const responseError: IApiError = error.response
+        this.store.searchUserError = responseError.reason
+      }
+      console.error(error)
+    } finally {
+      this.store.loadingSearchUser = false
+    }
+  }
 }

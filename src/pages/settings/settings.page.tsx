@@ -28,6 +28,7 @@ import AuthService from '../../services/authService'
 import UserService from '../../services/userService'
 import { Spinner } from '../../components/spinner/spinner.component'
 import { authStore } from '../../store/authStore'
+import { apiResourceUrl } from '../../consts'
 
 const userService = new UserService()
 const authService = new AuthService()
@@ -237,10 +238,7 @@ export default () => {
             <div className={style.avatarWrapper}>
               <div className={style.avatar}>
                 <img
-                  src={
-                    'https://ya-praktikum.tech/api/v2/resources/' +
-                    userStore.user.avatar
-                  }
+                  src={apiResourceUrl + userStore.user.avatar}
                   alt="avatar"
                 />
               </div>

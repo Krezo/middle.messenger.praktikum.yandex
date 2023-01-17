@@ -2,7 +2,14 @@ import { IWatchFunction } from './reactivity'
 
 interface IObserver<T = any> {
   value: T
-  deps: Set<IWatchFunction>
+  deps: Set<IWatchFunction<unknown>>
+}
+
+const isObserver = <T>(object: any): object is IObserver<T> => {
+  if (typeof object === 'object' && object !== null) {
+    return 'value' in object && 'deps' in object
+  }
+  return false
 }
 
 const observer = <T>(value: T, deps: any[] = []): IObserver<T> => {
@@ -12,4 +19,4 @@ const observer = <T>(value: T, deps: any[] = []): IObserver<T> => {
   }
 }
 
-export { observer, IObserver }
+export { observer, IObserver, isObserver }

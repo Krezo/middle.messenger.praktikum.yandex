@@ -1,5 +1,8 @@
 import { Nullable } from './utils'
 
+export enum UserRoles {
+  ADMIN = 'admin',
+}
 export interface IUser {
   id: number
   first_name: string
@@ -9,6 +12,10 @@ export interface IUser {
   email: string
   phone: string
   avatar: string
+}
+
+export interface IUserWithRole extends IUser {
+  role: UserRoles
 }
 
 export interface IUserNullable extends Nullable<IUser> {}

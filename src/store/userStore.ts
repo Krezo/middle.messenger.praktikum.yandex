@@ -6,9 +6,11 @@ interface IUserStore {
   loadingChangeUser: boolean
   loadingChangeAvatart: boolean
   loadingChangePassword: boolean
+  loadingSearchUser: boolean
   changeUserError: string
   changeAvatartError: string
   changePasswordError: string
+  searchUserError: string
 }
 // Хранилище для данных пользователя
 const userStore = reactive<IUserStore>({
@@ -25,9 +27,11 @@ const userStore = reactive<IUserStore>({
   loadingChangeUser: false,
   loadingChangeAvatart: false,
   loadingChangePassword: false,
+  loadingSearchUser: false,
   changeUserError: '',
   changeAvatartError: '',
   changePasswordError: '',
+  searchUserError: '',
 })
 
 const logoutUser = () => {
