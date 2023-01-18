@@ -15,7 +15,6 @@ import {
   login,
   password,
 } from '../../modules/validatorRules'
-import { watchEffect } from '../../modules/reactivity'
 import { RouterLink } from '../../modules/router/index'
 import AuthService from '../../services/authService'
 import { authStore } from '../../store/authStore'
@@ -28,14 +27,14 @@ const {
   isValid: authFormIsValid,
 } = useForm({
   login: {
-    value: 'abez',
+    value: '',
     validators: {
       // login,
       ...minLenght(3),
     },
   },
   password: {
-    value: '123123123123A',
+    value: '',
     validators: {
       // password,
       ...minLenght(8),
@@ -74,7 +73,9 @@ export default function () {
               onBlur={() => authFormData.password.blur()}
               toched={authFormData.password.toched}
               value={authFormData.password.value}
-              setValue={(value: string) => (authFormData.password.value = value)}
+              setValue={(value: string) =>
+                (authFormData.password.value = value)
+              }
               errorMessage={authFormData.password.errorMessage}
               id="password"
               placeholder="Пароль"

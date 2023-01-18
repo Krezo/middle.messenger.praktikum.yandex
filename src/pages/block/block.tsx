@@ -16,7 +16,7 @@ class Button extends Block<IButtonProps> {
     return renderDOM(
       <button className={`btn-${type}`} onClick={onClick}>
         Button
-      </button>,
+      </button>
     )
   }
 }
