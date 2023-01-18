@@ -30,16 +30,16 @@ export function MessageList(props: Props) {
   const sortedMessages = sortedMessageArray.map((message) => (
     <div>
       <div className={style.user}>
-        {message.user.first_name} {message.user.second_name}
-      </div>
-      <div key={message.id} className={style.messageItem}>
-        {message.content}
-        <div className={style.messageTime}>
+        {message.user.first_name} {message.user.second_name}{' '}
+        <span className={style.messageTime}>
           {message.date.toLocaleTimeString(undefined, {
             hour: '2-digit',
             minute: '2-digit',
           })}
-        </div>
+        </span>
+      </div>
+      <div key={message.id} className={style.messageItem}>
+        {message.content}
       </div>
     </div>
   ))

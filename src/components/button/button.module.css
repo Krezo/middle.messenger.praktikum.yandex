@@ -40,6 +40,9 @@
 .outline {
   color: var(--primary-color);
   background: var(--white);
+  &:hover {
+    background: var(--white);
+  }
 }
 
 .secondary {

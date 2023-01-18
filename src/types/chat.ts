@@ -11,12 +11,16 @@ interface LastMessage {
   content: string
 }
 
+export interface LastMessageWithDate extends Omit<LastMessage, 'time'> {
+  time: Date
+}
+
 export interface Chat {
   id: number
   title: string
   avatar: string
   unread_count: number
-  last_message: LastMessage
+  last_message: LastMessageWithDate | null
 }
 
 export enum MessageType {
@@ -28,5 +32,5 @@ export interface Message {
   time: string
   user_id: number
   content: string
-  type: MessageType
+  type: MessageType.MESSAGE
 }

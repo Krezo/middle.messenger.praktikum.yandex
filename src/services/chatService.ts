@@ -13,11 +13,18 @@ import UserService from './userService'
 
 export enum MessageType {
   USER_CONNEDTED = 'user connected',
+  MESSAGE = 'message',
+  PING = 'ping',
+  PONG = 'pong',
 }
 
 export interface UserConnectedMessage {
   content: number
   type: MessageType.USER_CONNEDTED
+}
+
+export interface PongMessage {
+  type: MessageType.PONG
 }
 
 /**
@@ -54,7 +61,9 @@ export default class ChatService {
         const token = await RealTimeChat.createToken(chat.id)
         if (userStore.user.id) {
           const rtChat = new RealTimeChat(userStore.user.id, chat.id, token)
-
+          if (chat.last_message) {
+            chat.last_message.time = new Date(chat.last_message.time)
+          }
           const chatUsers = new Map<number, IUser>()
           const chatInstace: ChatElement = {
             ...chat,
@@ -65,7 +74,6 @@ export default class ChatService {
 
           chats.push(chatInstace)
 
-          //
           const loadUser = async (userId: number) => {
             if (!chatUsers.has(userId)) {
               const user = await new UserService().getUsetById(userId)
@@ -77,7 +85,11 @@ export default class ChatService {
           rtChat.ws.addEventListener(
             'message',
             async (event: MessageEvent<string>) => {
-              const messageData: Message[] | Message | UserConnectedMessage = JSON.parse(event.data)
+              const messageData:
+                | Message[]
+                | Message
+                | UserConnectedMessage
+                | PongMessage = JSON.parse(event.data)
               // Загружаем массив сообщений
               if (Array.isArray(messageData)) {
                 for (const message of messageData) {
@@ -93,7 +105,7 @@ export default class ChatService {
                 await loadUser(messageData.content)
               }
               // Загружаем одно сообщение
-              else {
+              else if (messageData.type === MessageType.MESSAGE) {
                 const userId = messageData.user_id
                 await loadUser(userId)
                 chatInstace.messages.set(messageData.id, {
@@ -103,12 +115,14 @@ export default class ChatService {
                 })
                 chatInstace.last_message = {
                   content: messageData.content,
-                  time: messageData.time,
+                  time: new Date(messageData.time),
                 }
+              } else if (messageData.type === MessageType.PONG) {
+                return
               }
               // Тригерим рендер страницы
               this.store.loadMessagesTriger = !this.store.loadMessagesTriger
-            },
+            }
           )
         }
       }

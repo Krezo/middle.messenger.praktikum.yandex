@@ -200,6 +200,9 @@ export default function () {
     <main>
       {!!messageErrorMessage.value}
       {!!messageHeight.value}
+      {!!loadingMessages.value}
+      {!!chatStore.loadMessagesTriger}
+      {!!activeChatMessages.value}
       <div className={style.mainPage}>
         <div className={style.chatSidebar}>
           <div className={style.profileLink}>
@@ -359,22 +362,27 @@ export default function () {
                   <div className={style.companionMessage}>
                     {chat.last_message ? chat.last_message.content : 'Чат пуст'}
                   </div>
-                </div>
-                {/* <div className={style.companionMessageTime}>
-                  {getMessageTime(
-                    companion.messages[companion.messages.length - 1].time
-                  )}
-                  <div className={style.companionMessageCount}>
-                    {companion.unreadMessageCount.toString()}
+                  <div className={style.messageTime}>
+                    {chat.last_message
+                      ? chat.last_message.time.toLocaleDateString(undefined, {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })
+                      : ''}
                   </div>
-                </div> */}
+                  {chat.unread_count > 0 && (
+                    <div className={style.unreadMessagesWrapper}>
+                      <span className={style.unreadMessages}>
+                        {chat.unread_count}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
         </div>
-        {!!loadingMessages.value}
-        {!!chatStore.loadMessagesTriger}
-        {!!activeChatMessages.value}
+
         {aciveChatIndex.value > -1 && (
           <div className={style.messageSidebar}>
             <div className={style.activeChatWrapper}>
