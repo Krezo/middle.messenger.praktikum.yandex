@@ -11,13 +11,15 @@ interface Props extends IComponentProps {
   close: () => void
 }
 
-const Modal = (props: Props) => {
-  const { open, title, close, children } = props
+function Modal(props: Props) {
+  const {
+    open, title, close, children,
+  } = props
 
-  if (!!open) {
-    document.body.style['overflow'] = 'hidden'
+  if (open) {
+    document.body.style.overflow = 'hidden'
   } else {
-    document.body.style['overflow'] = 'auto'
+    document.body.style.overflow = 'auto'
   }
 
   return (
@@ -38,8 +40,8 @@ const Modal = (props: Props) => {
             >
               <path
                 d="M1 10L10 1M10 10L1 1"
-                stroke-width="2"
-                stroke-linecap="round"
+                strokeWidth="2"
+                strokeLinecap="round"
               />
             </svg>
           </div>

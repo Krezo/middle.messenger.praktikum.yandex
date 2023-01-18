@@ -13,8 +13,8 @@ label.inputWrapper {
   cursor: pointer;
 }
 .errorMessage {
+  bottom: -10px;
   font-weight: 400;
-  position: absolute;
   color: var(--input-error);
   left: 0;
   bottom: -24px;

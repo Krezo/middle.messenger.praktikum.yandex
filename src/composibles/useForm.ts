@@ -1,4 +1,6 @@
-import { computed, reactive, watch, Ref } from '../modules/reactivity'
+import {
+  computed, reactive, watch, Ref,
+} from '../modules/reactivity'
 import { IObserver } from '../modules/observer'
 
 interface FormData<FieldData> {
@@ -29,8 +31,8 @@ export const useForm = <
   T extends FormData<FieldData<E> & Partial<FieldDataExt>>,
   E = T[keyof T]['value']
 >(
-  init: T
-): {
+    init: T,
+  ): {
   formData: { [K in keyof T]: T[K] }
   values: IObserver<{ [K in keyof T]: T[K]['value'] }>
   isValid: Ref<boolean>

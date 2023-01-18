@@ -10,7 +10,7 @@ const authApiInstance = new HTTPTransport(
       Accept: 'application/json',
       Content: 'application/json',
     },
-  }
+  },
 )
 
 export interface ISignupParams extends Omit<IUser, 'id' | 'avatar'> {}
@@ -42,14 +42,17 @@ export default class AuthApi {
       data,
     })
   }
+
   signin(data: ISigninParams) {
     return authApiInstance.post<ISigninResponseOK>('/signin', {
       data,
     })
   }
+
   user() {
     return authApiInstance.get<IGetUserResponseOK>('/user')
   }
+
   logout() {
     return authApiInstance.post('/logout')
   }

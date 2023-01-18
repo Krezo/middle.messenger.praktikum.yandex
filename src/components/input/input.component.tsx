@@ -3,6 +3,7 @@ import { ref } from '../../modules/reactivity'
 import { h } from '../../modules/vdom'
 
 import style from './input.component.module.css'
+
 interface IProps extends IComponentProps {
   type?: string
   id: string
@@ -15,9 +16,10 @@ interface IProps extends IComponentProps {
   onKeyup?: (event: KeyboardEvent) => void
   onBlur?: () => void
   toched?: boolean
+  inputSstyle?: string
 }
 
-const Input = (props: IProps) => {
+function Input(props: IProps) {
   const {
     id,
     rounded,
@@ -28,17 +30,19 @@ const Input = (props: IProps) => {
     toched,
     value,
     type,
+    inputSstyle,
   } = props
 
   const isFileInput = type === 'file'
+  const isTextArea = type === 'textarea'
 
   const setValue = (event: KeyboardEvent) => {
     if (props.setValue) {
       if (isFileInput) {
         props.setValue(
           Array.from(
-            (document.getElementById(id) as HTMLInputElement).files ?? []
-          )
+            (document.getElementById(id) as HTMLInputElement).files ?? [],
+          ),
         )
         return
       }
@@ -69,6 +73,7 @@ const Input = (props: IProps) => {
   ]
 
   const TagName = isFileInput ? 'label' : 'div'
+  const InputTagName = isTextArea ? 'textarea' : 'input'
   const showErorr = errorMessage && toched
 
   const getValueFiles = (value: IProps['value']) => {
@@ -83,11 +88,12 @@ const Input = (props: IProps) => {
       className={[style.inputWrapper, errorClass].join(' ')}
       for={isFileInput ? id : ''}
     >
-      {!isFileInput && <label for={id}>{label || ''}</label>}
-      <input
+      {!isFileInput && <label htmlFor={id}>{label || ''}</label>}
+      <InputTagName
         value={isFileInput ? null : value}
         onBlur={onBlur}
         id={id}
+        style={inputSstyle}
         type={props.type ?? 'text'}
         onKeyUp={keyUp}
         className={inputClasses.join(' ')}
@@ -100,16 +106,16 @@ const Input = (props: IProps) => {
           className={style.errorMessage}
           style={showErorr ? '' : 'display: none;'}
         >
-          {errorMessage}
+          {errorMessage.toString()}
         </div>
       )}
       {!!isFileInput && (
         <div>
           <div className={style.avatarLabel}>{label || ''}</div>
           <div>
-            {getValueFiles(value).map((file: File) => {
-              return <div>{file.name.toString()}</div>
-            })}
+            {getValueFiles(value).map((file: File) => (
+              <div>{file.name.toString()}</div>
+            ))}
           </div>
           Перетащите файлы или загрузите
           <div className={style.fileFormat}>

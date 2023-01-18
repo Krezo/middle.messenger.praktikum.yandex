@@ -11,8 +11,11 @@ import { IApiError } from '../types/apiError'
  */
 export default class UserService {
   private readonly store: typeof userStore
+
   private readonly api: UserApi
+
   static __instance: UserService
+
   constructor() {
     if (UserService.__instance) {
       return UserService.__instance
@@ -99,6 +102,23 @@ export default class UserService {
       if (error instanceof HTTPTransportResponseError) {
         const responseError: IApiError = error.response
         this.store.searchUserError = responseError.reason
+      }
+      console.error(error)
+    } finally {
+      this.store.loadingSearchUser = false
+    }
+  }
+
+  /**
+   * Поиск пользователей
+   */
+  async getUsetById(id: number) {
+    try {
+      const { response } = await this.api.user(id)
+      return response
+    } catch (error) {
+      if (error instanceof HTTPTransportResponseError) {
+        const responseError: IApiError = error.response
       }
       console.error(error)
     } finally {

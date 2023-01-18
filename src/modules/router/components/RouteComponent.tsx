@@ -8,10 +8,8 @@ interface RouteComponentProps extends IComponentProps {
   title: string
 }
 
-const pageIsActive = (route: string) => {
-  return activePage.value === route
-}
-const RouteComponent = (props: RouteComponentProps) => {
+const pageIsActive = (route: string) => activePage.value === route
+function RouteComponent(props: RouteComponentProps) {
   const { path, title, page } = props
   // Проверяем активна ли сейчас страница
   const isActivePage = pageIsActive(path)

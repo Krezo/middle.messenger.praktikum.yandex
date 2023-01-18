@@ -1,14 +1,13 @@
-
 .spinner {
   width: var(--spinner-size);
   height: var(--spinner-size);
   display: inline-block;
   position: relative;
-  --spinner-color: #fff
+  --spinner-color: #fff;
 }
 
 .spinnerPrimary {
-  --spinner-color: var(--primary-color)
+  --spinner-color: var(--primary-color);
 }
 
 .spinnerLg {

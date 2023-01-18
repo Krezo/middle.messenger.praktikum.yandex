@@ -11,7 +11,7 @@ const userApiInstance = new HTTPTransport(
       Accept: 'application/json',
       Content: 'application/json',
     },
-  }
+  },
 )
 
 export interface IProfileParams extends Omit<IUser, 'id' | 'avatar'> {}
@@ -54,24 +54,28 @@ export default class UserApi {
       data,
     })
   }
+
   changeProfileAvatar(data: IProfileAvatarParams) {
     const formData = createFormData(data)
     return userApiInstance.put<IUser>('/profile/avatar', {
       formData,
     })
   }
+
   changePassword(data: IPasswordParams) {
     return userApiInstance.put('/password', {
       data,
     })
   }
-  user({ id }: IUserParams) {
-    return userApiInstance.get('/password', {
+
+  user(id: number) {
+    return userApiInstance.get<IUser>(`/${id}`, {
       params: {
         id,
       },
     })
   }
+
   userSearch(login: string) {
     return userApiInstance.post<IUser[]>('/search', {
       data: {
@@ -79,6 +83,7 @@ export default class UserApi {
       },
     })
   }
+
   token(chatId: string) {
     return userApiInstance.get<IGetTokenResponse>(`/token/${chatId}`, {})
   }

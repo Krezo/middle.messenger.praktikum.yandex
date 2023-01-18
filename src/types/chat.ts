@@ -1,5 +1,5 @@
 interface LastMessage {
-  user: {
+  user?: {
     first_name: string
     second_name: string
     avatar: string
@@ -7,7 +7,7 @@ interface LastMessage {
     login: string
     phone: string
   }
-  time: Date
+  time: string
   content: string
 }
 
@@ -26,7 +26,7 @@ export enum MessageType {
 export interface Message {
   id: number
   time: string
-  user_id: string
+  user_id: number
   content: string
   type: MessageType
 }

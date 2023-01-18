@@ -46,10 +46,11 @@ class HTTPTransport {
     private baseUrl: string = '',
     private options: HttpTransportOptions = {
       responseType: 'json',
-    }
+    },
   ) {
     this.baseUrl = baseUrl
   }
+
   get<T>(url: string, options?: HttpTransportOptions) {
     const queryUrl = [
       this.baseUrl + url,
@@ -101,9 +102,11 @@ class HTTPTransport {
 
   request<T>(
     url: string,
-    options: Options = { method: METHOD.GET }
+    options: Options = { method: METHOD.GET },
   ): Promise<XMLHttpRequestWithResponseType<T>> {
-    const { method, formData, data, headers, withCredentials } = options
+    const {
+      method, formData, data, headers, withCredentials,
+    } = options
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest()

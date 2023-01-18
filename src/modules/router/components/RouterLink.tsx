@@ -6,7 +6,7 @@ interface RouterLinkProps extends IComponentProps {
   href: string
 }
 
-const RouterLink = (props: RouterLinkProps) => {
+function RouterLink(props: RouterLinkProps) {
   const { href, children, className } = props
   const router = new Router()
 

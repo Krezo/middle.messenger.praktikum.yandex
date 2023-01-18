@@ -49,52 +49,54 @@ const signin = (event: Event) => {
   authService.signin(authFormValues.value)
 }
 
-export default () => (
-  <DefaultLayout>
-    <div className={style.authPage}>
-      <form className={style.authForm} onSubmit={signin}>
-        {/* <Logo className={style.authFormLogo} /> */}
-        <h2 className={styles.h2}>Авторизация</h2>
-        <p className={style.authFormTooltip}>
-          Введите логин и пароль для входа
-        </p>
-        <div className={style.errorMessage}>{authStore.signinError}</div>
-        <div className={style.authFormInputs}>
-          <Input
-            onBlur={() => authFormData.login.blur()}
-            toched={authFormData.login.toched}
-            value={authFormData.login.value}
-            setValue={(value: string) => (authFormData.login.value = value)}
-            errorMessage={authFormData.login.errorMessage}
-            id="login"
-            placeholder="Логин"
-          />
-          <Input
-            onBlur={() => authFormData.password.blur()}
-            toched={authFormData.password.toched}
-            value={authFormData.password.value}
-            setValue={(value: string) => (authFormData.password.value = value)}
-            errorMessage={authFormData.password.errorMessage}
-            id="password"
-            placeholder="Пароль"
-            type="password"
-          />
-        </div>
-        <Button
-          type="submit"
-          disabled={!authFormIsValid.value}
-          primary
-          loading={authStore.signinLoading}
-          className={style.authFormLoginBtn}
-        >
-          Войти
-        </Button>
-        <div>
-          <RouterLink className={styles.link} href="/sign-up">
-            Регистрация
-          </RouterLink>
-        </div>
-      </form>
-    </div>
-  </DefaultLayout>
-)
+export default function () {
+  return (
+    <DefaultLayout>
+      <div className={style.authPage}>
+        <form className={style.authForm} onSubmit={signin}>
+          {/* <Logo className={style.authFormLogo} /> */}
+          <h2 className={styles.h2}>Авторизация</h2>
+          <p className={style.authFormTooltip}>
+            Введите логин и пароль для входа
+          </p>
+          <div className={style.errorMessage}>{authStore.signinError}</div>
+          <div className={style.authFormInputs}>
+            <Input
+              onBlur={() => authFormData.login.blur()}
+              toched={authFormData.login.toched}
+              value={authFormData.login.value}
+              setValue={(value: string) => (authFormData.login.value = value)}
+              errorMessage={authFormData.login.errorMessage}
+              id="login"
+              placeholder="Логин"
+            />
+            <Input
+              onBlur={() => authFormData.password.blur()}
+              toched={authFormData.password.toched}
+              value={authFormData.password.value}
+              setValue={(value: string) => (authFormData.password.value = value)}
+              errorMessage={authFormData.password.errorMessage}
+              id="password"
+              placeholder="Пароль"
+              type="password"
+            />
+          </div>
+          <Button
+            type="submit"
+            disabled={!authFormIsValid.value}
+            primary
+            loading={authStore.signinLoading}
+            className={style.authFormLoginBtn}
+          >
+            Войти
+          </Button>
+          <div>
+            <RouterLink className={styles.link} href="/sign-up">
+              Регистрация
+            </RouterLink>
+          </div>
+        </form>
+      </div>
+    </DefaultLayout>
+  )
+}

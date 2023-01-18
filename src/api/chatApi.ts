@@ -1,7 +1,6 @@
 import { HTTPTransport } from '../modules/fetch'
-import { IApiError } from '../types/apiError'
 import { Chat } from '../types/chat'
-import { IUser, IUserWithRole } from '../types/user'
+import { IUserWithRole } from '../types/user'
 
 const chatApiInstance = new HTTPTransport(
   'https://ya-praktikum.tech/api/v2/chats',
@@ -11,7 +10,7 @@ const chatApiInstance = new HTTPTransport(
       Accept: 'application/json',
       Content: 'application/json',
     },
-  }
+  },
 )
 
 export interface GetChatMethodParams {
@@ -51,6 +50,7 @@ export default class ChatApi {
       params,
     })
   }
+
   createChat(title: string) {
     return chatApiInstance.post('/', {
       data: {
@@ -58,6 +58,7 @@ export default class ChatApi {
       },
     })
   }
+
   getChatUsers(chatId: number, params: GetChatUsersMethodsParams) {
     return chatApiInstance.get<IUserWithRole[]>(`/${chatId}/users`, {
       data: {
@@ -65,6 +66,7 @@ export default class ChatApi {
       },
     })
   }
+
   addUserToChat(chatId: number, ...users: number[]) {
     return chatApiInstance.put('/users', {
       data: {
@@ -73,6 +75,7 @@ export default class ChatApi {
       },
     })
   }
+
   deleteUserFromChat(chatId: number, ...users: number[]) {
     return chatApiInstance.delete('/users', {
       data: {
@@ -81,6 +84,7 @@ export default class ChatApi {
       },
     })
   }
+
   deleteChat(chatId: number) {
     return chatApiInstance.delete<DeleteChatMethodResponse>('/', {
       data: {
@@ -88,6 +92,7 @@ export default class ChatApi {
       },
     })
   }
+
   getToken(id: number) {
     return chatApiInstance.post<CreateTokenResponse>(`/token/${id}`)
   }

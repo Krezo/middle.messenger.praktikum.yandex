@@ -1,9 +1,15 @@
 import { Ref, reactive, ref } from '../modules/reactivity'
 import RealTimeChat from '../services/realTimeChat'
 import { Chat, Message } from '../types/chat'
+import { IUser } from '../types/user'
 
+export interface IChatMessage extends Message {
+  user: IUser
+  date: Date
+}
 export interface ChatElement extends Chat {
-  messages: Map<number, Message>
+  messages: Map<number, IChatMessage>
+  users: Map<number, IUser>
   rtChat: RealTimeChat
 }
 
@@ -34,7 +40,7 @@ interface IChatStore {
   loadingdeleteUserFromChat: boolean
   /** Ошибка получения списка пользователей чата */
   getChatUsersError: string
-  /** Флаг получения списка пользователей чата*/
+  /** Флаг получения списка пользователей чата */
   loadingGetChatUsers: boolean
   loadMessagesTriger: boolean
 }

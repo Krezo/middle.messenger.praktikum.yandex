@@ -14,7 +14,7 @@
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12);
   border-radius: 6px;
 
-  &>*:not(:first-child) {
+  & > *:not(:first-child) {
     margin-top: 25px;
   }
 
@@ -24,7 +24,7 @@
     justify-content: center;
     align-items: center;
 
-    &>*:not(:first-child) {
+    & > *:not(:first-child) {
       margin-top: 20px;
     }
   }
@@ -37,7 +37,7 @@
 .authFormInputs {
   width: 100%;
 
-  &>*:not(:first-child) {
+  & > *:not(:first-child) {
     margin-top: 25px;
   }
 }

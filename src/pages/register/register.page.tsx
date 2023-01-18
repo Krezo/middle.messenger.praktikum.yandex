@@ -71,94 +71,92 @@ const {
   },
 })
 
-export default () => (
-  <DefaultLayout>
-    <div className={style.registerPage}>
-      <form
-        className={style.registerForm}
-        onSubmit={(event: Event) => {
-          event.preventDefault()
-          console.log(registerFormValues.value)
-          authService.signup(registerFormValues.value)
-        }}
-      >
-        {/* <Logo className={style.registerFormLogo} /> */}
-        <h2 className={styles.h2}>Регистрация</h2>
-        <p className={style.registerFormTooltip}>
-          Введите данные для регистрации
-        </p>
-        <div className={style.errorMessage}>{authStore.signupError}</div>
-        <div className={style.registerFormInputs}>
-          <Input
-            setValue={(value: string) =>
-              (registerForm.first_name.value = value)
-            }
-            value={registerForm.first_name.value}
-            onBlur={() => registerForm.first_name.blur()}
-            toched={registerForm.first_name.toched}
-            errorMessage={registerForm.first_name.errorMessage}
-            id="first_name"
-            placeholder="Имя"
-          />
-          <Input
-            setValue={(value: string) =>
-              (registerForm.second_name.value = value)
-            }
-            value={registerForm.second_name.value}
-            onBlur={() => registerForm.second_name.blur()}
-            toched={registerForm.second_name.toched}
-            errorMessage={registerForm.second_name.errorMessage}
-            id="fam"
-            placeholder="Фамилия"
-          />
-          <Input
-            setValue={(value: string) => (registerForm.login.value = value)}
-            value={registerForm.login.value}
-            onBlur={() => registerForm.login.blur()}
-            toched={registerForm.login.toched}
-            errorMessage={registerForm.login.errorMessage}
-            id="login"
-            placeholder="Логин"
-          />
-          <Input
-            setValue={(value: string) => (registerForm.email.value = value)}
-            value={registerForm.email.value}
-            onBlur={() => registerForm.email.blur()}
-            toched={registerForm.email.toched}
-            errorMessage={registerForm.email.errorMessage}
-            id="email"
-            placeholder="Email"
-          />
-          <Input
-            setValue={(value: string) => (registerForm.password.value = value)}
-            value={registerForm.password.value}
-            onBlur={() => registerForm.password.blur()}
-            toched={registerForm.password.toched}
-            errorMessage={registerForm.password.errorMessage}
-            id="password"
-            type="password"
-            placeholder="Пароль"
-          />
-          <Input
-            setValue={(value: string) => (registerForm.phone.value = value)}
-            value={registerForm.phone.value}
-            onBlur={() => registerForm.phone.blur()}
-            toched={registerForm.phone.toched}
-            errorMessage={registerForm.phone.errorMessage}
-            id="phone"
-            placeholder="Телефон"
-          />
-        </div>
-        <Button
-          disabled={!isValid.value}
-          primary
-          className={style.registerFormLoginBtn}
-          type="submit"
-          loading={authStore.signupLoading}
+export default function () {
+  return (
+    <DefaultLayout>
+      <div className={style.registerPage}>
+        <form
+          className={style.registerForm}
+          onSubmit={(event: Event) => {
+            event.preventDefault()
+            console.log(registerFormValues.value)
+            authService.signup(registerFormValues.value)
+          }}
         >
-          Регистрация
-        </Button>
-      </form>
-    </div>
-  </DefaultLayout>
-)
+          {/* <Logo className={style.registerFormLogo} /> */}
+          <h2 className={styles.h2}>Регистрация</h2>
+          <p className={style.registerFormTooltip}>
+            Введите данные для регистрации
+          </p>
+          <div className={style.errorMessage}>{authStore.signupError}</div>
+          <div className={style.registerFormInputs}>
+            <Input
+              setValue={(value: string) => (registerForm.first_name.value = value)}
+              value={registerForm.first_name.value}
+              onBlur={() => registerForm.first_name.blur()}
+              toched={registerForm.first_name.toched}
+              errorMessage={registerForm.first_name.errorMessage}
+              id="first_name"
+              placeholder="Имя"
+            />
+            <Input
+              setValue={(value: string) => (registerForm.second_name.value = value)}
+              value={registerForm.second_name.value}
+              onBlur={() => registerForm.second_name.blur()}
+              toched={registerForm.second_name.toched}
+              errorMessage={registerForm.second_name.errorMessage}
+              id="fam"
+              placeholder="Фамилия"
+            />
+            <Input
+              setValue={(value: string) => (registerForm.login.value = value)}
+              value={registerForm.login.value}
+              onBlur={() => registerForm.login.blur()}
+              toched={registerForm.login.toched}
+              errorMessage={registerForm.login.errorMessage}
+              id="login"
+              placeholder="Логин"
+            />
+            <Input
+              setValue={(value: string) => (registerForm.email.value = value)}
+              value={registerForm.email.value}
+              onBlur={() => registerForm.email.blur()}
+              toched={registerForm.email.toched}
+              errorMessage={registerForm.email.errorMessage}
+              id="email"
+              placeholder="Email"
+            />
+            <Input
+              setValue={(value: string) => (registerForm.password.value = value)}
+              value={registerForm.password.value}
+              onBlur={() => registerForm.password.blur()}
+              toched={registerForm.password.toched}
+              errorMessage={registerForm.password.errorMessage}
+              id="password"
+              type="password"
+              placeholder="Пароль"
+            />
+            <Input
+              setValue={(value: string) => (registerForm.phone.value = value)}
+              value={registerForm.phone.value}
+              onBlur={() => registerForm.phone.blur()}
+              toched={registerForm.phone.toched}
+              errorMessage={registerForm.phone.errorMessage}
+              id="phone"
+              placeholder="Телефон"
+            />
+          </div>
+          <Button
+            disabled={!isValid.value}
+            primary
+            className={style.registerFormLoginBtn}
+            type="submit"
+            loading={authStore.signupLoading}
+          >
+            Регистрация
+          </Button>
+        </form>
+      </div>
+    </DefaultLayout>
+  )
+}

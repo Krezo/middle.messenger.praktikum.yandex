@@ -12,7 +12,9 @@ interface IRoute {
 
 class Router {
   static __instance: Router
+
   private routeList = new Map<string, IRoute>()
+
   constructor() {
     if (Router.__instance) {
       return Router.__instance
@@ -22,14 +24,17 @@ class Router {
     })
     Router.__instance = this
   }
+
   addRoute(route: IRoute) {
     if (!this.routeList.has(route.path)) {
       this.routeList.set(route.path, route)
     }
   }
+
   routeExist(path: string) {
     return this.routeList.has(path)
   }
+
   go(href = '') {
     const route = this.routeList.get(href)
     if (!route) {
@@ -39,12 +44,16 @@ class Router {
     window.history.pushState({}, route.title, href)
     activePage.value = href
   }
+
   back() {
     window.history.go(-1)
   }
+
   forward() {
     window.history.go(1)
   }
 }
 
-export { RouterComponent, RouteComponent, Router, RouterLink, activePage }
+export {
+  RouterComponent, RouteComponent, Router, RouterLink, activePage,
+}

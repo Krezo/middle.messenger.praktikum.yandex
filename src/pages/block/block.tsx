@@ -10,12 +10,13 @@ class Button extends Block<IButtonProps> {
   constructor(props: IButtonProps) {
     super('button', props)
   }
+
   render() {
     const { type, onClick } = this.props
     return renderDOM(
       <button className={`btn-${type}`} onClick={onClick}>
         Button
-      </button>
+      </button>,
     )
   }
 }

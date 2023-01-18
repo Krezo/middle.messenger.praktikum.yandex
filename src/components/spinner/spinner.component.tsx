@@ -8,10 +8,9 @@ interface SpinnerProps extends IComponentProps {
   primary?: boolean
 }
 
-const Spinner = (props: SpinnerProps) => {
+function Spinner(props: SpinnerProps) {
   const { size, className, primary } = props
-  const spinnerSizeClass =
-    style['spinner' + capitalizeFirstLetter(size ?? 'md')]
+  const spinnerSizeClass = style[`spinner${capitalizeFirstLetter(size ?? 'md')}`]
   const spinnerClass = [
     primary ? style.spinnerPrimary : '',
     style.spinner,
@@ -20,10 +19,10 @@ const Spinner = (props: SpinnerProps) => {
   ]
   return (
     <div className={spinnerClass.join(' ')}>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+      <div />
+      <div />
+      <div />
+      <div />
     </div>
   )
 }

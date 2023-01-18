@@ -1,8 +1,7 @@
-import { ReactNode } from 'react'
 import { ChildrendVNode, IVNode, VNodeProps } from './vdom'
 
 export interface IComponentProps {
-  children?: any | IVNode[]
+  children?: unknown | IVNode[]
   className?: string
 }
 
@@ -16,6 +15,7 @@ export interface IOnUpdateHook<T> {
 
 let lifeCycleRegister = false
 
+// Стек хуков
 export const hookOnUpdateStack: (IOnUpdateHook<VNodeProps> | null)[] = []
 export const hookOnMountedStack: (IOnMountedHook | null)[] = []
 
@@ -30,15 +30,12 @@ export const startListenHooks = () => {
   lifeCycleRegister = true
 }
 
-export const getHooks = () => {
-  return {
-    onUpdate: hookOnUpdateStack.pop() || null,
-    onMounted: hookOnMountedStack.pop() || null,
-  }
-}
+export const getHooks = () => ({
+  onUpdate: hookOnUpdateStack.pop() || null,
+  onMounted: hookOnMountedStack.pop() || null,
+})
 
 export const endListenHooks = () => {
-  // clearLifeCycleHooks()
   lifeCycleRegister = false
 }
 
@@ -46,7 +43,7 @@ const isLifeCycleRegisterEnable = () => lifeCycleRegister
 
 export const registerLifeCycleHooks = (
   component: IComponentVNode,
-  hooks: IComponentLifeCycleHooks
+  hooks: IComponentLifeCycleHooks,
 ) => {
   Object.assign(component, hooks)
 }
@@ -78,10 +75,8 @@ export interface ILifeCycleComponent extends IComponentVNode {
 }
 
 export const isComponentNode = (
-  data: IVNode | IComponentVNode
-): data is IComponentVNode => {
-  return typeof data.tagName === 'function'
-}
+  data: IVNode | IComponentVNode,
+): data is IComponentVNode => typeof data.tagName === 'function'
 
 export const onMounted = (onMountedFunc: IOnMountedHook) => {
   if (!isLifeCycleRegisterEnable) return
@@ -92,18 +87,16 @@ export const onMounted = (onMountedFunc: IOnMountedHook) => {
 export const onUpdate = <T>(onUpdateFunc: IOnUpdateHook<T>) => {
   if (!isLifeCycleRegisterEnable) return
   hookOnUpdateStack.pop()
-  hookOnUpdateStack.push(onUpdateFunc)
+  hookOnUpdateStack.push(onUpdateFunc as IOnUpdateHook<VNodeProps>)
 }
 
 export const createComponentNode = (
   tagName: (props: VNodeProps, children: (IVNode | string)[]) => IVNode,
   props: VNodeProps,
-  children: ChildrendVNode
-): IComponentVNode => {
-  return {
-    tagName,
-    props,
-    children,
-    ...componentLifecycleHooks,
-  }
-}
+  children: ChildrendVNode,
+): IComponentVNode => ({
+  tagName,
+  props,
+  children,
+  ...componentLifecycleHooks,
+})

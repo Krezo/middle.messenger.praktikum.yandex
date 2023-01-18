@@ -4,6 +4,7 @@ import { IComponentProps } from '../../modules/components'
 import style from './button.module.css'
 
 import { Spinner } from '../spinner/spinner.component'
+
 interface IProps extends IComponentProps {
   primary?: boolean
   outline?: boolean

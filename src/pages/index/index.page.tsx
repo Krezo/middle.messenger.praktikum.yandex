@@ -2,18 +2,13 @@
 import style from './index.page.module.css'
 import styles from '../../css/app.module.css'
 // Modules
-import { computed, ref, watch, watchEffect } from '../../modules/reactivity'
-// Images
-import companionImagePlaceholder from '../../images/avatar_placeholder.jpeg'
+import { computed, ref, watch } from '../../modules/reactivity'
 // Components
 import { Input } from '../../components/input/input.component'
-import { useForm } from '../../composibles/useForm'
 import RouterLink from '../../modules/router/components/RouterLink'
 import { h } from '../../modules/vdom'
-import AuthService from '../../services/authService'
-import ChatApi from '../../api/chatApi'
 
-import { authStore } from '../../store/authStore.ts'
+import { authStore } from '../../store/authStore'
 import ChatService from '../../services/chatService'
 import { Button } from '../../components/button/buttonComponent'
 import { Modal } from '../../components/modal/modal.component'
@@ -21,7 +16,6 @@ import { chatStore } from '../../store/chatStore'
 import UserService from '../../services/userService'
 import { IUser, IUserWithRole, UserRoles } from '../../types/user'
 import { apiResourceUrl } from '../../consts'
-import { Message } from '../../types/chat'
 import { MessageList } from '../../components/messageList/messageList.component'
 
 const aciveChatIndex = ref(-1)
@@ -29,6 +23,7 @@ const loadingMessages = ref(false)
 
 const activeChat = computed(() => {
   if (aciveChatIndex.value > -1) {
+    messageLines.value = 1
     return chatStore.chats[aciveChatIndex.value]
   }
 })
@@ -46,24 +41,11 @@ watch(
           loadingMessages.value = false
         })
     }
-  }
+  },
 )
-
-watchEffect(() => {
-  // console.log(chatStore.activeChatMessages.value)
-  console.log(chatStore.activeChatMessages)
-})
 
 const selectActiveComponent = (index: number) => {
   aciveChatIndex.value = index
-}
-
-const getMessageTime = (date: Date) => {
-  return date.toLocaleTimeString('en-US', {
-    hour12: false,
-    hour: '2-digit',
-    minute: '2-digit',
-  })
 }
 
 const deleteChat = async () => {
@@ -73,36 +55,40 @@ const deleteChat = async () => {
   }
 }
 
+const messageLines = ref(1)
+const lineHeight = 28
+const messagePadding = 10
+
+const messageHeight = computed(
+  () => `${messagePadding * 2 + lineHeight * messageLines.value}px`,
+)
+
 const sendMessage = (event: KeyboardEvent) => {
+  const messageElement = (event.target as HTMLInputElement)!
+  messageLines.value = messageElement.value.split('\n').length
+  debugger
+  if (message.value.replace(/\W\s/, '') === '') {
+    messageErrorMessage.value = 'Поле не моет быть пустым'
+    return
+  }
+  messageErrorMessage.value = false
+
   if (event.code === 'Enter' && activeChat.value) {
-    const content = (event.target as HTMLInputElement).value
+    if (event.shiftKey) {
+      console.log('Shift')
+      return
+    }
+    const content = messageElement.value
     activeChat.value.rtChat.sendMessage(content)
-    ;(event.target as HTMLInputElement).value = ''
-    messageFormData.message.value = ''
+    messageLines.value = 1
+    messageElement.value = ''
+    message.value = ''
   }
 }
 
-const { formData: messageFormData } = useForm({
-  message: {
-    value: '',
-    validators: {
-      required: (value: string) => !!value || 'Поле не может быть пустым',
-    },
-    blur,
-    valid: false,
-    errorMessage: '123',
-  },
-})
+const message = ref('')
+const messageErrorMessage = ref<string | boolean>(false)
 
-watch(
-  () => messageFormData.message.errorMessage,
-  (message) => {
-    console.log(message)
-  },
-  { immediate: true }
-)
-
-const authService = new AuthService()
 const chatService = new ChatService()
 const userService = new UserService()
 
@@ -137,9 +123,7 @@ const createChat = async (event: Event) => {
   })
 }
 
-const activeChatMessages = computed(() => {
-  return chatStore.activeChatMessages
-})
+const activeChatMessages = computed(() => chatStore.activeChatMessages)
 
 const addUserToChat = async (event: Event) => {
   if (!activeChat.value) return
@@ -166,12 +150,13 @@ const deleteUserFromChat = async (event: Event) => {
 const activeChatUsers = ref<IUserWithRole[]>([])
 
 watch(
-  () => {
-    return chatUsersModalOpen.value
-  },
+  () => chatUsersModalOpen.value,
   (chatUsersModalOpen) => {
     if (chatUsersModalOpen) {
       findUserString.value = ''
+      if (!activeChat.value) {
+        return
+      }
       chatService.getChatUsers(activeChat.value.id).then((chatUsers) => {
         if (chatUsers) {
           addedUserIds.value = chatUsers.map((user) => user.id)
@@ -179,7 +164,7 @@ watch(
         }
       })
     }
-  }
+  },
 )
 
 watch(
@@ -188,7 +173,7 @@ watch(
     if (isAuth) {
       chatService.getChats()
     }
-  }
+  },
 )
 
 watch(
@@ -200,21 +185,22 @@ watch(
           findUsers.value = findedUsers
         }
       })
-    } else {
+    } else if (activeChat.value) {
       chatService.getChatUsers(activeChat.value.id).then((chatUsers) => {
         if (chatUsers) {
           addedUserIds.value = chatUsers.map((user) => user.id)
           activeChatUsers.value = chatUsers
         }
       })
-      // findUsers.value = []
     }
-  }
+  },
 )
 
-export default () => {
+export default function () {
   return (
     <main>
+      {!!messageErrorMessage.value}
+      {!!messageHeight.value}
       <div className={style.mainPage}>
         <div className={style.chatSidebar}>
           <div className={style.profileLink}>
@@ -285,7 +271,9 @@ export default () => {
                       alt="user avatar"
                     />
                     <span className={style.chatUserDisplayName}>
-                      {user.id} {user.login}
+                      {user.id}
+                      {' '}
+                      {user.login}
                     </span>
                     {user.role !== UserRoles.ADMIN ? (
                       <span
@@ -299,7 +287,7 @@ export default () => {
                         Удалить
                       </span>
                     ) : (
-                      <div></div>
+                      <div />
                     )}
                   </div>
                 ))}
@@ -311,7 +299,7 @@ export default () => {
                 }`}
               >
                 {!addedUserIds.value}
-                {findUsers.value.map((user, userIndex) => (
+                {findUsers.value.map((user) => (
                   <div>
                     <img
                       src={apiResourceUrl + user.avatar}
@@ -319,7 +307,9 @@ export default () => {
                       alt="user avatar"
                     />
                     <span className={style.chatUserDisplayName}>
-                      {user.id} {user.login}
+                      {user.id}
+                      {' '}
+                      {user.login}
                     </span>
                     <span className={style.chatUserFuncBlock}>
                       {!addedUserIds.value.includes(user.id) ? (
@@ -372,9 +362,7 @@ export default () => {
                 <div className={style.companionBody}>
                   <div className={style.companionName}>{chat.title}</div>
                   <div className={style.companionMessage}>
-                    {!!chat.last_message
-                      ? chat.last_message.content
-                      : 'Чат пуст'}
+                    {chat.last_message ? chat.last_message.content : 'Чат пуст'}
                   </div>
                 </div>
                 {/* <div className={style.companionMessageTime}>
@@ -415,14 +403,15 @@ export default () => {
             />
             <Input
               id="message"
-              value={messageFormData.message.value}
+              type="textarea"
+              inputSstyle={`height: ${messageHeight.value}`}
+              value={message.value}
               onKeyup={sendMessage}
-              onBlur={() => messageFormData.message.blur()}
-              toched={messageFormData.message.toched}
-              errorMessage={messageFormData.message.errorMessage}
-              setValue={(value: string) =>
-                (messageFormData.message.value = value)
-              }
+              toched
+              errorMessage={messageErrorMessage.value}
+              setValue={(value: string) => {
+                message.value = value
+              }}
               className={style.messageInput}
               rounded
             />

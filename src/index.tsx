@@ -21,34 +21,32 @@ const router = new Router()
 document.addEventListener('DOMContentLoaded', async () => {
   const rootEl = document.getElementById('root')
 
-  const app = createApp(rootEl, () => {
-    return (
-      <RouterComponent>
-        <RouteComponent
-          title="Chat. Messenger"
-          path="/messenger"
-          page={IndexPage}
-        />
-        <RouteComponent
-          title="Chat. Settings"
-          path="/settings"
-          page={SettingsPage}
-        />
-        <RouteComponent title="Chat. Auth" path="/" page={AuthPage} />
-        <RouteComponent
-          title="Chat. Signup"
-          path="/sign-up"
-          page={RegisterPage}
-        />
-        <RouteComponent
-          title="Chat. Page not found"
-          path="/404"
-          page={Page404}
-        />
-        <RouteComponent title="Chat. Server error" path="/500" page={Page500} />
-      </RouterComponent>
-    )
-  })
+  const app = createApp(rootEl, () => (
+    <RouterComponent>
+      <RouteComponent
+        title="Chat. Messenger"
+        path="/messenger"
+        page={IndexPage}
+      />
+      <RouteComponent
+        title="Chat. Settings"
+        path="/settings"
+        page={SettingsPage}
+      />
+      <RouteComponent title="Chat. Auth" path="/" page={AuthPage} />
+      <RouteComponent
+        title="Chat. Signup"
+        path="/sign-up"
+        page={RegisterPage}
+      />
+      <RouteComponent
+        title="Chat. Page not found"
+        path="/404"
+        page={Page404}
+      />
+      <RouteComponent title="Chat. Server error" path="/500" page={Page500} />
+    </RouterComponent>
+  ))
 
   app.mount()
 
@@ -71,7 +69,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         authStore.signinError = 'Необходима авторизация'
         new Router().go('/')
       }
-      return
     }
   })
 })

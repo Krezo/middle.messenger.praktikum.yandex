@@ -17,8 +17,11 @@ import { loginUser, logoutUser } from '../store/userStore'
  */
 export default class AuthService {
   private readonly store: typeof authStore
+
   private readonly api: AuthApi
+
   private __instance: AuthService
+
   constructor() {
     if (this.__instance) {
       return this.__instance

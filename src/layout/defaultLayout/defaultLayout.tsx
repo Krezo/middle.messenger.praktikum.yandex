@@ -5,7 +5,7 @@ import { IComponentProps } from '../../modules/components'
 import { h } from '../../modules/vdom'
 import { Header } from '../../components/header/header.component'
 
-const DefaultLayout = (props: IComponentProps) => {
+function DefaultLayout(props: IComponentProps) {
   return (
     <div>
       {/* <Header /> */}

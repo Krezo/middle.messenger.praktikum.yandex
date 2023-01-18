@@ -3,14 +3,22 @@ import ChatApi, {
   GetChatUsersMethodsParams,
 } from '../api/chatApi'
 import { HTTPTransportResponseError } from '../modules/fetch'
-import { ref } from '../modules/reactivity'
-import { Router } from '../modules/router/index'
-import { authStore } from '../store/authStore'
-import { ChatElement, chatStore } from '../store/chatStore'
+import { ChatElement, IChatMessage, chatStore } from '../store/chatStore'
 import { userStore } from '../store/userStore'
 import { IApiError } from '../types/apiError'
 import { Message } from '../types/chat'
+import { IUser } from '../types/user'
 import RealTimeChat from './realTimeChat'
+import UserService from './userService'
+
+export enum MessageType {
+  USER_CONNEDTED = 'user connected',
+}
+
+export interface UserConnectedMessage {
+  content: number
+  type: MessageType.USER_CONNEDTED
+}
 
 /**
  * Класс для работы с аутентификацией
@@ -19,8 +27,11 @@ import RealTimeChat from './realTimeChat'
  */
 export default class ChatService {
   private readonly store: typeof chatStore
+
   private readonly api: ChatApi
+
   private __instance: ChatService
+
   constructor() {
     if (this.__instance) {
       return this.__instance
@@ -43,27 +54,61 @@ export default class ChatService {
         const token = await RealTimeChat.createToken(chat.id)
         if (userStore.user.id) {
           const rtChat = new RealTimeChat(userStore.user.id, chat.id, token)
+
+          const chatUsers = new Map<number, IUser>()
           const chatInstace: ChatElement = {
             ...chat,
-            messages: new Map<number, Message>(),
+            users: chatUsers,
+            messages: new Map<number, IChatMessage>(),
             rtChat,
           }
+
           chats.push(chatInstace)
+
+          //
+          const loadUser = async (userId: number) => {
+            if (!chatUsers.has(userId)) {
+              const user = await new UserService().getUsetById(userId)
+              if (!user) return
+              chatUsers.set(userId, user)
+            }
+          }
 
           rtChat.ws.addEventListener(
             'message',
-            (event: MessageEvent<string>) => {
-              const messageData: Message[] | Message = JSON.parse(event.data)
+            async (event: MessageEvent<string>) => {
+              const messageData: Message[] | Message | UserConnectedMessage = JSON.parse(event.data)
+              // Загружаем массив сообщений
               if (Array.isArray(messageData)) {
-                messageData.forEach((messageData) => {
-                  chatInstace.messages.set(messageData.id, messageData)
-                })
-              } else {
-                chatInstace.messages.set(messageData.id, messageData)
+                for (const message of messageData) {
+                  const userId = message.user_id
+                  await loadUser(userId)
+                  chatInstace.messages.set(message.id, {
+                    ...message,
+                    user: chatUsers.get(userId)!,
+                    date: this.createChatDate(message.time),
+                  })
+                }
+              } else if (messageData.type === MessageType.USER_CONNEDTED) {
+                await loadUser(messageData.content)
               }
-
+              // Загружаем одно сообщение
+              else {
+                const userId = messageData.user_id
+                await loadUser(userId)
+                chatInstace.messages.set(messageData.id, {
+                  ...messageData,
+                  user: chatUsers.get(userId)!,
+                  date: this.createChatDate(messageData.time),
+                })
+                chatInstace.last_message = {
+                  content: messageData.content,
+                  time: messageData.time,
+                }
+              }
+              // Тригерим рендер страницы
               this.store.loadMessagesTriger = !this.store.loadMessagesTriger
-            }
+            },
           )
         }
       }
@@ -99,6 +144,10 @@ export default class ChatService {
     } finally {
       this.store.loadingCreateChat = false
     }
+  }
+
+  private createChatDate(date: string) {
+    return new Date(date)
   }
 
   /**

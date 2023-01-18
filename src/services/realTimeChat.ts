@@ -9,14 +9,18 @@ const chatApi = new ChatApi()
  */
 export default class RealTimeChat {
   public readonly ws: WebSocket
+
   private readonly wsBaseUrl = 'wss://ya-praktikum.tech/ws/chats'
+
   constructor(userId: number, chatId: number, token: string) {
     this.ws = new WebSocket([this.wsBaseUrl, userId, chatId, token].join('/'))
   }
+
   public static async createToken(chatId: number) {
     const { response } = await chatApi.getToken(chatId)
     return response.token
   }
+
   public loadMessage(content: number = 0, type = 'get old') {
     return new Promise((res, rej) => {
       const intervalId = setInterval(() => {
@@ -25,7 +29,7 @@ export default class RealTimeChat {
             JSON.stringify({
               content,
               type,
-            })
+            }),
           )
           clearInterval(intervalId)
           res(true)
@@ -33,17 +37,21 @@ export default class RealTimeChat {
       }, 100)
     })
   }
+
   public sendMessage(content: string, type = 'message') {
-    const intervalId = setInterval(() => {
-      if (this.ws.readyState === this.ws.OPEN) {
-        this.ws.send(
-          JSON.stringify({
-            content,
-            type,
-          })
-        )
-        clearInterval(intervalId)
-      }
-    }, 100)
+    return new Promise((res, rej) => {
+      const intervalId = setInterval(() => {
+        if (this.ws.readyState === this.ws.OPEN) {
+          this.ws.send(
+            JSON.stringify({
+              content,
+              type,
+            }),
+          )
+          clearInterval(intervalId)
+          res(true)
+        }
+      }, 100)
+    })
   }
 }

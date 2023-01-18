@@ -10,7 +10,9 @@ import AvatarPlaceholder from '../../images/avatar_placeholder.jpeg'
 import style from './settings.page.module.css'
 import styles from '../../css/app.module.css'
 // Others
-import { reactive, ref, watch, watchEffect } from '../../modules/reactivity'
+import {
+  reactive, ref, watch, watchEffect,
+} from '../../modules/reactivity'
 import { useForm } from '../../composibles/useForm'
 import {
   name,
@@ -57,8 +59,7 @@ const {
   display_name: {
     value: '',
     validators: {
-      display_name: (value: string) =>
-        /^[^\W]+$/g.test(value) || 'Имя должно состояить из букв',
+      display_name: (value: string) => /^[^\W]+$/g.test(value) || 'Имя должно состояить из букв',
     },
   },
   login: {
@@ -154,7 +155,7 @@ const onSubmitSettingsForm = async (event: Event) => {
   if (mode.value === 'editPassword') {
     await userService.changePassword(
       changePasswordFormValues.value.confirmPassword,
-      changePasswordFormValues.value.oldPassword
+      changePasswordFormValues.value.oldPassword,
     )
     if (!userStore.changePasswordError) {
       backToSettings()
@@ -185,7 +186,7 @@ watch(
     } else {
       avatarErrorMessage.value = ''
     }
-  }
+  },
 )
 
 authService.getUser().then(() => {
@@ -198,7 +199,7 @@ const logoutUser = () => {
   }
 }
 
-export default () => {
+export default function () {
   return (
     <DefaultLayout>
       <div className={style.settingsPage}>
@@ -294,7 +295,7 @@ export default () => {
                 value={avatarFile.value}
                 setValue={(value: File[]) => (avatarFile.value = value)}
                 type="file"
-                toched={true}
+                toched
                 errorMessage={avatarErrorMessage.value}
                 label="Аватар"
               />
@@ -317,9 +318,7 @@ export default () => {
               onBlur={() => changeSettingsFormData.display_name.blur()}
               toched={changeSettingsFormData.display_name.toched}
               errorMessage={changeSettingsFormData.display_name.errorMessage}
-              setValue={(value: string) =>
-                (changeSettingsFormData.display_name.value = value)
-              }
+              setValue={(value: string) => (changeSettingsFormData.display_name.value = value)}
             />
 
             <Input
@@ -330,9 +329,7 @@ export default () => {
               onBlur={() => changeSettingsFormData.first_name.blur()}
               toched={changeSettingsFormData.first_name.toched}
               errorMessage={changeSettingsFormData.first_name.errorMessage}
-              setValue={(value: string) =>
-                (changeSettingsFormData.first_name.value = value)
-              }
+              setValue={(value: string) => (changeSettingsFormData.first_name.value = value)}
             />
 
             <Input
@@ -343,9 +340,7 @@ export default () => {
               onBlur={() => changeSettingsFormData.second_name.blur()}
               toched={changeSettingsFormData.second_name.toched}
               errorMessage={changeSettingsFormData.second_name.errorMessage}
-              setValue={(value: string) =>
-                (changeSettingsFormData.second_name.value = value)
-              }
+              setValue={(value: string) => (changeSettingsFormData.second_name.value = value)}
             />
 
             <Input
@@ -356,9 +351,7 @@ export default () => {
               onBlur={() => changeSettingsFormData.login.blur()}
               toched={changeSettingsFormData.login.toched}
               errorMessage={changeSettingsFormData.login.errorMessage}
-              setValue={(value: string) =>
-                (changeSettingsFormData.login.value = value)
-              }
+              setValue={(value: string) => (changeSettingsFormData.login.value = value)}
             />
 
             <Input
@@ -369,9 +362,7 @@ export default () => {
               onBlur={() => changeSettingsFormData.email.blur()}
               toched={changeSettingsFormData.email.toched}
               errorMessage={changeSettingsFormData.email.errorMessage}
-              setValue={(value: string) =>
-                (changeSettingsFormData.email.value = value)
-              }
+              setValue={(value: string) => (changeSettingsFormData.email.value = value)}
             />
 
             <Input
@@ -382,9 +373,7 @@ export default () => {
               onBlur={() => changeSettingsFormData.phone.blur()!}
               toched={changeSettingsFormData.phone.toched}
               errorMessage={changeSettingsFormData.phone.errorMessage}
-              setValue={(value: string) =>
-                (changeSettingsFormData.phone.value = value)
-              }
+              setValue={(value: string) => (changeSettingsFormData.phone.value = value)}
             />
 
             <Button
@@ -411,9 +400,7 @@ export default () => {
               onBlur={() => changePasswordFormData.oldPassword.blur()}
               toched={changePasswordFormData.oldPassword.toched}
               errorMessage={changePasswordFormData.oldPassword.errorMessage}
-              setValue={(value: string) =>
-                (changePasswordFormData.oldPassword.value = value)
-              }
+              setValue={(value: string) => (changePasswordFormData.oldPassword.value = value)}
               type="password"
               placeholder="Старый пароль"
             />
@@ -422,9 +409,7 @@ export default () => {
               onBlur={() => changePasswordFormData.password.blur()}
               toched={changePasswordFormData.password.toched}
               errorMessage={changePasswordFormData.password.errorMessage}
-              setValue={(value: string) =>
-                (changePasswordFormData.password.value = value)
-              }
+              setValue={(value: string) => (changePasswordFormData.password.value = value)}
               type="password"
               placeholder="Пароль"
             />
@@ -433,9 +418,7 @@ export default () => {
               onBlur={() => changePasswordFormData.confirmPassword.blur()}
               toched={changePasswordFormData.confirmPassword.toched}
               errorMessage={changePasswordFormData.confirmPassword.errorMessage}
-              setValue={(value: string) =>
-                (changePasswordFormData.confirmPassword.value = value)
-              }
+              setValue={(value: string) => (changePasswordFormData.confirmPassword.value = value)}
               type="password"
               placeholder="Пароль"
             />

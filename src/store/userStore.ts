@@ -54,4 +54,6 @@ const loginUser = (userData: typeof userStore.user) => {
   reassignUser(userData)
 }
 
-export { userStore, logoutUser, loginUser, reassignUser, clearUserError }
+export {
+  userStore, logoutUser, loginUser, reassignUser, clearUserError,
+}
