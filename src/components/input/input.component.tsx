@@ -1,24 +1,51 @@
-import { IComponentProps } from '../../modules/components';
-import { h } from '../../modules/vdom';
+import { IComponentProps } from '../../modules/components'
+import { ref } from '../../modules/reactivity'
+import { h } from '../../modules/vdom'
 
-import style from "./input.component.module.css";
+import style from './input.component.module.css'
+
 interface IProps extends IComponentProps {
-  type?: string,
-  id?: string
-  placeholder?: string,
+  type?: string
+  id: string
+  placeholder?: string
+  label?: string
+  value?: string | File[]
   errorMessage?: string | boolean
-  rounded?: boolean;
-  setValue?: (value: any) => void;
-  onKeyup?: (event: KeyboardEvent) => void,
-  onBlur?: () => void,
+  rounded?: boolean
+  setValue?: (value: any) => void
+  onKeyup?: (event: KeyboardEvent) => void
+  onBlur?: () => void
   toched?: boolean
+  inputSstyle?: string
 }
 
-const Input = (props: IProps) => {
-  const { rounded, className, errorMessage, toched } = props;
+function Input(props: IProps) {
+  const {
+    id,
+    rounded,
+    className,
+    children,
+    label,
+    errorMessage,
+    toched,
+    value,
+    type,
+    inputSstyle,
+  } = props
+
+  const isFileInput = type === 'file'
+  const isTextArea = type === 'textarea'
 
   const setValue = (event: KeyboardEvent) => {
     if (props.setValue) {
+      if (isFileInput) {
+        props.setValue(
+          Array.from(
+            (document.getElementById(id) as HTMLInputElement).files ?? [],
+          ),
+        )
+        return
+      }
       props.setValue((event.target as HTMLInputElement).value)
     }
   }
@@ -35,29 +62,69 @@ const Input = (props: IProps) => {
     }
   }
 
+  const errorClass = errorMessage && toched ? style.error : ''
+
   const inputClasses = [
     style.input,
     rounded ? style.rounded : '',
-    errorMessage && toched ? style.error : '',
-    ...(className ?? '').split(' ')
+    isFileInput ? style.inputFile : '',
+    errorClass,
+    ...(className ?? '').split(' '),
   ]
 
-  const showErorr = errorMessage && toched;
+  const TagName = isFileInput ? 'label' : 'div'
+  const InputTagName = isTextArea ? 'textarea' : 'input'
+  const showErorr = errorMessage && toched
 
-  return (<div className={style.inputWrapper}>
-    <input
-      onBlur={onBlur}
-      id={props.id}
-      type={props.type ?? 'text'}
-      onKeyUp={keyUp}
-      className={inputClasses.join(' ')}
-      placeholder={props.placeholder ?? ''}
-      onInput={setValue}
-    />
-    <div className={style.errorMessage} style={showErorr ? '' : 'display: none;'}>{errorMessage}</div>
-  </div>)
+  const getValueFiles = (value: IProps['value']) => {
+    if (Array.isArray(value)) {
+      return value
+    }
+    return []
+  }
+
+  return (
+    <TagName
+      className={[style.inputWrapper, errorClass].join(' ')}
+      for={isFileInput ? id : ''}
+    >
+      {!isFileInput && <label htmlFor={id}>{label || ''}</label>}
+      <InputTagName
+        value={isFileInput ? null : value}
+        onBlur={onBlur}
+        id={id}
+        style={inputSstyle}
+        type={props.type ?? 'text'}
+        onKeyUp={keyUp}
+        className={inputClasses.join(' ')}
+        placeholder={props.placeholder ?? ''}
+        onInput={setValue}
+        hidden={isFileInput}
+      />
+      {!!errorMessage && (
+        <div
+          className={style.errorMessage}
+          style={showErorr ? '' : 'display: none;'}
+        >
+          {errorMessage.toString()}
+        </div>
+      )}
+      {!!isFileInput && (
+        <div>
+          <div className={style.avatarLabel}>{label || ''}</div>
+          <div>
+            {getValueFiles(value).map((file: File) => (
+              <div>{file.name.toString()}</div>
+            ))}
+          </div>
+          Перетащите файлы или загрузите
+          <div className={style.fileFormat}>
+            Поддерживаемые форматы: PNG, TIFF, JPG
+          </div>
+        </div>
+      )}
+    </TagName>
+  )
 }
 
-export {
-  Input
-}
+export { Input }

@@ -1,0 +1,44 @@
+.messageItem {
+  position: relative;
+  white-space: pre;
+  background: var(--primary-color);
+  color: var(--white);
+  border-radius: 2rem;
+  padding: 10px 60px 10px 10px;
+  margin-bottom: 1rem;
+}
+.user {
+  font-weight: 600;
+  text-align: right;
+  padding-right: 10px;
+}
+.messageTime {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+.spinnerWrapper {
+  position: absolute;
+  display: flex;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.02);
+  justify-content: center;
+  align-items: center;
+}
+.messageList {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column-reverse;
+  flex-flow: column nowrap;
+  position: relative;
+  flex-direction: column;
+  align-items: flex-end;
+  height: 100vh;
+  flex: 1;
+  & > *:first-child {
+    margin-top: auto;
+  }
+}

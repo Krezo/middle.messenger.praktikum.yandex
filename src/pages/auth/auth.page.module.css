@@ -33,6 +33,7 @@
     width: 100%;
   }
 }
+
 .authFormInputs {
   width: 100%;
 
@@ -40,10 +41,17 @@
     margin-top: 25px;
   }
 }
+
 .authFormLogo {
   width: 56px;
 }
+
 .authFormTooltip {
   font-weight: 500;
   color: var(--text-secondary-color);
+}
+
+.errorMessage {
+  color: var(--input-error);
+  font-weight: 600;
 }

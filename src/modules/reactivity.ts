@@ -1,51 +1,51 @@
-import { IObserver, observer } from './observer';
+import { observer } from './observer'
 
-interface IWatchFunction {
-  (oldValue?: any, newValue?: any): void
+interface IWatchFunction<T> {
+  (oldValue?: T, newValue?: T): void
 }
 
-let rootRenderFunc: any = null;
+export interface Ref<T> extends IObserver<T> {}
+
+let rootRenderFunc: any = null
 // Ключ для проверки является ли возвращаемый реактивный объект reactive/ref
-let isReactive = Symbol('isReactive');
-let isRef = Symbol('isRef');
+const isReactive = Symbol('isReactive')
+export const isRef = Symbol('isRef')
+export const isValueRef = <T>(value: any): value is IObserver<T> => value.isRef
 
 const setRootRenderFunc = (renderFunc: (...params: any) => void) => {
-  rootRenderFunc = renderFunc;
+  rootRenderFunc = renderFunc
 }
 
 // Отслеживание зависимостей observer
-let isWatchFunction: boolean = false;
-let watchFunction: IWatchFunction;
+let isWatchFunction: boolean = false
+let watchFunction: IWatchFunction<unknown>
 
 // Реализация Proxy обертки на observer для автоматического определения зависимостей
-const ref = <T>(value: T) => {
-  return new Proxy(observer(value), {
-    get(target, prop) {
-      if (prop == isRef) {
-        return true;
-      }
-      const propString = prop.toString();
-      if (propString in target) {
-        if (propString == 'value' && isWatchFunction) {
-          target.deps.add(watchFunction)
-        }
-        return target[propString as keyof typeof target];
-      }
-    },
-    set(target, prop, newValue) {
-      const propString = prop.toString();
-      const oldValue = target[propString as keyof typeof target];
-      target[propString as keyof typeof target] = newValue;
-      if (propString == 'value' && oldValue !== newValue) {
-        target.deps.forEach(dep => dep(newValue, oldValue))
-      }
-      return true;
+const ref = <T>(value: T) => new Proxy(observer(value), {
+  get(target, prop) {
+    if (prop == isRef) {
+      return true
     }
-  })
-}
+    const propString = prop.toString()
+    if (propString in target) {
+      if (propString == 'value' && isWatchFunction) {
+        target.deps.add(watchFunction)
+      }
+      return target[propString as keyof typeof target]
+    }
+  },
+  set(target, prop, newValue) {
+    const propString = prop.toString()
+    const oldValue = target[propString as keyof typeof target]
+    target[propString as keyof typeof target] = newValue
+    if (propString == 'value' && oldValue !== newValue) {
+      target.deps.forEach((dep) => dep(newValue, oldValue))
+    }
+    return true
+  },
+})
 
-
-const reactive = <T extends object>(value: T, deep: boolean = true) => {
+const reactive = <T extends object>(value: T, deep: boolean = true): T => {
   // Объект обертка для управления зависимостями
   // Работаем с простым proxy над target(value)
   // Тригерем зависимости из objectObserver
@@ -54,78 +54,88 @@ const reactive = <T extends object>(value: T, deep: boolean = true) => {
   // Если значение является объектом, то вызываем для него рекурсивно reactive
   // Потом в геттере вернем его для реактивных объектов
   for (const key in value) {
-    if (typeof value[key] === 'object' && deep) {
+    if (
+      typeof value[key] === 'object'
+      && !Array.isArray(value[key])
+      && value[key] !== null
+      && deep
+    ) {
       objectObserver[key] = reactive(value[key] as object)
-    } else
-      // Не важно что будет в ref, объект нужен для хранения зависимостей
-      objectObserver[key] = ref(true);
+    }
+    // Не важно что будет в ref, объект нужен для хранения зависимостей
+    else objectObserver[key] = ref(true)
   }
-
-  return new Proxy<T>(value, {
+  return new Proxy<any>(value, {
     get(target, prop) {
-
       if (prop === isReactive) {
         return true
       }
       // Возращаем reactive proxy
       if (objectObserver[prop]?.[isReactive]) {
-        return objectObserver[prop];
+        return objectObserver[prop]
       }
       // Добавляем зависимости
       if (isWatchFunction) {
         objectObserver[prop].deps.add(watchFunction)
       }
       if (prop in target) {
-        return target[prop as keyof typeof target];
+        return target[prop]
       }
     },
     set(target, prop, newValue) {
       // Вызываем все зависимости, если значение изменилось
       if (prop in target) {
-        if (target[prop as keyof typeof target] !== newValue) {
-          target[prop as keyof typeof target] = newValue;
+        if (target[prop] !== newValue) {
+          target[prop] = newValue
           if (objectObserver[prop][isRef]) {
-            (objectObserver[prop].deps as IObserver['deps']).forEach(dep => dep(newValue, target[prop as keyof typeof target]))
+            (objectObserver[prop].deps as IObserver['deps']).forEach((dep) => dep(newValue, target[prop]))
           }
-          return true
         }
+        return true
       }
       // Добавление реактивных данных
       if (newValue?.[isReactive]) {
-        target[prop as keyof typeof target] = newValue
-        return true;
+        target[prop] = newValue
+        return true
       }
       // Добавление ref
       if (newValue?.[isRef]) {
-        target[prop as keyof typeof target] = newValue.value;
-        objectObserver[prop] = newValue;
-        return true;
+        target[prop] = newValue.value
+        objectObserver[prop] = newValue
+        return true
       }
       // Добавление обычных данных
-      target[prop as keyof typeof target] = newValue;
-      objectObserver[prop] = ref(newValue);
+      target[prop] = newValue
+      objectObserver[prop] = ref(newValue)
       return true
-    }
+    },
   })
 }
 
 // Вспомогательная функция для привязки зависимостей observer
-const watchDep = (watch: (...params: any) => void, watchFunc?: IWatchFunction) => {
-  isWatchFunction = true;
-  watchFunction = watchFunc ? watchFunc : watch;
-  watch();
-  isWatchFunction = false;
+const watchDep = (
+  watch: (...params: any) => void,
+  watchFunc?: IWatchFunction<unknown>,
+) => {
+  isWatchFunction = true
+  watchFunction = watchFunc || watch
+  watch()
+  isWatchFunction = false
 }
 
-// Вычисляемый observer 
+// Вычисляемый observer
 const computed = <T>(computedFunc: () => T) => {
-  const computedObserver = ref(computedFunc());
-  watchDep(() => computedObserver.value = computedFunc());
-  return computedObserver;
+  const computedObserver = ref<null | T>(null)
+  watchDep(() => (computedObserver.value = computedFunc()))
+  return computedObserver as IObserver<T>
 }
 
 // Функция отслеживания изменений watch параметра
-const watch = <T>(watch: () => T, watchFunc: IWatchFunction, options?: { immediate: boolean }) => {
+const watch = <T>(
+  watch: () => T,
+  watchFunc: IWatchFunction<T>,
+  options?: { immediate: boolean },
+) => {
   watchDep(watch, watchFunc)
   if (options?.immediate) {
     watchFunc(watch())
@@ -137,6 +147,13 @@ const watchEffect = (watchEffectFunction: () => any) => {
   watchDep(watchEffectFunction)
 }
 
+const isObserveArray = (object: any): object is IObserver<[]> => {
+  if (isObserver(object)) {
+    return Array.isArray(object.value)
+  }
+  return false
+}
+
 export {
   ref,
   computed,
@@ -145,5 +162,5 @@ export {
   rootRenderFunc,
   setRootRenderFunc,
   IWatchFunction,
-  reactive
+  reactive,
 }

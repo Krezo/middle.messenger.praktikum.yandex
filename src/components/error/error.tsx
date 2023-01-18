@@ -1,9 +1,9 @@
-import { IComponentProps } from '../../modules/components';
-import { Button } from '../button/buttonComponent';
+import { IComponentProps } from '../../modules/components'
+import { Button } from '../button/buttonComponent'
 
-import style from './error.module.css';
+import style from './error.module.css'
 
-import { h } from '../../modules/vdom';
+import { h } from '../../modules/vdom'
 
 interface IProps extends IComponentProps {
   statusCode: number
@@ -12,13 +12,11 @@ interface IProps extends IComponentProps {
 }
 
 function Error(props: IProps) {
-  const { statusCode } = props;
+  const { statusCode } = props
   return (
     <div>
       <div className={style.errorPageInner}>
-        <div className={style.statusCode}>
-          {statusCode}
-        </div>
+        <div className={style.statusCode}>{statusCode}</div>
         <div className={style.errorText}>{props.text}</div>
         <p className={style.errorTextDiscription}>{props.textDiscription}</p>
         <Button className={style.button} primary link href="/">
@@ -26,9 +24,7 @@ function Error(props: IProps) {
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
-export {
-  Error,
-};
+export { Error }

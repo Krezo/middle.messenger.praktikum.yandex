@@ -4,6 +4,17 @@
   "plugins": ["@typescript-eslint"],
   "rules": {
     "max-len": [2, 100],
+    "semi": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
     "@typescript-eslint/no-unused-vars": 2,
     "react/destructuring-assignmen": "off"
   }

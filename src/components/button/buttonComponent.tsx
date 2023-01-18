@@ -1,8 +1,10 @@
-import { IComponentProps } from '../../modules/components';
+import { h } from '../../modules/vdom'
+import { IComponentProps } from '../../modules/components'
 
-import style from './button.module.css';
+import style from './button.module.css'
 
-import { h } from '../../modules/vdom';
+import { Spinner } from '../spinner/spinner.component'
+
 interface IProps extends IComponentProps {
   primary?: boolean
   outline?: boolean
@@ -10,6 +12,7 @@ interface IProps extends IComponentProps {
   link?: boolean
   rounded?: boolean
   small?: boolean
+  loading?: boolean
   empty?: boolean
   text?: string
   href?: string
@@ -19,8 +22,17 @@ interface IProps extends IComponentProps {
 
 function Button(props: IProps = {}) {
   const {
-    primary, small, type, disabled, outline, rounded, className, onClick, href,
-  } = props;
+    primary,
+    small,
+    type,
+    disabled,
+    outline,
+    rounded,
+    className,
+    onClick,
+    href,
+    loading,
+  } = props
 
   const btnClasses = [
     style.btn,
@@ -29,22 +41,23 @@ function Button(props: IProps = {}) {
     small ? style.small : '',
     rounded ? style.rounded : '',
     ...(className ?? '').split(' '),
-  ];
+  ]
 
-  const ButtonTag = props.link ? 'a' : 'button';
+  const ButtonTag = props.link ? 'a' : 'button'
+  const isDisabled = disabled || loading
 
   return (
     <ButtonTag
       type={type ?? 'button'}
       href={href}
-      disabled={disabled}
+      disabled={isDisabled}
       className={btnClasses.join(' ')}
-      onClick={props.onClick}>
+      onClick={onClick}
+    >
       {props.children}
+      {!!loading && <Spinner className={style.spinner} />}
     </ButtonTag>
-  );
+  )
 }
 
-export {
-  Button,
-};
+export { Button }

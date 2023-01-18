@@ -15,6 +15,7 @@
   border: 1px;
   border-style: solid;
   border-color: transparent;
+
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -31,6 +32,9 @@
   color: #fff;
   background: var(--primary-color);
   border-color: var(--primary-color);
+  &:hover {
+    background: var(--primary-button-hover-color);
+  }
 }
 
 .outline {
@@ -54,4 +58,8 @@
 
 .small {
   padding: 7px 15px;
+}
+
+.spinner {
+  margin-left: 1em;
 }
