@@ -13,13 +13,13 @@ export function MessageList(props: Props) {
   const { messages, loading } = props
 
   const sortedMessageArray = Array.from(messages.values()).sort(
-    (message, newMessage) => (newMessage.time > message.time ? -1 : 1),
+    (message, newMessage) => (newMessage.time > message.time ? -1 : 1)
   )
 
   onUpdate<Props>((component, oldProps, newProps) => {
     if (newProps.messages.size > 0) {
       const lastMessageElement = document.querySelector(
-        '#message-container > *:last-child',
+        '#message-container > *:last-child'
       )
       if (lastMessageElement) {
         lastMessageElement.scrollIntoView()
@@ -30,9 +30,7 @@ export function MessageList(props: Props) {
   const sortedMessages = sortedMessageArray.map((message) => (
     <div>
       <div className={style.user}>
-        {message.user.first_name}
-        {' '}
-        {message.user.second_name}
+        {message.user.first_name} {message.user.second_name}
       </div>
       <div key={message.id} className={style.messageItem}>
         {message.content}

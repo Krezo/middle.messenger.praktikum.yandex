@@ -41,7 +41,7 @@ watch(
           loadingMessages.value = false
         })
     }
-  },
+  }
 )
 
 const selectActiveComponent = (index: number) => {
@@ -60,13 +60,12 @@ const lineHeight = 28
 const messagePadding = 10
 
 const messageHeight = computed(
-  () => `${messagePadding * 2 + lineHeight * messageLines.value}px`,
+  () => `${messagePadding * 2 + lineHeight * messageLines.value}px`
 )
 
 const sendMessage = (event: KeyboardEvent) => {
   const messageElement = (event.target as HTMLInputElement)!
   messageLines.value = messageElement.value.split('\n').length
-  debugger
   if (message.value.replace(/\W\s/, '') === '') {
     messageErrorMessage.value = 'Поле не моет быть пустым'
     return
@@ -164,7 +163,7 @@ watch(
         }
       })
     }
-  },
+  }
 )
 
 watch(
@@ -173,7 +172,7 @@ watch(
     if (isAuth) {
       chatService.getChats()
     }
-  },
+  }
 )
 
 watch(
@@ -193,7 +192,7 @@ watch(
         }
       })
     }
-  },
+  }
 )
 
 export default function () {
@@ -271,9 +270,7 @@ export default function () {
                       alt="user avatar"
                     />
                     <span className={style.chatUserDisplayName}>
-                      {user.id}
-                      {' '}
-                      {user.login}
+                      {user.id} {user.login}
                     </span>
                     {user.role !== UserRoles.ADMIN ? (
                       <span
@@ -307,9 +304,7 @@ export default function () {
                       alt="user avatar"
                     />
                     <span className={style.chatUserDisplayName}>
-                      {user.id}
-                      {' '}
-                      {user.login}
+                      {user.id} {user.login}
                     </span>
                     <span className={style.chatUserFuncBlock}>
                       {!addedUserIds.value.includes(user.id) ? (

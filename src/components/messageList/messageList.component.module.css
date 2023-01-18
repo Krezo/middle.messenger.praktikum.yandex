@@ -1,5 +1,6 @@
 .messageItem {
   position: relative;
+  white-space: pre;
   background: var(--primary-color);
   color: var(--white);
   border-radius: 2rem;
