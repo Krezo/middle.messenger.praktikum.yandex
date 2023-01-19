@@ -15,7 +15,7 @@ import { Modal } from '../../components/modal/modal.component'
 import { chatStore } from '../../store/chatStore'
 import UserService from '../../services/userService'
 import { IUser, IUserWithRole, UserRoles } from '../../types/user'
-import { apiResourceUrl } from '../../consts'
+import { API_RESIURCE_URL } from '../../consts'
 import { MessageList } from '../../components/messageList/messageList.component'
 
 const aciveChatIndex = ref(-1)
@@ -268,7 +268,7 @@ export default function () {
                 {activeChatUsers.value.map((user) => (
                   <div key={user.id}>
                     <img
-                      src={apiResourceUrl + user.avatar}
+                      src={API_RESIURCE_URL + user.avatar}
                       className={style.chatUserAvatar}
                       alt="user avatar"
                     />
@@ -302,7 +302,7 @@ export default function () {
                 {findUsers.value.map((user) => (
                   <div>
                     <img
-                      src={apiResourceUrl + user.avatar}
+                      src={API_RESIURCE_URL + user.avatar}
                       className={style.chatUserAvatar}
                       alt="user avatar"
                     />

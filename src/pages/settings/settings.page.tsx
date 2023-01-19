@@ -10,9 +10,7 @@ import AvatarPlaceholder from '../../images/avatar_placeholder.jpeg'
 import style from './settings.page.module.css'
 import styles from '../../css/app.module.css'
 // Others
-import {
-  reactive, ref, watch, watchEffect,
-} from '../../modules/reactivity'
+import { reactive, ref, watch, watchEffect } from '../../modules/reactivity'
 import { useForm } from '../../composibles/useForm'
 import {
   name,
@@ -30,7 +28,7 @@ import AuthService from '../../services/authService'
 import UserService from '../../services/userService'
 import { Spinner } from '../../components/spinner/spinner.component'
 import { authStore } from '../../store/authStore'
-import { apiResourceUrl } from '../../consts'
+import { API_RESIURCE_URL } from '../../consts'
 
 const userService = new UserService()
 const authService = new AuthService()
@@ -59,7 +57,8 @@ const {
   display_name: {
     value: '',
     validators: {
-      display_name: (value: string) => /^[^\W]+$/g.test(value) || 'Имя должно состояить из букв',
+      display_name: (value: string) =>
+        /^[^\W]+$/g.test(value) || 'Имя должно состояить из букв',
     },
   },
   login: {
@@ -155,7 +154,7 @@ const onSubmitSettingsForm = async (event: Event) => {
   if (mode.value === 'editPassword') {
     await userService.changePassword(
       changePasswordFormValues.value.confirmPassword,
-      changePasswordFormValues.value.oldPassword,
+      changePasswordFormValues.value.oldPassword
     )
     if (!userStore.changePasswordError) {
       backToSettings()
@@ -186,7 +185,7 @@ watch(
     } else {
       avatarErrorMessage.value = ''
     }
-  },
+  }
 )
 
 authService.getUser().then(() => {
@@ -239,7 +238,7 @@ export default function () {
             <div className={style.avatarWrapper}>
               <div className={style.avatar}>
                 <img
-                  src={apiResourceUrl + userStore.user.avatar}
+                  src={API_RESIURCE_URL + userStore.user.avatar}
                   alt="avatar"
                 />
               </div>
@@ -318,7 +317,9 @@ export default function () {
               onBlur={() => changeSettingsFormData.display_name.blur()}
               toched={changeSettingsFormData.display_name.toched}
               errorMessage={changeSettingsFormData.display_name.errorMessage}
-              setValue={(value: string) => (changeSettingsFormData.display_name.value = value)}
+              setValue={(value: string) =>
+                (changeSettingsFormData.display_name.value = value)
+              }
             />
 
             <Input
@@ -329,7 +330,9 @@ export default function () {
               onBlur={() => changeSettingsFormData.first_name.blur()}
               toched={changeSettingsFormData.first_name.toched}
               errorMessage={changeSettingsFormData.first_name.errorMessage}
-              setValue={(value: string) => (changeSettingsFormData.first_name.value = value)}
+              setValue={(value: string) =>
+                (changeSettingsFormData.first_name.value = value)
+              }
             />
 
             <Input
@@ -340,7 +343,9 @@ export default function () {
               onBlur={() => changeSettingsFormData.second_name.blur()}
               toched={changeSettingsFormData.second_name.toched}
               errorMessage={changeSettingsFormData.second_name.errorMessage}
-              setValue={(value: string) => (changeSettingsFormData.second_name.value = value)}
+              setValue={(value: string) =>
+                (changeSettingsFormData.second_name.value = value)
+              }
             />
 
             <Input
@@ -351,7 +356,9 @@ export default function () {
               onBlur={() => changeSettingsFormData.login.blur()}
               toched={changeSettingsFormData.login.toched}
               errorMessage={changeSettingsFormData.login.errorMessage}
-              setValue={(value: string) => (changeSettingsFormData.login.value = value)}
+              setValue={(value: string) =>
+                (changeSettingsFormData.login.value = value)
+              }
             />
 
             <Input
@@ -362,7 +369,9 @@ export default function () {
               onBlur={() => changeSettingsFormData.email.blur()}
               toched={changeSettingsFormData.email.toched}
               errorMessage={changeSettingsFormData.email.errorMessage}
-              setValue={(value: string) => (changeSettingsFormData.email.value = value)}
+              setValue={(value: string) =>
+                (changeSettingsFormData.email.value = value)
+              }
             />
 
             <Input
@@ -373,7 +382,9 @@ export default function () {
               onBlur={() => changeSettingsFormData.phone.blur()!}
               toched={changeSettingsFormData.phone.toched}
               errorMessage={changeSettingsFormData.phone.errorMessage}
-              setValue={(value: string) => (changeSettingsFormData.phone.value = value)}
+              setValue={(value: string) =>
+                (changeSettingsFormData.phone.value = value)
+              }
             />
 
             <Button
@@ -400,7 +411,9 @@ export default function () {
               onBlur={() => changePasswordFormData.oldPassword.blur()}
               toched={changePasswordFormData.oldPassword.toched}
               errorMessage={changePasswordFormData.oldPassword.errorMessage}
-              setValue={(value: string) => (changePasswordFormData.oldPassword.value = value)}
+              setValue={(value: string) =>
+                (changePasswordFormData.oldPassword.value = value)
+              }
               type="password"
               placeholder="Старый пароль"
             />
@@ -409,7 +422,9 @@ export default function () {
               onBlur={() => changePasswordFormData.password.blur()}
               toched={changePasswordFormData.password.toched}
               errorMessage={changePasswordFormData.password.errorMessage}
-              setValue={(value: string) => (changePasswordFormData.password.value = value)}
+              setValue={(value: string) =>
+                (changePasswordFormData.password.value = value)
+              }
               type="password"
               placeholder="Пароль"
             />
@@ -418,7 +433,9 @@ export default function () {
               onBlur={() => changePasswordFormData.confirmPassword.blur()}
               toched={changePasswordFormData.confirmPassword.toched}
               errorMessage={changePasswordFormData.confirmPassword.errorMessage}
-              setValue={(value: string) => (changePasswordFormData.confirmPassword.value = value)}
+              setValue={(value: string) =>
+                (changePasswordFormData.confirmPassword.value = value)
+              }
               type="password"
               placeholder="Пароль"
             />

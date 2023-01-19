@@ -1,18 +1,16 @@
+import { API_BASE_URL } from '../consts'
 import { HTTPTransport } from '../modules/fetch'
 import { IApiError } from '../types/apiError'
 import { IUser } from '../types/user'
 import { createFormData } from '../utils/index'
 
-const userApiInstance = new HTTPTransport(
-  'https://ya-praktikum.tech/api/v2/user',
-  {
-    withCredentials: true,
-    headers: {
-      Accept: 'application/json',
-      Content: 'application/json',
-    },
+const userApiInstance = new HTTPTransport(API_BASE_URL + '/user', {
+  withCredentials: true,
+  headers: {
+    Accept: 'application/json',
+    Content: 'application/json',
   },
-)
+})
 
 export interface IProfileParams extends Omit<IUser, 'id' | 'avatar'> {}
 export interface IProfileResponseOK extends Omit<IUser, 'id' | 'avatar'> {}

@@ -1,17 +1,15 @@
+import { API_BASE_URL } from '../consts'
 import { HTTPTransport } from '../modules/fetch'
 import { IApiError } from '../types/apiError'
 import { IUser } from '../types/user'
 
-const authApiInstance = new HTTPTransport(
-  'https://ya-praktikum.tech/api/v2/auth',
-  {
-    withCredentials: true,
-    headers: {
-      Accept: 'application/json',
-      Content: 'application/json',
-    },
+const authApiInstance = new HTTPTransport(API_BASE_URL + '/auth', {
+  withCredentials: true,
+  headers: {
+    Accept: 'application/json',
+    Content: 'application/json',
   },
-)
+})
 
 export interface ISignupParams extends Omit<IUser, 'id' | 'avatar'> {}
 export interface ISignupResponseOK {

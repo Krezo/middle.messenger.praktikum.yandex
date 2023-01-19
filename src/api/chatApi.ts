@@ -1,17 +1,15 @@
+import { API_BASE_URL } from '../consts'
 import { HTTPTransport } from '../modules/fetch'
 import { Chat } from '../types/chat'
 import { IUserWithRole } from '../types/user'
 
-const chatApiInstance = new HTTPTransport(
-  'https://ya-praktikum.tech/api/v2/chats',
-  {
-    withCredentials: true,
-    headers: {
-      Accept: 'application/json',
-      Content: 'application/json',
-    },
+const chatApiInstance = new HTTPTransport(API_BASE_URL + '/chats', {
+  withCredentials: true,
+  headers: {
+    Accept: 'application/json',
+    Content: 'application/json',
   },
-)
+})
 
 export interface GetChatMethodParams {
   offset?: number
