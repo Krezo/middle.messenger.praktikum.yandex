@@ -5,12 +5,11 @@ import { Input } from '../../components/input/input.component'
 import { Button } from '../../components/button/buttonComponent'
 // Images
 import LeftArrow from '../../images/left_arrow.svg'
-import AvatarPlaceholder from '../../images/avatar_placeholder.jpeg'
 // Styles
 import style from './settings.page.module.css'
 import styles from '../../css/app.module.css'
 // Others
-import { reactive, ref, watch, watchEffect } from '../../modules/reactivity'
+import { ref, watch } from '../../modules/reactivity'
 import { useForm } from '../../composibles/useForm'
 import {
   name,
@@ -350,7 +349,7 @@ export default function () {
 
             <Input
               label="Логин"
-              id="login"
+              id="setting_login"
               placeholder="Логин"
               value={changeSettingsFormData.login.value}
               onBlur={() => changeSettingsFormData.login.blur()}
@@ -376,7 +375,7 @@ export default function () {
 
             <Input
               label="Телефон"
-              id="phone"
+              id="setting_phone"
               placeholder="Телефон"
               value={changeSettingsFormData.phone.value}
               onBlur={() => changeSettingsFormData.phone.blur()!}
@@ -418,7 +417,7 @@ export default function () {
               placeholder="Старый пароль"
             />
             <Input
-              id="password"
+              id="setting_password"
               onBlur={() => changePasswordFormData.password.blur()}
               toched={changePasswordFormData.password.toched}
               errorMessage={changePasswordFormData.password.errorMessage}

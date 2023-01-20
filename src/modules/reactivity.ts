@@ -6,15 +6,10 @@ interface IWatchFunction<T> {
 
 export interface Ref<T> extends IObserver<T> {}
 
-let rootRenderFunc: any = null
 // Ключ для проверки является ли возвращаемый реактивный объект reactive/ref
 const isReactive = Symbol('isReactive')
 export const isRef = Symbol('isRef')
 export const isValueRef = <T>(value: any): value is IObserver<T> => value.isRef
-
-const setRootRenderFunc = (renderFunc: (...params: any) => void) => {
-  rootRenderFunc = renderFunc
-}
 
 // Отслеживание зависимостей observer
 let isWatchFunction: boolean = false
@@ -117,7 +112,7 @@ const reactive = <T extends object>(value: T, deep: boolean = true): T => {
 
 // Вспомогательная функция для привязки зависимостей observer
 const watchDep = (
-  watch: (...params: any) => void,
+  watch: (...params: unknown[]) => void,
   watchFunc?: IWatchFunction<unknown>
 ) => {
   isWatchFunction = true
@@ -157,13 +152,4 @@ export const isObserveArray = (object: any): object is IObserver<[]> => {
   return false
 }
 
-export {
-  ref,
-  computed,
-  watch,
-  watchEffect,
-  rootRenderFunc,
-  setRootRenderFunc,
-  IWatchFunction,
-  reactive,
-}
+export { ref, computed, watch, watchEffect, IWatchFunction, reactive }

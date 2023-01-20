@@ -1,6 +1,4 @@
-import {
-  computed, reactive, watch, Ref,
-} from '../modules/reactivity'
+import { computed, reactive, watch, Ref } from '../modules/reactivity'
 import { IObserver } from '../modules/observer'
 
 interface FormData<FieldData> {
@@ -22,23 +20,24 @@ interface FieldData<V> {
   validators?: {
     [key: string]: (
       value: V,
-      formData?: FormData<FieldData<V> & Required<FieldDataExt>>
+      formData?: FormData<FieldData<V> & Partial<FieldDataExt>>
     ) => boolean | string
   }
 }
 
 export const useForm = <
-  T extends FormData<FieldData<E> & Partial<FieldDataExt>>,
+  K extends FieldData<E> & Partial<FieldDataExt>,
+  T extends FormData<K>,
   E = T[keyof T]['value']
 >(
-    init: T,
-  ): {
-  formData: { [K in keyof T]: T[K] }
+  init: T
+): {
+  formData: { [K in keyof T]: T[K] & FieldDataExt }
   values: IObserver<{ [K in keyof T]: T[K]['value'] }>
   isValid: Ref<boolean>
 } => {
-  const formData = reactive(init)
-  for (const [key, value] of Object.entries(formData)) {
+  const formData: any = reactive(init)
+  for (const [key, _] of Object.entries(formData)) {
     const formField = formData[key]
     formField.errors = reactive({})
     formField.toched = false
@@ -48,7 +47,7 @@ export const useForm = <
     }
     formField.errorMessage = ''
 
-    const reassignFunc = (value: string) => {
+    const reassignFunc = (value: E) => {
       let lastErrorMessage = ''
       formField.valid = true
       for (const name of Object.keys(formField.validators ?? {})) {
@@ -70,7 +69,7 @@ export const useForm = <
   }
 
   const values = computed(() => {
-    const formValues: Record<string, string> = {}
+    const formValues: any = {}
     Object.keys(formData).forEach((k) => (formValues[k] = formData[k].value))
     return formValues
   })

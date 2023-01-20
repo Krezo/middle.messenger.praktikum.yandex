@@ -1,10 +1,9 @@
 import { IComponentProps } from '../../modules/components'
-import { ref } from '../../modules/reactivity'
 import { h } from '../../modules/vdom'
 
 import style from './input.component.module.css'
 
-type InputType = 'textarea' | 'file' | 'input'
+type InputType = 'textarea' | 'file' | 'input' | 'password'
 
 interface IProps extends IComponentProps {
   type?: InputType
@@ -14,7 +13,7 @@ interface IProps extends IComponentProps {
   value?: string | File[]
   errorMessage?: string | boolean
   rounded?: boolean
-  setValue?: (value: any) => void
+  setValue?: (value: unknown) => void
   onKeyup?: (event: KeyboardEvent) => void
   onBlur?: () => void
   toched?: boolean

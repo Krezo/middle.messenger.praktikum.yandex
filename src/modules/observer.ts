@@ -12,7 +12,10 @@ const isObserver = <T>(object: any): object is IObserver<T> => {
   return false
 }
 
-const observer = <T>(value: T, deps: any[] = []): IObserver<T> => ({
+const observer = <T>(
+  value: T,
+  deps: IWatchFunction<unknown>[] = []
+): IObserver<T> => ({
   value,
   deps: new Set(deps),
 })

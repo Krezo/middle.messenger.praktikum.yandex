@@ -154,7 +154,7 @@ const patchNode = (
   }
 
   if (
-    typeof vNode === 'string' ||
+    typeof nextVNode === 'string' ||
     typeof nextVNode === 'number' ||
     vNode === null ||
     nextVNode === null
@@ -224,7 +224,7 @@ const patchNode = (
   }
 
   // Патчим свойства (реализация будет далее)
-  const propIsDiff = patchProps(node, vNode.props, nextVNode.props)
+  patchProps(node, vNode.props, nextVNode.props)
 
   // Патчим детей (реализация будет далее)
   patchChildren(node, vNode.children, nextVNode.children)

@@ -91,16 +91,20 @@ export default function () {
           <div className={style.errorMessage}>{authStore.signupError}</div>
           <div className={style.registerFormInputs}>
             <Input
-              setValue={(value: string) => (registerForm.first_name.value = value)}
+              setValue={(value: string) =>
+                (registerForm.first_name.value = value)
+              }
               value={registerForm.first_name.value}
               onBlur={() => registerForm.first_name.blur()}
               toched={registerForm.first_name.toched}
               errorMessage={registerForm.first_name.errorMessage}
-              id="first_name"
+              id="signup_first_name"
               placeholder="Имя"
             />
             <Input
-              setValue={(value: string) => (registerForm.second_name.value = value)}
+              setValue={(value: string) =>
+                (registerForm.second_name.value = value)
+              }
               value={registerForm.second_name.value}
               onBlur={() => registerForm.second_name.blur()}
               toched={registerForm.second_name.toched}
@@ -114,7 +118,7 @@ export default function () {
               onBlur={() => registerForm.login.blur()}
               toched={registerForm.login.toched}
               errorMessage={registerForm.login.errorMessage}
-              id="login"
+              id="signup_login"
               placeholder="Логин"
             />
             <Input
@@ -123,16 +127,18 @@ export default function () {
               onBlur={() => registerForm.email.blur()}
               toched={registerForm.email.toched}
               errorMessage={registerForm.email.errorMessage}
-              id="email"
+              id="signup_email"
               placeholder="Email"
             />
             <Input
-              setValue={(value: string) => (registerForm.password.value = value)}
+              setValue={(value: string) =>
+                (registerForm.password.value = value)
+              }
               value={registerForm.password.value}
               onBlur={() => registerForm.password.blur()}
               toched={registerForm.password.toched}
               errorMessage={registerForm.password.errorMessage}
-              id="password"
+              id="signup_password"
               type="password"
               placeholder="Пароль"
             />
@@ -142,7 +148,7 @@ export default function () {
               onBlur={() => registerForm.phone.blur()}
               toched={registerForm.phone.toched}
               errorMessage={registerForm.phone.errorMessage}
-              id="phone"
+              id="signup_phone"
               placeholder="Телефон"
             />
           </div>

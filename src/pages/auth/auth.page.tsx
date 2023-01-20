@@ -66,7 +66,7 @@ export default function () {
               value={authFormData.login.value}
               setValue={(value: string) => (authFormData.login.value = value)}
               errorMessage={authFormData.login.errorMessage}
-              id="login"
+              id="auth_login"
               placeholder="Логин"
             />
             <Input
@@ -77,7 +77,7 @@ export default function () {
                 (authFormData.password.value = value)
               }
               errorMessage={authFormData.password.errorMessage}
-              id="password"
+              id="auth_password"
               placeholder="Пароль"
               type="password"
             />

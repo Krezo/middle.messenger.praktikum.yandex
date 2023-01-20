@@ -1,9 +1,6 @@
 import { IComponentProps } from '../../modules/components'
-import { ref } from '../../modules/reactivity'
 import { h } from '../../modules/vdom'
 import style from './modal.component.module.css'
-
-import CloseIcon from '../../images/icons/close.svg'
 
 interface Props extends IComponentProps {
   open: boolean
@@ -12,9 +9,7 @@ interface Props extends IComponentProps {
 }
 
 function Modal(props: Props) {
-  const {
-    open, title, close, children,
-  } = props
+  const { open, title, close, children } = props
 
   if (open) {
     document.body.style.overflow = 'hidden'
