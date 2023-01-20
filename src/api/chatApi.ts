@@ -2,6 +2,7 @@ import { API_BASE_URL } from '../consts'
 import { HTTPTransport } from '../modules/fetch'
 import { Chat } from '../types/chat'
 import { IUserWithRole } from '../types/user'
+import { createFormData } from '../utils/index'
 
 const chatApiInstance = new HTTPTransport(API_BASE_URL + '/chats', {
   withCredentials: true,
@@ -50,7 +51,7 @@ export default class ChatApi {
   }
 
   createChat(title: string) {
-    return chatApiInstance.post('/', {
+    return chatApiInstance.post<{ id: number }>('/', {
       data: {
         title,
       },
@@ -61,6 +62,15 @@ export default class ChatApi {
     return chatApiInstance.get<IUserWithRole[]>(`/${chatId}/users`, {
       data: {
         ...params,
+      },
+    })
+  }
+
+  uploadAvatar(chatId: number, avatar: File) {
+    return chatApiInstance.put<any>('/avatar', {
+      formData: {
+        chatId,
+        avatar,
       },
     })
   }

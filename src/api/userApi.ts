@@ -54,9 +54,8 @@ export default class UserApi {
   }
 
   changeProfileAvatar(data: IProfileAvatarParams) {
-    const formData = createFormData(data)
     return userApiInstance.put<IUser>('/profile/avatar', {
-      formData,
+      formData: data,
     })
   }
 

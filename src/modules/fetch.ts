@@ -1,4 +1,4 @@
-import { queryStringify } from '../utils/index'
+import { createFormData, queryStringify } from '../utils/index'
 
 enum METHOD {
   GET = 'GET',
@@ -32,7 +32,7 @@ type Options = {
   withCredentials?: boolean
   headers?: { [key: string]: string }
   data?: any
-  formData?: FormData
+  formData?: Record<string, any>
   responseType?: XMLHttpRequestResponseType
   params?: Record<string, any>
 }
@@ -46,7 +46,7 @@ class HTTPTransport {
     private baseUrl: string = '',
     private options: HttpTransportOptions = {
       responseType: 'json',
-    },
+    }
   ) {
     this.baseUrl = baseUrl
   }
@@ -68,7 +68,6 @@ class HTTPTransport {
     // не ясно в каком формате требуется отправлять данные API
     // как вариант передовавть и принимать все в JSON, но из форм придется брать
     // например изображение аватара
-    console.log(this.baseUrl + url)
     return this.request<T>(this.baseUrl + url, {
       ...(this.options || {}),
       ...options,
@@ -102,11 +101,9 @@ class HTTPTransport {
 
   request<T>(
     url: string,
-    options: Options = { method: METHOD.GET },
+    options: Options = { method: METHOD.GET }
   ): Promise<XMLHttpRequestWithResponseType<T>> {
-    const {
-      method, formData, data, headers, withCredentials,
-    } = options
+    const { method, formData, data, headers, withCredentials } = options
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest()
@@ -136,7 +133,7 @@ class HTTPTransport {
 
       if (formData) {
         // xhr.setRequestHeader('Content-Type', 'multipart/form-data')
-        xhr.send(formData)
+        xhr.send(createFormData(formData))
         return
       }
       if (typeof data === 'object') {
