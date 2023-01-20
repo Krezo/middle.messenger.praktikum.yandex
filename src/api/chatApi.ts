@@ -67,7 +67,7 @@ export default class ChatApi {
   }
 
   uploadAvatar(chatId: number, avatar: File) {
-    return chatApiInstance.put<any>('/avatar', {
+    return chatApiInstance.put<Chat>('/avatar', {
       formData: {
         chatId,
         avatar,

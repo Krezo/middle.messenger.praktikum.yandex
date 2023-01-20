@@ -168,6 +168,32 @@ export default class ChatService {
     }
   }
 
+  async changeAvatar(chatId: number, avatar: File) {
+    try {
+      this.store.changeAvatarError = ''
+      this.store.loadingChangeAvatar = true
+      if (avatar) {
+        const { response } = await this.api.uploadAvatar(chatId, avatar)
+        const updatedChat = this.store.chats.find(
+          (chat) => chat.id === response.id
+        )
+        if (updatedChat) {
+          updatedChat.avatar = response.avatar
+        }
+      }
+      this.getChats()
+    } catch (error) {
+      if (error instanceof HTTPTransportResponseError) {
+        const responseError: IApiError = error.response
+        this.store.changeAvatarError = responseError.reason
+      } else {
+        console.log(error)
+      }
+    } finally {
+      this.store.loadingChangeAvatar = false
+    }
+  }
+
   private createChatDate(date: string) {
     return new Date(date)
   }

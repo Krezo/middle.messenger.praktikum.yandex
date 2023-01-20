@@ -42,6 +42,10 @@ interface IChatStore {
   getChatUsersError: string
   /** Флаг получения списка пользователей чата */
   loadingGetChatUsers: boolean
+  /** Ошибка загрузки аватара */
+  changeAvatarError: string
+  /** Флаг загрузки аватара */
+  loadingChangeAvatar: boolean
   loadMessagesTriger: boolean
 }
 // Хранилище для данных аутентификации
@@ -61,6 +65,8 @@ const chatStore = reactive<IChatStore>({
   loadingGetChatUsers: false,
   deleteUserFromChatError: '',
   loadingdeleteUserFromChat: false,
+  changeAvatarError: '',
+  loadingChangeAvatar: false,
   loadMessagesTriger: false,
 })
 

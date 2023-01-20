@@ -111,11 +111,17 @@ const closeChatUsersModal = () => {
   chatUsersModalOpen.value = false
 }
 
+const openChangeAvatarForm = () => {
+  changeAvatarOpen.value = true
+}
+const closeChangeAvatarForm = () => {
+  changeAvatarOpen.value = false
+}
+
 const createChatName = ref('')
 const createChatModalOpen = ref(false)
 const chatUsersModalOpen = ref(false)
 const findUserString = ref('')
-
 const findUsers = ref<IUser[]>([])
 const addedUserIds = ref<number[]>([])
 
@@ -126,7 +132,24 @@ const createChat = async (event: Event) => {
   if (!chatStore.createChatError) {
     closeCreateChatModal()
     createChatName.value = ''
+    avatar.value = []
   }
+}
+
+const changeChatAvatar = async (event: Event) => {
+  event.preventDefault()
+  avatarChangeError.value = ''
+  if (!activeChat.value) {
+    return
+  }
+  const avatarFile =
+    avatarChange.value.length > 0 ? avatarChange.value[0] : undefined
+  if (!avatarFile) {
+    avatarChangeError.value = 'Файл не выбран'
+    return
+  }
+  await chatService.changeAvatar(activeChat.value?.id, avatarFile)
+  closeChangeAvatarForm()
 }
 
 const activeChatMessages = computed(() => chatStore.activeChatMessages)
@@ -155,6 +178,9 @@ const deleteUserFromChat = async (event: Event) => {
 
 const activeChatUsers = ref<IUserWithRole[]>([])
 const avatar = ref<File[]>([])
+const changeAvatarOpen = ref(false)
+const avatarChange = ref<File[]>([])
+const avatarChangeError = ref('')
 
 watch(
   () => chatUsersModalOpen.value,
@@ -261,6 +287,38 @@ export default function () {
                 primary
               >
                 Создать
+              </Button>
+            </form>
+          </Modal>
+
+          <Modal
+            close={closeChangeAvatarForm}
+            title="Изменить аватар"
+            open={changeAvatarOpen.value}
+          >
+            <form
+              onSubmit={changeChatAvatar}
+              className={style.changeAvatarForm}
+            >
+              <div className={styles.formErrorMessage}>
+                {chatStore.changeAvatarError}
+              </div>
+              <Input
+                value={avatarChange.value}
+                toched={true}
+                errorMessage={avatarChangeError.value}
+                setValue={(value: File[]) => (avatarChange.value = value)}
+                className={styles.formControl}
+                id="create_chat_avatart"
+                type="file"
+              ></Input>
+
+              <Button
+                loading={chatStore.loadingChangeAvatar}
+                type="submit"
+                primary
+              >
+                Изменить
               </Button>
             </form>
           </Modal>
@@ -410,6 +468,12 @@ export default function () {
               <div className={style.activeChat}>
                 <div className={style.companionName}>
                   {activeChat.value ? activeChat.value.title : ''}
+                  <span
+                    onClick={openChangeAvatarForm}
+                    className={[styles.link, style.chatSettingsLink].join(' ')}
+                  >
+                    Изменить аватар
+                  </span>
                 </div>
                 <div className={style.funcBlock}>
                   <span onClick={openChatUsersModal} className={styles.link}>
