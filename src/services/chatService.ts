@@ -8,6 +8,7 @@ import { userStore } from '../store/userStore'
 import { IApiError } from '../types/apiError'
 import { Message } from '../types/chat'
 import { IUser } from '../types/user'
+import { createFormData } from '../utils/index'
 import RealTimeChat from './realTimeChat'
 import UserService from './userService'
 
@@ -58,6 +59,10 @@ export default class ChatService {
       const { response } = await this.api.getChats(params)
       const chats: ChatElement[] = []
       for (const chat of response) {
+        // Добавляем только те чаты, которых еще нет
+        if (this.store.chats.find((_chat) => _chat.id === chat.id)) {
+          continue
+        }
         const token = await RealTimeChat.createToken(chat.id)
         if (userStore.user.id) {
           const rtChat = new RealTimeChat(userStore.user.id, chat.id, token)
@@ -126,7 +131,7 @@ export default class ChatService {
           )
         }
       }
-      this.store.chats = chats
+      this.store.chats = [...chats, ...this.store.chats]
     } catch (error) {
       if (error instanceof HTTPTransportResponseError) {
         const responseError: IApiError = error.response
@@ -142,11 +147,14 @@ export default class ChatService {
   /**
    * Создание чата
    */
-  async createChats(title: string) {
+  async createChats(title: string, avatar?: File) {
     try {
       this.store.createChatError = ''
       this.store.loadingCreateChat = true
-      await this.api.createChat(title)
+      const { response } = await this.api.createChat(title)
+      if (avatar && response.id) {
+        await this.api.uploadAvatar(response.id, avatar)
+      }
       this.getChats()
     } catch (error) {
       if (error instanceof HTTPTransportResponseError) {
@@ -172,7 +180,11 @@ export default class ChatService {
       this.store.deleteChatError = ''
       this.store.loadingDeleteChat = true
       await this.api.deleteChat(chatId)
-      this.getChats()
+      const deletedChat = this.store.chats.find((chat) => chat.id === chatId)
+      if (deletedChat) {
+        deletedChat?.rtChat.close()
+        this.store.chats = this.store.chats.filter((chat) => chat.id !== chatId)
+      }
     } catch (error) {
       if (error instanceof HTTPTransportResponseError) {
         const responseError: IApiError = error.response

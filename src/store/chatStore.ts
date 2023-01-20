@@ -50,7 +50,6 @@ const chatStore = reactive<IChatStore>({
   activeChatId: -1,
   activeChatMessages: [],
   getChatError: '',
-  chatMessages: {},
   loadingChats: false,
   createChatError: '',
   loadingCreateChat: false,

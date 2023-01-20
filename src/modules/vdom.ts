@@ -25,7 +25,7 @@ export interface IVNode {
 const createVNode = (
   tagName: string,
   props: VNodeProps,
-  children: ChildrendVNode[],
+  children: ChildrendVNode[]
 ) => ({
   tagName,
   props,
@@ -53,16 +53,15 @@ const h = (
   return createVNode(tagName, props, children)
 }
 
-const isSvg = (node: IVNode | IComponentVNode) => (
-  node.tagName === 'svg'
-    || node.tagName === 'line'
-    || node.tagName === 'polygon'
-    || node.tagName === 'path'
-)
+const isSvg = (node: IVNode | IComponentVNode) =>
+  node.tagName === 'svg' ||
+  node.tagName === 'line' ||
+  node.tagName === 'polygon' ||
+  node.tagName === 'path'
 
 const renderDOM = (
   root: IVNode | IComponentVNode | string | number | null,
-  component?: IComponentVNode,
+  component?: IComponentVNode
 ): Node => {
   // Нод условного рендера
   if (typeof root === 'boolean') {
@@ -93,7 +92,7 @@ const renderDOM = (
   if (isSvg(root)) {
     domRoot = document.createElementNS(
       'http://www.w3.org/2000/svg',
-      root.tagName,
+      root.tagName
     )
   } else {
     domRoot = document.createElement(root.tagName)
@@ -103,20 +102,20 @@ const renderDOM = (
     if (propName.startsWith('on')) {
       domRoot.addEventListener(
         propName.replace('on', '').toLocaleLowerCase(),
-        root.props[propName],
+        root.props[propName]
       )
       continue
     }
     if (!root.props[propName]) continue
-    if (root.tagName === 'input' && propName === 'value') {
-      (domRoot as HTMLInputElement).value = root.props[propName]
+    if (isInputElement(root) && propName === 'value') {
+      ;(domRoot as HTMLInputElement).value = root.props[propName]
     } else if (propName === 'className') {
       domRoot.setAttribute(
         'class',
         (root.props[propName] as string)
           .split(' ')
           .filter((v) => !!v)
-          .join(' '),
+          .join(' ')
       )
     } else if (propName === 'children') {
     } else domRoot.setAttribute(propName, root.props[propName])
@@ -142,7 +141,7 @@ const patchNode = (
   component?: ILifeCycleComponent,
   nextComponent?: ILifeCycleComponent,
   componentOldProps?: VNodeProps,
-  componentNewProps?: VNodeProps,
+  componentNewProps?: VNodeProps
 ) => {
   // Пропускам обновление условного рендера
   if (vNode === false && nextVNode === false) {
@@ -155,10 +154,10 @@ const patchNode = (
   }
 
   if (
-    typeof vNode === 'string'
-    || typeof nextVNode === 'number'
-    || vNode === null
-    || nextVNode === null
+    typeof vNode === 'string' ||
+    typeof nextVNode === 'number' ||
+    vNode === null ||
+    nextVNode === null
   ) {
     // Заменяем ноду на новую, если как минимум одно из значений равно строке
     // и эти значения не равны друг другу
@@ -192,7 +191,7 @@ const patchNode = (
       vNode as ILifeCycleComponent,
       nextVNode as ILifeCycleComponent,
       vNode.props,
-      nextVNode.props,
+      nextVNode.props
     )
     return
   }
@@ -202,7 +201,7 @@ const patchNode = (
       node,
       vNode.children[0],
       nextVNode,
-      nextVNode as ILifeCycleComponent,
+      nextVNode as ILifeCycleComponent
     )
     return
   }
@@ -212,7 +211,7 @@ const patchNode = (
       node,
       vNode,
       nextVNode.children[0],
-      nextVNode as ILifeCycleComponent,
+      nextVNode as ILifeCycleComponent
     )
     return
   }
@@ -234,7 +233,7 @@ const patchNode = (
     if (component.onUpdate) {
       // Передаем ноду, иначе при след. вызовах теряем
       nextComponent.domNode = component.domNode
-      component.onUpdate(component, componentOldProps, componentNewProps)
+      component.onUpdate(component, componentOldProps, componentNewProps || {})
     }
   }
 
@@ -242,11 +241,15 @@ const patchNode = (
   return node
 }
 
+const isInputElement = (node: HTMLElement | IVNode) => {
+  return node.tagName === 'INPUT' || node.tagName === 'TEXTAREA'
+}
+
 const patchProp = (
   node: HTMLElement,
   key: string,
   value: any,
-  nextValue: any,
+  nextValue: any
 ) => {
   // Если новое значение не задано, то удаляем атрибут
   if (typeof value === 'function') {
@@ -260,8 +263,9 @@ const patchProp = (
     return
   }
 
-  if (node.tagName === 'INPUT' && key === 'value') {
-    (node as HTMLInputElement).value = nextValue
+  if (isInputElement(node) && key === 'value') {
+    // debugger
+    ;(node as HTMLInputElement).value = nextValue
     return
   }
   if (nextValue == null || nextValue === false) {
@@ -298,10 +302,10 @@ const patchProps = (node: HTMLElement, props: any, nextProps: any) => {
 const patchChildren = (
   parent: HTMLElement,
   vChildren: IVNode[],
-  nextVChildren: IVNode[],
+  nextVChildren: IVNode[]
 ) => {
   // Создаем копию элементов родителя и передаем их в patchNode
-  [...Array.from(parent.childNodes)].forEach((childNode, i) => {
+  ;[...Array.from(parent.childNodes)].forEach((childNode, i) => {
     patchNode(childNode as HTMLElement, vChildren[i], nextVChildren[i])
   })
   // Проверяем что передали массив
@@ -320,7 +324,7 @@ const mount = (target: HTMLElement, node: HTMLElement) => {
 
 const createApp = (
   root: HTMLElement | null,
-  vnodeRoot: () => IVNode | JSX.Element,
+  vnodeRoot: () => IVNode | JSX.Element
 ) => {
   // vnodeRoot всегда возвращает IVNode, JSX.Element чтобы не было ошибок при работе с JXS
   const rootVDOM = computed(() => vnodeRoot() as IVNode)
@@ -340,12 +344,10 @@ const createApp = (
         (newVTree, oldVTree) => {
           clearHooksStack()
           patchNode(rootDOM, oldVTree, newVTree)
-        },
+        }
       )
     },
   }
 }
 
-export {
-  mount, h, patchNode, renderDOM, createApp,
-}
+export { mount, h, patchNode, renderDOM, createApp }

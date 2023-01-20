@@ -1,6 +1,5 @@
 import UserApi, { IProfileParams } from '../api/userApi'
 import { HTTPTransportResponseError } from '../modules/fetch'
-import { Router } from '../modules/router/index'
 import { reassignUser, userStore } from '../store/userStore'
 import { IApiError } from '../types/apiError'
 

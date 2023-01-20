@@ -63,25 +63,29 @@ const messageHeight = computed(
   () => `${messagePadding * 2 + lineHeight * messageLines.value}px`
 )
 
-const sendMessage = (event: KeyboardEvent) => {
-  const messageElement = (event.target as HTMLInputElement)!
-  messageLines.value = messageElement.value.split('\n').length
-  if (message.value.replace(/\W\s/, '') === '') {
+const sendMessage = () => {
+  const messageString = message.value
+  if (messageString.replace(/\W\s/, '') === '') {
     messageErrorMessage.value = 'Поле не моет быть пустым'
     return
   }
+  if (!activeChat.value) {
+    return
+  }
+  message.value = ''
+  messageLines.value = 1
+  activeChat.value.rtChat.sendMessage(messageString)
+}
+
+const onMessageKeyUp = (event: KeyboardEvent) => {
   messageErrorMessage.value = false
 
-  if (event.code === 'Enter' && activeChat.value) {
+  if (event.code === 'Enter') {
     if (event.shiftKey) {
-      console.log('Shift')
+      messageLines.value = message.value.split('\n').length
       return
     }
-    const content = messageElement.value
-    activeChat.value.rtChat.sendMessage(content)
-    messageLines.value = 1
-    messageElement.value = ''
-    message.value = ''
+    sendMessage()
   }
 }
 
@@ -117,9 +121,12 @@ const addedUserIds = ref<number[]>([])
 
 const createChat = async (event: Event) => {
   event.preventDefault()
-  chatService.createChats(createChatName.value).then(() => {
-    createChatModalOpen.value = false
-  })
+  const avatarFile = avatar.value.length > 0 ? avatar.value[0] : undefined
+  await chatService.createChats(createChatName.value, avatarFile)
+  if (!chatStore.createChatError) {
+    closeCreateChatModal()
+    createChatName.value = ''
+  }
 }
 
 const activeChatMessages = computed(() => chatStore.activeChatMessages)
@@ -147,6 +154,7 @@ const deleteUserFromChat = async (event: Event) => {
 }
 
 const activeChatUsers = ref<IUserWithRole[]>([])
+const avatar = ref<File[]>([])
 
 watch(
   () => chatUsersModalOpen.value,
@@ -198,6 +206,8 @@ watch(
 export default function () {
   return (
     <main>
+      {!!createChatName.value}
+      {!!message.value}
       {!!messageErrorMessage.value}
       {!!messageHeight.value}
       {!!loadingMessages.value}
@@ -226,14 +236,25 @@ export default function () {
             open={createChatModalOpen.value}
           >
             <form onSubmit={createChat} className={style.createChatForm}>
-              <Input
-                id="create_chat_name"
-                setValue={(value) => (createChatName.value = value)}
-                placeholder="Поиск"
-              />
               <div className={styles.formErrorMessage}>
                 {chatStore.createChatError}
               </div>
+              <Input
+                value={avatar.value}
+                setValue={(value: File[]) => (avatar.value = value)}
+                className={styles.formControl}
+                id="create_chat_avatart"
+                type="file"
+              ></Input>
+
+              <Input
+                value={createChatName.value}
+                className={styles.formControl}
+                id="create_chat_name"
+                setValue={(value) => (createChatName.value = value)}
+                placeholder="Название чата"
+              />
+
               <Button
                 loading={chatStore.loadingCreateChat}
                 type="submit"
@@ -354,7 +375,7 @@ export default function () {
               >
                 <img
                   className={style.companionImage}
-                  src={chat.avatar}
+                  src={API_RESIURCE_URL + chat.avatar}
                   alt=""
                 />
                 <div className={style.companionBody}>
@@ -409,7 +430,7 @@ export default function () {
               type="textarea"
               inputSstyle={`height: ${messageHeight.value}`}
               value={message.value}
-              onKeyup={sendMessage}
+              onKeyup={onMessageKeyUp}
               toched
               errorMessage={messageErrorMessage.value}
               setValue={(value: string) => {
@@ -417,7 +438,16 @@ export default function () {
               }}
               className={style.messageInput}
               rounded
-            />
+            >
+              <Button
+                onClick={sendMessage}
+                rounded
+                className={style.sendButton}
+                primary
+              >
+                Отправить
+              </Button>
+            </Input>
           </div>
         )}
         <div

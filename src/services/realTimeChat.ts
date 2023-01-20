@@ -46,6 +46,10 @@ export default class RealTimeChat {
     return response.token
   }
 
+  public close() {
+    this.ws.close()
+  }
+
   public loadMessage(content: number = 0, type = 'get old') {
     return new Promise((res, rej) => {
       const intervalId = setInterval(() => {

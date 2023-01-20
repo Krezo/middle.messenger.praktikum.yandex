@@ -4,8 +4,10 @@ import { h } from '../../modules/vdom'
 
 import style from './input.component.module.css'
 
+type InputType = 'textarea' | 'file' | 'input'
+
 interface IProps extends IComponentProps {
-  type?: string
+  type?: InputType
   id: string
   placeholder?: string
   label?: string
@@ -41,8 +43,8 @@ function Input(props: IProps) {
       if (isFileInput) {
         props.setValue(
           Array.from(
-            (document.getElementById(id) as HTMLInputElement).files ?? [],
-          ),
+            (document.getElementById(id) as HTMLInputElement).files ?? []
+          )
         )
         return
       }
@@ -69,7 +71,6 @@ function Input(props: IProps) {
     rounded ? style.rounded : '',
     isFileInput ? style.inputFile : '',
     errorClass,
-    ...(className ?? '').split(' '),
   ]
 
   const TagName = isFileInput ? 'label' : 'div'
@@ -85,7 +86,7 @@ function Input(props: IProps) {
 
   return (
     <TagName
-      className={[style.inputWrapper, errorClass].join(' ')}
+      className={[style.inputWrapper, errorClass, className].join(' ')}
       for={isFileInput ? id : ''}
     >
       {!isFileInput && <label htmlFor={id}>{label || ''}</label>}
@@ -123,6 +124,7 @@ function Input(props: IProps) {
           </div>
         </div>
       )}
+      {children}
     </TagName>
   )
 }

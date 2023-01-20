@@ -2,6 +2,7 @@
   position: relative;
 }
 label.inputWrapper {
+  position: relative;
   display: block;
   background-color: var(--white);
   border: 2px dashed var(--primary-color);
@@ -13,6 +14,7 @@ label.inputWrapper {
   cursor: pointer;
 }
 .errorMessage {
+  position: absolute;
   bottom: -10px;
   font-weight: 400;
   color: var(--input-error);
