@@ -61,6 +61,10 @@
   }
 }
 
+.formControl {
+  margin-bottom: 1rem;
+}
+
 .flex {
   display: flex;
 }
