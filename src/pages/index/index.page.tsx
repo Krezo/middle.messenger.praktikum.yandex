@@ -100,6 +100,8 @@ const openCreateChatModal = () => {
 }
 
 const closeCreateChatModal = () => {
+  createChatName.value = ''
+  avatar.value = []
   createChatModalOpen.value = false
 }
 
@@ -115,6 +117,7 @@ const openChangeAvatarForm = () => {
   changeAvatarOpen.value = true
 }
 const closeChangeAvatarForm = () => {
+  avatarChange.value = []
   changeAvatarOpen.value = false
 }
 
@@ -131,8 +134,6 @@ const createChat = async (event: Event) => {
   await chatService.createChats(createChatName.value, avatarFile)
   if (!chatStore.createChatError) {
     closeCreateChatModal()
-    createChatName.value = ''
-    avatar.value = []
   }
 }
 
