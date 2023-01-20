@@ -6,7 +6,8 @@ Netlify: https://starlit-ganache-25683f.netlify.app/
 
 Figma: https://www.figma.com/file/81pEOmE0IPf2m6d1jedEfc/Yandex-Practicum-Messanger?node-id=0%3A1
 
-## Запуск проекта ##
+## Запуск проекта
+
 - `npm run dev` - для разработки
 
 - `npm run start` - запуск проекта
@@ -17,7 +18,8 @@ Figma: https://www.figma.com/file/81pEOmE0IPf2m6d1jedEfc/Yandex-Practicum-Messan
 
 - `npx stylelint ./src/**/*.css` - stylelint
 
-## Структура проекта ##
+## Структура проекта
+
 **components/\*** - папка компонентов
 
 > **component_name.tsx** - Описание компонента
@@ -58,7 +60,7 @@ Figma: https://www.figma.com/file/81pEOmE0IPf2m6d1jedEfc/Yandex-Practicum-Messan
 
 **utils/\*** - утилиы
 
-## Шаблонизатор ##
+## Шаблонизатор
 
 **Особенности**
 
@@ -70,10 +72,11 @@ Figma: https://www.figma.com/file/81pEOmE0IPf2m6d1jedEfc/Yandex-Practicum-Messan
 
 - VDOM неправильно перерисовывает DOM дерево, функция `patchNode` перебираем своих потомков, а `patchChildren` меняет DOM, из-за чего цикл прекращает работу. Итог условный рендеринг использовать получится, если не менять структуру DOM. Универсально можно пользоваться `display: none;`
 - JSX ссылается на типы React из-за чего могут быть ошибки IDE в возвращаемых типах. Как их переопределить не знаю
-- Продумать жизненный цикл компонентов
+- Продумать жизненный цикл компонентов (сделано onMounted, update)
 - Продумать возможность использовать в компонентах локальное состояние (сейчас функци ререндере рабаотает только при измененни в корневом шаблоне)
 
 **Алгоритм работы рендера страницы**
+
 - createApp обораживает корневой компонент в `watch (reactive)` функцию и следит за изменениями состояния
 - При изменении перерисовывает VDOM
-- VDOM делает изменения в DOM 
+- VDOM делает изменения в DOM

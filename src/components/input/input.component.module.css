@@ -1,9 +1,58 @@
+.inputWrapper {
+  position: relative;
+}
+label.inputWrapper {
+  position: relative;
+  display: block;
+  background-color: var(--white);
+  border: 2px dashed var(--primary-color);
+  color: var(--primary-color);
+  font-weight: 600;
+  text-align: center;
+  padding: 2rem 1rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+.errorMessage {
+  position: absolute;
+  bottom: -10px;
+  font-weight: 400;
+  color: var(--input-error);
+  left: 0;
+  bottom: -24px;
+}
 .input {
-  padding: 14px 20px;
-  font-size: 16px;
+  padding: 12px 14px;
+  width: 100%;
+  font-size: 1rem;
   border: 1px solid var(--input-border-color);
   border-radius: 6px;
   &:focus {
-    outline: 1px solid var(--primary-color);
+    background-color: #fff;
+    border-color: var(--primary-color);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
   }
+}
+.rounded {
+  border-radius: 2rem;
+}
+.error {
+  border-color: var(--input-error) !important;
+  &:focus {
+    border-color: var(--input-error);
+    box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
+  }
+}
+.fileIcon {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.avatarLabel {
+  margin-bottom: 1rem;
+}
+.fileFormat {
+  font-weight: 400;
+  color: var(--text-input-color);
 }

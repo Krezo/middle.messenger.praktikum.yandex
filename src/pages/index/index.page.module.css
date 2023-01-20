@@ -1,0 +1,225 @@
+.mainPage {
+  display: flex;
+  align-items: stretch;
+}
+.chatSidebar {
+  width: 400px;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+}
+.profileLink {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem;
+  position: relative;
+  text-align: right;
+}
+.createChatForm,
+.changeAvatarForm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.emptyChatMessage {
+  padding: 20px;
+}
+.chatList {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  border-top: 1px solid #efefef;
+}
+.companionBlock {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  border-top: 1px solid #efefef;
+  &:first-of-type {
+    border-top-style: none;
+  }
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+}
+.createChatButton {
+  max-width: 140px;
+}
+.companionBlockActive {
+  background: #eaeaea;
+}
+.companionImage {
+  border-radius: 50%;
+  height: 50px;
+  margin-right: 10px;
+  width: 50px;
+}
+.companionBody {
+  flex: 1;
+}
+.companionName {
+  font-weight: 700;
+}
+.chatSettingsLink {
+  margin-left: 1rem;
+}
+.companionMessage {
+  color: var(--text-secondary-color);
+}
+.companionMessageCount {
+  height: 20px;
+  width: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  font-variant-numeric: tabular-nums;
+  border-radius: 10px;
+  color: var(--white);
+  margin-top: auto;
+  background: var(--primary-color);
+}
+.companionMessageTime {
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 40px;
+}
+.messageSidebar {
+  position: relative;
+  /* align-self: flex-start; */
+  padding: 0 10px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100vh;
+}
+.selectChatMessage {
+  color: var(--primary-color);
+  background: var(--white);
+  font-weight: 600;
+  border: 2px solid var(--primary-color);
+  border-radius: 2rem;
+  padding: 10px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+/* .activeChat {
+  display: flex;
+  padding: 0.75rem 0;
+  justify-content: space-between;
+} */
+.messageList {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: flex-end;
+  max-height: 200vh;
+  flex: 1;
+}
+.chatUserList {
+  margin-top: 1rem;
+  & > * {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+
+    &:first-child {
+      border-top-style: none;
+    }
+    border-top: 1px solid #efefef;
+  }
+}
+.funcBlock {
+  display: flex;
+  & > * {
+    margin-left: 0.75rem;
+    &:first-of-type {
+      margin-left: 0;
+    }
+  }
+}
+.chatUserDisplayName {
+  font-size: 1rem;
+  font-weight: 500;
+}
+.chatUserFuncBlock {
+  font-weight: 500;
+  color: var(--primary-color);
+  margin-left: auto;
+}
+.chatUserAlreadyAdded {
+  font-weight: 500;
+  color: var(--input-error);
+}
+.chatUserAvatar {
+  height: 30px;
+  margin-right: 1rem;
+  width: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--primary-color);
+}
+.activeCompanionWrapper {
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+}
+.activeChat {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  /* margin: 0 10px; */
+  border-bottom: 1px solid #efefef;
+}
+
+.messageItem {
+  position: relative;
+  background: var(--primary-color);
+  color: var(--white);
+  border-radius: 2rem;
+  padding: 10px 60px 10px 10px;
+  margin-bottom: 1rem;
+}
+.messageTime {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  font-size: 12px;
+}
+.sendButton {
+  height: 37px;
+  bottom: 11px;
+  position: absolute;
+  right: 10px;
+}
+.unreadMessagesWrapper {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  border-radius: 50%;
+  position: absolute;
+  right: 12px;
+  color: var(--white);
+  bottom: 6px;
+  background-color: var(--primary-color);
+}
+.unreadMessages {
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.messageInput {
+  /* overflow: hidden; */
+  /* margin-bottom: 10px; */
+}
