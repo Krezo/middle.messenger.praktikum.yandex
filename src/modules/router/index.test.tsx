@@ -1,10 +1,17 @@
-import { Router } from './index'
+import { IComponentVNode } from '../components'
+import { IVNode, renderDOM } from '../vdom'
+import { RouteComponent, Router, RouterComponent } from './index'
 
 describe('Router', () => {
   let routerInstace = new Router()
 
+  const originalHistoryBack = window.history.back.bind(window.history)
+  const originalHistoryForward = window.history.forward.bind(window.history)
+
   beforeEach(() => {
     routerInstace.reset()
+    window.history.back = originalHistoryBack
+    window.history.forward = originalHistoryForward
   })
 
   test('should return router instance', () => {
@@ -75,5 +82,38 @@ describe('Router', () => {
     window.history.forward = mockHistoryForwardFn
     routerInstace.forward()
     expect(mockHistoryForwardFn).toBeCalledTimes(1)
+  })
+
+  test('should render active page component', () => {
+    const mainPage = {
+      page: () => <div id="main"></div>,
+      title: 'main',
+      path: '/',
+    }
+    const usersPage = {
+      page: () => <div id="users"></div>,
+      title: 'users',
+      path: '/users',
+    }
+
+    routerInstace.activePage.value = '/users'
+
+    const mainPageRouteComponent = <RouteComponent {...mainPage} />
+    const usersPageRouteComponent = <RouteComponent {...usersPage} />
+
+    // @ts-ignore
+    const root = (
+      <div>
+        {mainPageRouteComponent}
+        {usersPageRouteComponent}
+      </div>
+    ) as IVNode
+
+    // @ts-ignore
+    const routerContainer = (mainPageRouteComponent as IComponentVNode)
+      .children[0] as IVNode | IComponentVNode
+    expect(routerContainer.props['style'].replace(/\s*/g, '')).toBe(
+      'display:none'
+    )
   })
 })

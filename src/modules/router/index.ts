@@ -11,7 +11,7 @@ interface IRoute {
 class Router {
   static __instance: Router
 
-  private readonly routeList = new Map<string, IRoute>()
+  public readonly routeList = new Map<string, IRoute>()
 
   constructor(public readonly activePage = ref(window.location.pathname)) {
     if (Router.__instance) {
@@ -31,7 +31,7 @@ class Router {
   }
 
   reset() {
-    this.activePage.value = ''
+    this.activePage.value = '/'
     this.routeList.clear()
     this.resetActivePage()
   }

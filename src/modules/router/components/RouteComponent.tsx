@@ -1,4 +1,4 @@
-import { IComponentProps } from '../../components'
+import { IComponentProps, IComponentVNode } from '../../components'
 import { h } from '../../vdom'
 import { Router } from '../index'
 
@@ -25,7 +25,7 @@ function RouteComponent(props: RouteComponentProps) {
   }
   // Скрываем/отображаем страницу
   const display = isActivePage ? 'block' : 'none'
-  return <div style={`display : ${display}`}>{page(props)}</div>
+  return <div style={`display :${display}`}>{page(props)}</div>
 }
 
 export default RouteComponent

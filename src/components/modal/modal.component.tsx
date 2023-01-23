@@ -5,7 +5,7 @@ import style from './modal.component.module.css'
 interface Props extends IComponentProps {
   open: boolean
   title?: string
-  close: () => void
+  close?: () => void
 }
 
 function Modal(props: Props) {
