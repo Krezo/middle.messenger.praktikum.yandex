@@ -12,7 +12,7 @@ Figma: https://www.figma.com/file/81pEOmE0IPf2m6d1jedEfc/Yandex-Practicum-Messan
 
 - `npm run dev` - для разработки
 
-- `npm run hoy` - разработка с HMR
+- `npm run hot` - разработка с HMR
 
 - `npm run start` - запуск проекта
 
