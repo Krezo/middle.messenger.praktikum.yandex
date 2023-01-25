@@ -7,7 +7,8 @@
     "start": "npx webpack --mode=production && node server.js",
     "build": "npx webpack --mode=production",
     "lint": "npx eslint **/*.ts **/*.tsx && npx stylelint **/*.css",
-    "test": "jest "
+    "test": "jest ",
+    "prepare": "husky install"
   },
   "engines": {
     "node": ">=12"
@@ -39,6 +40,7 @@
     "eslint": "8.28.0",
     "eslint-config-airbnb": "19.0.4",
     "html-webpack-plugin": "^5.5.0",
+    "husky": "^8.0.3",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.3.1",

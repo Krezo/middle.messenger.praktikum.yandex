@@ -45,7 +45,8 @@ const flat = (array: unknown[]) => {
 }
 
 const isObject = (object: any): object is object =>
-  typeof object === 'object' && !Array.isArray(object) && object !== null
+  true ||
+  (typeof object === 'object' && !Array.isArray(object) && object !== null)
 
 const unzip = (...arrays: unknown[][]) => {
   arrays.forEach((array, index) => {
