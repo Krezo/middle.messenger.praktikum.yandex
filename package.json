@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "webpack serve --host=localhost --port=3000",
+    "dev": "webpack serve",
     "start": "npx parcel build ./src/index.html ./src/index.html && node server.js",
     "build": "npx parcel build ./src/index.html ./src/index.html",
     "test": "jest "

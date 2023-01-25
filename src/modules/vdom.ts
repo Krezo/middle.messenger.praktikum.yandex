@@ -5,6 +5,7 @@ import {
   clearHooksStack,
   isComponentNode,
 } from './components'
+import h from './h'
 
 import { computed, watch } from './reactivity'
 
@@ -162,13 +163,6 @@ const patchNode = (
   const vNodeIsComponentNode = isComponentNode(vNode)
   const nextVNodeComponentNode = isComponentNode(nextVNode)
   const canUpdateComponent = vNodeIsComponentNode && nextVNodeComponentNode
-
-  if (vNodeIsComponentNode) {
-    if (vNode.props?.messages) {
-      // console.log(vNode.props?.messages)
-      // debugger
-    }
-  }
 
   if (vNodeIsComponentNode && nextVNodeComponentNode) {
     patchNode(
@@ -341,4 +335,4 @@ const createApp = (
   }
 }
 
-export { mount, patchNode, renderDOM, createApp }
+export { mount, patchNode, renderDOM, createApp, h }

@@ -79,7 +79,6 @@ export default function () {
           className={style.registerForm}
           onSubmit={(event: Event) => {
             event.preventDefault()
-            console.log(registerFormValues.value)
             authService.signup(registerFormValues.value)
           }}
         >

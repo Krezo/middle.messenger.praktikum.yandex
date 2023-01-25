@@ -57,7 +57,12 @@ module.exports = {
       },
     ],
   },
-
+  devServer: {
+    port: 3000,
+    historyApiFallback: {
+      index: '/index.html',
+    },
+  },
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
