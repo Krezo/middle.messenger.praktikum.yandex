@@ -3,11 +3,20 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { webpack, ProvidePlugin } = require('webpack')
 
 module.exports = {
-  entry: './src/index.tsx',
-  mode: 'development',
+  entry: {
+    app: './src/index.tsx',
+  },
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.json'],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+    }),
+    new ProvidePlugin({
+      h: [path.resolve(path.join(__dirname, 'src/modules/h')), 'default'],
+    }),
+  ],
   module: {
     rules: [
       {
@@ -41,6 +50,7 @@ module.exports = {
           },
         ],
       },
+      // стили
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
@@ -57,22 +67,9 @@ module.exports = {
       },
     ],
   },
-  devServer: {
-    port: 3000,
-    historyApiFallback: {
-      index: '/index.html',
-    },
-  },
   output: {
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
+    clean: true,
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './src/index.html',
-    }),
-    new ProvidePlugin({
-      h: [path.resolve(path.join(__dirname, 'src/modules/h')), 'default'],
-    }),
-  ],
 }
