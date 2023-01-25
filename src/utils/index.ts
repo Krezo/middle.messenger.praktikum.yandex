@@ -18,8 +18,9 @@ function queryStringify(data: object, prefix?: string): string {
 const isSetEquals = (a: Set<unknown>, b: Set<unknown>) =>
   a.size === b.size && [...a].every((x) => b.has(x))
 
-const capitalizeFirstLetter = (string: string) =>
-  string.charAt(0).toUpperCase() + string.slice(1)
+const capitalizeFirstLetter = (string: string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
 
 const createFormData = (data: Record<string, any>): FormData => {
   const formData = new FormData()
@@ -44,9 +45,9 @@ const flat = (array: unknown[]) => {
   return returnArray
 }
 
-const isObject = (object: any): object is object =>
-  true ||
-  (typeof object === 'object' && !Array.isArray(object) && object !== null)
+const isObject = (object: any): object is object => {
+  return typeof object === 'object' && !Array.isArray(object) && object !== null
+}
 
 const unzip = (...arrays: unknown[][]) => {
   arrays.forEach((array, index) => {
@@ -79,7 +80,7 @@ const classNames = (...classItems: (unknown | object | unknown[])[]) => {
     }
     if (isObject(classItem)) {
       Object.entries(classItem).map(([k, v]) => {
-        if (v) {
+        if (!!v) {
           _classNames.push(k)
         }
       })
@@ -87,6 +88,7 @@ const classNames = (...classItems: (unknown | object | unknown[])[]) => {
     }
     if (Array.isArray(classItem)) {
       _classNames.push(...classNames(...classItem).split(' '))
+      return
     }
   })
 
