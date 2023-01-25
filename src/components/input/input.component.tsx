@@ -1,5 +1,4 @@
 import { IComponentProps } from '../../modules/components'
-import { h } from '../../modules/vdom'
 
 import style from './input.component.module.css'
 

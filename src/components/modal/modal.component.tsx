@@ -1,5 +1,5 @@
 import { IComponentProps } from '../../modules/components'
-import { h } from '../../modules/vdom'
+
 import style from './modal.component.module.css'
 
 interface Props extends IComponentProps {

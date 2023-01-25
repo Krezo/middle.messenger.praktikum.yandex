@@ -6,7 +6,6 @@ import { computed, ref, watch } from '../../modules/reactivity'
 // Components
 import { Input } from '../../components/input/input.component'
 import RouterLink from '../../modules/router/components/RouterLink'
-import { h } from '../../modules/vdom'
 
 import { authStore } from '../../store/authStore'
 import ChatService from '../../services/chatService'
@@ -278,7 +277,7 @@ export default function () {
                 value={createChatName.value}
                 className={styles.formControl}
                 id="create_chat_name"
-                setValue={(value) => (createChatName.value = value)}
+                setValue={(value: string) => (createChatName.value = value)}
                 placeholder="Название чата"
               />
 
@@ -336,7 +335,7 @@ export default function () {
               <Input
                 value={findUserString.value}
                 id="create_chat_name"
-                setValue={(value) => (findUserString.value = value)}
+                setValue={(value: string) => (findUserString.value = value)}
                 placeholder="Введите имя пользователя"
               />
               <div

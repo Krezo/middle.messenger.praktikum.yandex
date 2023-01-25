@@ -3,12 +3,7 @@ import {
   IComponentVNode,
   ILifeCycleComponent,
   clearHooksStack,
-  createComponentNode,
-  endListenHooks,
-  getHooks,
   isComponentNode,
-  registerLifeCycleHooks,
-  startListenHooks,
 } from './components'
 
 import { computed, watch } from './reactivity'
@@ -22,7 +17,7 @@ export interface IVNode {
   children: ChildrendVNode[]
 }
 
-const createVNode = (
+export const createVNode = (
   tagName: string,
   props: VNodeProps,
   children: ChildrendVNode[]
@@ -31,27 +26,6 @@ const createVNode = (
   props,
   children: children.flat(),
 })
-
-const h = (
-  tagName: ((props: VNodeProps, children: ChildrendVNode) => IVNode) | string,
-  props: VNodeProps = {},
-  ...children: ChildrendVNode[]
-): IVNode | IComponentVNode => {
-  if (typeof tagName === 'function') {
-    const componentProps = { ...props, ...{ children } }
-    startListenHooks()
-    const componentRender = tagName(componentProps, children)
-    const hooks = getHooks()
-    const component = createComponentNode(tagName, componentProps, [
-      componentRender,
-    ])
-    registerLifeCycleHooks(component, hooks)
-    endListenHooks()
-
-    return component
-  }
-  return createVNode(tagName, props, children)
-}
 
 // Тут не весь список
 // Полный список https://developer.mozilla.org/en-US/docs/Web/SVG/Element#svg_elements_a_to_z
@@ -367,4 +341,4 @@ const createApp = (
   }
 }
 
-export { mount, h, patchNode, renderDOM, createApp }
+export { mount, patchNode, renderDOM, createApp }

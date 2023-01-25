@@ -1,4 +1,3 @@
-import { h } from '../../modules/vdom'
 import { IComponentProps } from '../../modules/components'
 
 import style from './button.module.css'

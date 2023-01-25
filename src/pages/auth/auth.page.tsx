@@ -7,7 +7,7 @@ import { DefaultLayout } from '../../layout/defaultLayout/defaultLayout'
 import style from './auth.page.module.css'
 import styles from '../../css/app.module.css'
 // Others
-import { h } from '../../modules/vdom'
+
 import { useForm } from '../../composibles/useForm'
 import {
   maxLenght,

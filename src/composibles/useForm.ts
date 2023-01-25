@@ -1,7 +1,7 @@
 import { computed, reactive, watch, Ref } from '../modules/reactivity'
 import { IObserver } from '../modules/observer'
 
-interface FormData<FieldData> {
+export interface FormData<FieldData> {
   [key: string]: FieldData
 }
 
@@ -15,7 +15,7 @@ interface FieldDataExt {
   reassign: () => void
 }
 
-interface FieldData<V> {
+export interface FieldData<V> {
   value: V
   validators?: {
     [key: string]: (

@@ -136,7 +136,7 @@ const watch = <T>(
 ) => {
   watchDep(watch, watchFunc)
   if (options?.immediate) {
-    watchFunc(watch(), null, null)
+    watchFunc(watch(), null)
   }
 }
 

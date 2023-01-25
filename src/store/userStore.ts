@@ -36,7 +36,7 @@ const userStore = reactive<IUserStore>({
 
 const logoutUser = () => {
   for (const userKey in userStore.user) {
-    userStore.user[userKey as keyof typeof userStore.user] = null
+    userStore.user[userKey] = null
   }
 }
 
@@ -54,6 +54,4 @@ const loginUser = (userData: typeof userStore.user) => {
   reassignUser(userData)
 }
 
-export {
-  userStore, logoutUser, loginUser, reassignUser, clearUserError,
-}
+export { userStore, logoutUser, loginUser, reassignUser, clearUserError }

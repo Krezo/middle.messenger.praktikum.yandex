@@ -1,5 +1,5 @@
 import { IComponentProps, onUpdate } from '../../modules/components'
-import { h } from '../../modules/vdom'
+
 import { IChatMessage } from '../../store/chatStore'
 import { Spinner } from '../spinner/spinner.component'
 import style from './messageList.component.module.css'

@@ -3,8 +3,6 @@ import { Button } from '../button/buttonComponent'
 
 import style from './error.module.css'
 
-import { h } from '../../modules/vdom'
-
 interface IProps extends IComponentProps {
   statusCode: number
   text: string

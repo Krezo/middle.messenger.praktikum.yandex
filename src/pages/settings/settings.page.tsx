@@ -1,6 +1,6 @@
 // Components
 import { DefaultLayout } from '../../layout/defaultLayout/defaultLayout'
-import { h } from '../../modules/vdom'
+
 import { Input } from '../../components/input/input.component'
 import { Button } from '../../components/button/buttonComponent'
 // Images

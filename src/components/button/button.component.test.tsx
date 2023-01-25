@@ -1,5 +1,6 @@
 import { renderDOM } from '../../modules/vdom'
 import { Button } from './buttonComponent'
+import spinnerStyles from '../spinner/spinner.component.module.css'
 
 describe('Button component', () => {
   test('should call onClick handler', () => {
@@ -16,6 +17,8 @@ describe('Button component', () => {
 
   test('should show spinner when prop loading is true', () => {
     const root = renderDOM(<Button loading />) as HTMLElement
-    expect(root.lastElementChild?.classList.contains('spinner')).toBe(true)
+    expect(
+      root.lastElementChild?.classList.contains(spinnerStyles.spinner)
+    ).toBe(true)
   })
 })

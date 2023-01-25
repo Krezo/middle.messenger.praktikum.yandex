@@ -11,7 +11,8 @@ const authApiInstance = new HTTPTransport(API_BASE_URL + '/auth', {
   },
 })
 
-export interface ISignupParams extends Omit<IUser, 'id' | 'avatar'> {}
+export interface ISignupParams
+  extends Omit<IUser, 'id' | 'avatar' | 'display_name'> {}
 export interface ISignupResponseOK {
   id: number
 }

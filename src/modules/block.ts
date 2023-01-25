@@ -1,5 +1,4 @@
 import { EventBus } from './eventBus'
-import { h, renderDOM } from './vdom'
 
 type BlockEvents<Props = any> = {
   init: []
@@ -34,7 +33,7 @@ abstract class Block<Props extends { [key: string]: unknown } = any> {
 
   constructor(
     tagName: keyof HTMLElementTagNameMap = 'div',
-    props = {} as Props,
+    props = {} as Props
   ) {
     const eventBus = new EventBus()
     this._meta = {
@@ -140,7 +139,7 @@ abstract class Block<Props extends { [key: string]: unknown } = any> {
             .emit(
               'flow:component-did-update',
               { ...self.props, [prop]: oldPropValue },
-              { ...self.props, [prop]: newValue },
+              { ...self.props, [prop]: newValue }
             )
         }
         return true
