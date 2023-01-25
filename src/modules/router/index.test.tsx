@@ -1,6 +1,6 @@
 import { IComponentVNode } from '../components'
-import { IVNode, renderDOM } from '../vdom'
-import { RouteComponent, Router, RouterComponent } from './index'
+import { IVNode } from '../vdom'
+import { RouteComponent, Router } from './index'
 
 describe('Router', () => {
   let routerInstace = new Router()

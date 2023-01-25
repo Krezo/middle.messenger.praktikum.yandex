@@ -9,13 +9,13 @@ describe('HTTP Transport', () => {
     const data = {
       users: [{ id: 1 }, { id: 2 }],
     }
-    const mock = mockFetch(200, data)
+    mockFetch(200, data)
     const { response } = await fetch.get('/users')
     expect(data).toEqual(response)
   })
 
   test('should return error (error status code)', async () => {
-    const mock = mockFetch(400)
+    mockFetch(400)
     await expect(fetch.get('/users')).rejects.toBeInstanceOf(
       HTTPTransportResponseError
     )

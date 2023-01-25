@@ -6,7 +6,7 @@ describe('Component', () => {
     const mockComponentProps = props
     const mockComponentTagName = (props: typeof mockComponentProps) => {
       // @ts-ignore
-      return (<div></div>) as IVNode
+      return (<div {...props}></div>) as IVNode
     }
 
     const componenetVNode = createComponentNode(

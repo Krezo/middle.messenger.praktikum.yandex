@@ -1,4 +1,3 @@
-import { IComponentVNode } from './components'
 import { renderDOM } from './vdom'
 
 describe('Virtual DOM', () => {
@@ -20,7 +19,7 @@ describe('Virtual DOM', () => {
   })
 
   test('should return div with empty text (null passed)', () => {
-    const text = null
+    const text: null = null
     const divNode = renderDOM(<div>{text}</div>) as HTMLElement
     expect(divNode.innerHTML).toBe('')
   })

@@ -5,7 +5,13 @@ export interface FormData<FieldData> {
   [key: string]: FieldData
 }
 
-interface FieldDataExt {
+export interface FormDataCompleted<
+  T = FieldData<unknown> & Partial<FieldDataExt>
+> {
+  [key: string]: T
+}
+
+export interface FieldDataExt {
   label: string
   errors: { [key: string]: boolean }
   valid: boolean

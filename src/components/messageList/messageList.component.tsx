@@ -16,6 +16,7 @@ export function MessageList(props: Props) {
     (message, newMessage) => (newMessage.time > message.time ? -1 : 1)
   )
 
+  // @ts-ignore
   onUpdate<Props>((component, oldProps, newProps) => {
     if (newProps.messages.size > 0) {
       const lastMessageElement = document.querySelector(

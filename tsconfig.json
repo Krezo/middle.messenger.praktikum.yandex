@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "module": "es6",
     "target": "ESNext",
     "jsx": "preserve",
@@ -8,7 +8,7 @@
     "allowJs": true,
     "sourceMap": true,
     "moduleResolution": "node",
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
     "noUnusedParameters": false
   },
   "include": ["./src/**/*"]
