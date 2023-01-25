@@ -1,4 +1,4 @@
-import { IComponentProps, IComponentVNode } from '../../components'
+import { IComponentProps } from '../../components'
 import { Router } from '../index'
 
 interface RouteComponentProps extends IComponentProps {

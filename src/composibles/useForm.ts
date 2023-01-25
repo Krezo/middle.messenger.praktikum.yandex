@@ -37,7 +37,7 @@ export const useForm = <
   isValid: Ref<boolean>
 } => {
   const formData: any = reactive(init)
-  for (const [key, _] of Object.entries(formData)) {
+  for (const [key] of Object.entries(formData)) {
     const formField = formData[key]
     formField.errors = reactive({})
     formField.toched = false

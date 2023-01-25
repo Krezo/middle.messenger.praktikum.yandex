@@ -6,7 +6,9 @@ import {
   registerLifeCycleHooks,
   startListenHooks,
 } from './components'
-import { ChildrendVNode, IVNode, VNodeProps, createVNode } from './vdom'
+import {
+  ChildrendVNode, IVNode, VNodeProps, createVNode,
+} from './vdom'
 
 const h = (
   tagName: ((props: VNodeProps, children: ChildrendVNode) => IVNode) | string,

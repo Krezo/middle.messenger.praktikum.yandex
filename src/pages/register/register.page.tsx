@@ -1,5 +1,4 @@
 // Components
-import { Logo } from '../../components/logoComponent'
 import { DefaultLayout } from '../../layout/defaultLayout/defaultLayout'
 
 import { Input } from '../../components/input/input.component'

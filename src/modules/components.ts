@@ -43,7 +43,7 @@ const isLifeCycleRegisterEnable = () => lifeCycleRegister
 
 export const registerLifeCycleHooks = (
   component: IComponentVNode,
-  hooks: IComponentLifeCycleHooks
+  hooks: IComponentLifeCycleHooks,
 ) => {
   Object.assign(component, hooks)
 }
@@ -75,7 +75,7 @@ export interface ILifeCycleComponent extends IComponentVNode {
 }
 
 export const isComponentNode = (
-  data: IVNode | IComponentVNode
+  data: IVNode | IComponentVNode,
 ): data is IComponentVNode => typeof data.tagName === 'function'
 
 export const onMounted = (onMountedFunc: IOnMountedHook) => {
@@ -93,7 +93,7 @@ export const onUpdate = <T>(onUpdateFunc: IOnUpdateHook<T>) => {
 export const createComponentNode = (
   tagName: (props: VNodeProps, children: (IVNode | string)[]) => IVNode,
   props: VNodeProps,
-  children: ChildrendVNode
+  children: ChildrendVNode,
 ): IComponentVNode => ({
   tagName,
   props,

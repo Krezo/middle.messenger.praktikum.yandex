@@ -14,10 +14,10 @@ const isObserver = <T>(object: any): object is IObserver<T> => {
 
 const observer = <T>(
   value: T,
-  deps: IWatchFunction<unknown>[] = []
+  deps: IWatchFunction<unknown>[] = [],
 ): IObserver<T> => ({
-  value,
-  deps: new Set(deps),
-})
+    value,
+    deps: new Set(deps),
+  })
 
 export { observer, IObserver, isObserver }

@@ -1,4 +1,4 @@
-import { Ref, reactive, ref } from '../modules/reactivity'
+import { reactive } from '../modules/reactivity'
 import RealTimeChat from '../services/realTimeChat'
 import { Chat, Message } from '../types/chat'
 import { IUser } from '../types/user'

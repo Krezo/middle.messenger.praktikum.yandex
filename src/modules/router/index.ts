@@ -69,4 +69,6 @@ class Router {
   }
 }
 
-export { RouterComponent, RouteComponent, Router, RouterLink }
+export {
+  RouterComponent, RouteComponent, Router, RouterLink,
+}

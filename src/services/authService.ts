@@ -17,6 +17,7 @@ import { loginUser, logoutUser } from '../store/userStore'
  */
 export default class AuthService {
   private readonly api: AuthApi
+
   private __instance: AuthService
 
   constructor(private store = authStore, private router = new Router()) {
@@ -76,7 +77,7 @@ export default class AuthService {
         const responseError: IGetUserResponseError = error.response
         this.store.getUserError = responseError.reason
       } else {
-        console.log(error)
+        // console.log(error)
       }
     } finally {
       this.store.getUserLoading = false
@@ -98,7 +99,7 @@ export default class AuthService {
         const responseError: ISigninResponseError = error.response
         this.store.signinError = responseError.reason
       } else {
-        console.log(error)
+        // console.log(error)
       }
     } finally {
       this.store.signinLoading = false
@@ -120,9 +121,8 @@ export default class AuthService {
       if (error instanceof HTTPTransportResponseError) {
         const responseError: ISigninResponseError = error.response
         this.store.logoutError = responseError.reason
-        console.log(error)
       } else {
-        console.log(error)
+        // console.log(error)
       }
     } finally {
       this.store.logoutLoading = false

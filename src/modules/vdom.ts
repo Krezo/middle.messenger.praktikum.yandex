@@ -162,7 +162,7 @@ const patchNode = (
 
   const vNodeIsComponentNode = isComponentNode(vNode)
   const nextVNodeComponentNode = isComponentNode(nextVNode)
-  const canUpdateComponent = vNodeIsComponentNode && nextVNodeComponentNode
+  // const canUpdateComponent = vNodeIsComponentNode && nextVNodeComponentNode
 
   if (vNodeIsComponentNode && nextVNodeComponentNode) {
     patchNode(
@@ -226,9 +226,8 @@ const patchNode = (
   return node
 }
 
-const isInputElement = (node: HTMLElement | IVNode) => {
-  return node.tagName === 'INPUT' || node.tagName === 'TEXTAREA'
-}
+const isInputElement = (node: HTMLElement | IVNode) =>
+  node.tagName === 'INPUT' || node.tagName === 'TEXTAREA'
 
 const patchProp = (
   node: HTMLElement,

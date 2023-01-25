@@ -6,10 +6,16 @@
     "dev": "webpack --mode=development serve",
     "start": "npx webpack --mode=production && node server.js",
     "build": "npx webpack --mode=production",
+    "lint": "npx eslint **/*.ts **/*.tsx && npx stylelint **/*.css",
     "test": "jest "
   },
   "engines": {
     "node": ">=12"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run test && npm run lint"
+    }
   },
   "browserslist": "> 0.5%, last 2 versions",
   "keywords": [],

@@ -15,7 +15,7 @@ export function mockFetch<T>(status: number, data?: T) {
 
   setTimeout(() => {
     // @ts-ignore
-    xhrMockObj['onreadystatechange']()
+    xhrMockObj.onreadystatechange()
   }, 0)
 
   return xhrMockClass

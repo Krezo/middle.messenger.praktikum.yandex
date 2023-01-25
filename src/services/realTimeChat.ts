@@ -1,5 +1,5 @@
 import ChatApi from '../api/chatApi'
-import ChatService, { MessageType } from './chatService'
+import { MessageType } from './chatService'
 
 const chatApi = new ChatApi()
 
@@ -20,17 +20,17 @@ export default class RealTimeChat {
   ) {
     this.ws = new WebSocket([this.wsBaseUrl, userId, chatId, token].join('/'))
     this.ws.addEventListener('open', () => {
-      console.log('Успешное подключение к чату сокета')
+      // console.log('Успешное подключение к чату сокета')
     })
     this.ws.addEventListener('error', () => {
-      console.log('Ошибка при подключении к сокету')
+      // console.log('Ошибка при подключении к сокету')
     })
     this.ws.addEventListener('close', (event) => {
       if (event.wasClean) {
-        console.log('Соединение закрыто чисто')
+        // console.log('Соединение закрыто чисто')
         return
       }
-      console.log('Соединение принудительно закрыто')
+      // console.log('Соединение принудительно закрыто')
     })
     if (infinitePing) {
       this.ping()
@@ -51,7 +51,7 @@ export default class RealTimeChat {
   }
 
   public loadMessage(content: number = 0, type = 'get old') {
-    return new Promise((res, rej) => {
+    return new Promise((res) => {
       const intervalId = setInterval(() => {
         if (this.ws.readyState === this.ws.OPEN) {
           this.ws.send(
@@ -68,7 +68,7 @@ export default class RealTimeChat {
   }
 
   public sendMessage(content: string, type: MessageType = MessageType.MESSAGE) {
-    return new Promise((res, rej) => {
+    return new Promise((res) => {
       const intervalId = setInterval(() => {
         if (this.ws.readyState === this.ws.OPEN) {
           this.ws.send(
