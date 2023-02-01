@@ -8,7 +8,6 @@ import { userStore } from '../store/userStore'
 import { IApiError } from '../types/apiError'
 import { Message } from '../types/chat'
 import { IUser } from '../types/user'
-import { createFormData } from '../utils/index'
 import RealTimeChat from './realTimeChat'
 import UserService from './userService'
 
@@ -137,7 +136,7 @@ export default class ChatService {
         const responseError: IApiError = error.response
         this.store.getChatError = responseError.reason
       } else {
-        console.log(error)
+        // console.log(error)
       }
     } finally {
       this.store.loadingChats = false
@@ -161,7 +160,7 @@ export default class ChatService {
         const responseError: IApiError = error.response
         this.store.createChatError = responseError.reason
       } else {
-        console.log(error)
+        // console.log(error)
       }
     } finally {
       this.store.loadingCreateChat = false
@@ -187,7 +186,7 @@ export default class ChatService {
         const responseError: IApiError = error.response
         this.store.changeAvatarError = responseError.reason
       } else {
-        console.log(error)
+        // console.log(error)
       }
     } finally {
       this.store.loadingChangeAvatar = false
@@ -216,7 +215,7 @@ export default class ChatService {
         const responseError: IApiError = error.response
         this.store.deleteChatError = responseError.reason
       } else {
-        console.log(error)
+        // console.log(error)
       }
     } finally {
       this.store.loadingDeleteChat = false
@@ -236,7 +235,7 @@ export default class ChatService {
         const responseError: IApiError = error.response
         this.store.addUserToChatError = responseError.reason
       } else {
-        console.log(error)
+        // console.log(error)
       }
     } finally {
       this.store.loadingAddUserToChat = false
@@ -256,7 +255,7 @@ export default class ChatService {
         const responseError: IApiError = error.response
         this.store.deleteUserFromChatError = responseError.reason
       } else {
-        console.log(error)
+        // console.log(error)
       }
     } finally {
       this.store.loadingdeleteUserFromChat = false
@@ -277,7 +276,7 @@ export default class ChatService {
         const responseError: IApiError = error.response
         this.store.getChatUsersError = responseError.reason
       } else {
-        console.log(error)
+        // console.log(error)
       }
     } finally {
       this.store.loadingGetChatUsers = false

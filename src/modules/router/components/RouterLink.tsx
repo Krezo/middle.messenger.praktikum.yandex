@@ -1,5 +1,4 @@
 import { IComponentProps } from '../../components'
-import { h } from '../../vdom'
 import { Router } from '../index'
 
 interface RouterLinkProps extends IComponentProps {

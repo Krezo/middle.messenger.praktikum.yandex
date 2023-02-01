@@ -3,13 +3,9 @@ import {
   IComponentVNode,
   ILifeCycleComponent,
   clearHooksStack,
-  createComponentNode,
-  endListenHooks,
-  getHooks,
   isComponentNode,
-  registerLifeCycleHooks,
-  startListenHooks,
 } from './components'
+import h from './h'
 
 import { computed, watch } from './reactivity'
 
@@ -22,7 +18,7 @@ export interface IVNode {
   children: ChildrendVNode[]
 }
 
-const createVNode = (
+export const createVNode = (
   tagName: string,
   props: VNodeProps,
   children: ChildrendVNode[]
@@ -32,27 +28,8 @@ const createVNode = (
   children: children.flat(),
 })
 
-const h = (
-  tagName: ((props: VNodeProps, children: ChildrendVNode) => IVNode) | string,
-  props: VNodeProps = {},
-  ...children: ChildrendVNode[]
-): IVNode | IComponentVNode => {
-  if (typeof tagName === 'function') {
-    const componentProps = { ...props, ...{ children } }
-    startListenHooks()
-    const componentRender = tagName(componentProps, children)
-    const hooks = getHooks()
-    const component = createComponentNode(tagName, componentProps, [
-      componentRender,
-    ])
-    registerLifeCycleHooks(component, hooks)
-    endListenHooks()
-
-    return component
-  }
-  return createVNode(tagName, props, children)
-}
-
+// Тут не весь список
+// Полный список https://developer.mozilla.org/en-US/docs/Web/SVG/Element#svg_elements_a_to_z
 const isSvg = (node: IVNode | IComponentVNode) =>
   node.tagName === 'svg' ||
   node.tagName === 'line' ||
@@ -60,7 +37,14 @@ const isSvg = (node: IVNode | IComponentVNode) =>
   node.tagName === 'path'
 
 const renderDOM = (
-  root: IVNode | IComponentVNode | string | number | null,
+  root:
+    | IVNode
+    | IComponentVNode
+    | JSX.Element
+    | string
+    | number
+    | boolean
+    | null,
   component?: IComponentVNode
 ): Node => {
   // Нод условного рендера
@@ -76,52 +60,56 @@ const renderDOM = (
   if (typeof root === 'number') {
     return document.createTextNode(root.toString())
   }
+
   if (root === null) {
     return document.createTextNode('')
   }
 
   let domRoot: HTMLElement | SVGElement
 
-  if (isComponentNode(root)) {
-    if (!root.domNode) {
-      return renderDOM(root.children[0], root)
+  // JXS.Element нужен для совместимости, избавляемся от него
+  const notJXSRoot = root as IVNode | IComponentVNode
+
+  if (isComponentNode(notJXSRoot)) {
+    if (!notJXSRoot.domNode) {
+      return renderDOM(notJXSRoot.children[0], notJXSRoot)
     }
-    return renderDOM(root.children[0])
+    return renderDOM(notJXSRoot.children[0])
   }
 
-  if (isSvg(root)) {
+  if (isSvg(notJXSRoot)) {
     domRoot = document.createElementNS(
       'http://www.w3.org/2000/svg',
-      root.tagName
+      notJXSRoot.tagName
     )
   } else {
-    domRoot = document.createElement(root.tagName)
+    domRoot = document.createElement(notJXSRoot.tagName)
   }
 
   for (const propName in root.props) {
     if (propName.startsWith('on')) {
       domRoot.addEventListener(
         propName.replace('on', '').toLocaleLowerCase(),
-        root.props[propName]
+        notJXSRoot.props[propName]
       )
       continue
     }
-    if (!root.props[propName]) continue
-    if (isInputElement(root) && propName === 'value') {
-      ;(domRoot as HTMLInputElement).value = root.props[propName]
+    if (!notJXSRoot.props[propName]) continue
+    if (isInputElement(notJXSRoot) && propName === 'value') {
+      ;(domRoot as HTMLInputElement).value = notJXSRoot.props[propName]
     } else if (propName === 'className') {
       domRoot.setAttribute(
         'class',
-        (root.props[propName] as string)
+        (notJXSRoot.props[propName] as string)
           .split(' ')
           .filter((v) => !!v)
           .join(' ')
       )
     } else if (propName === 'children') {
-    } else domRoot.setAttribute(propName, root.props[propName])
+    } else domRoot.setAttribute(propName, notJXSRoot.props[propName])
   }
 
-  root.children.forEach((child) => {
+  notJXSRoot.children.forEach((child) => {
     domRoot.appendChild(renderDOM(child))
   })
 
@@ -174,14 +162,7 @@ const patchNode = (
 
   const vNodeIsComponentNode = isComponentNode(vNode)
   const nextVNodeComponentNode = isComponentNode(nextVNode)
-  const canUpdateComponent = vNodeIsComponentNode && nextVNodeComponentNode
-
-  if (vNodeIsComponentNode) {
-    if (vNode.props?.messages) {
-      // console.log(vNode.props?.messages)
-      // debugger
-    }
-  }
+  // const canUpdateComponent = vNodeIsComponentNode && nextVNodeComponentNode
 
   if (vNodeIsComponentNode && nextVNodeComponentNode) {
     patchNode(
@@ -233,7 +214,11 @@ const patchNode = (
     if (component.onUpdate) {
       // Передаем ноду, иначе при след. вызовах теряем
       nextComponent.domNode = component.domNode
-      component.onUpdate(component, componentOldProps, componentNewProps || {})
+      component.onUpdate(
+        nextComponent,
+        componentOldProps,
+        componentNewProps || {}
+      )
     }
   }
 
@@ -241,9 +226,8 @@ const patchNode = (
   return node
 }
 
-const isInputElement = (node: HTMLElement | IVNode) => {
-  return node.tagName === 'INPUT' || node.tagName === 'TEXTAREA'
-}
+const isInputElement = (node: HTMLElement | IVNode) =>
+  node.tagName === 'INPUT' || node.tagName === 'TEXTAREA'
 
 const patchProp = (
   node: HTMLElement,
@@ -350,4 +334,4 @@ const createApp = (
   }
 }
 
-export { mount, h, patchNode, renderDOM, createApp }
+export { mount, patchNode, renderDOM, createApp, h }

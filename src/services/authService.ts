@@ -16,19 +16,24 @@ import { loginUser, logoutUser } from '../store/userStore'
  * https://ya-praktikum.tech/api/v2/swagger/#/Auth
  */
 export default class AuthService {
-  private readonly store: typeof authStore
-
   private readonly api: AuthApi
 
   private __instance: AuthService
 
-  constructor() {
+  constructor(private store = authStore, private router = new Router()) {
     if (this.__instance) {
       return this.__instance
     }
     this.api = new AuthApi()
-    this.store = authStore
     this.__instance = this
+  }
+
+  public setStore(store: typeof authStore) {
+    this.store = store
+  }
+
+  public resetRouter() {
+    this.router.reset()
   }
 
   /**
@@ -40,7 +45,7 @@ export default class AuthService {
       this.store.signupLoading = true
       await this.api.signup(params)
       this.getUser()
-      new Router().go('/messenger')
+      this.router.go('/messenger')
     } catch (error: unknown) {
       if (error instanceof HTTPTransportResponseError) {
         const responseError: ISignupResponseError = error.response
@@ -72,7 +77,7 @@ export default class AuthService {
         const responseError: IGetUserResponseError = error.response
         this.store.getUserError = responseError.reason
       } else {
-        console.log(error)
+        // console.log(error)
       }
     } finally {
       this.store.getUserLoading = false
@@ -84,20 +89,20 @@ export default class AuthService {
    */
   async signin(data: ISigninParams) {
     try {
-      authStore.signinLoading = true
-      authStore.signinError = ''
+      this.store.signinLoading = true
+      this.store.signinError = ''
       await this.api.signin(data)
-      new Router().go('/messenger')
+      this.router.go('/messenger')
       this.getUser(true)
     } catch (error: unknown) {
       if (error instanceof HTTPTransportResponseError) {
         const responseError: ISigninResponseError = error.response
-        authStore.signinError = responseError.reason
+        this.store.signinError = responseError.reason
       } else {
-        console.log(error)
+        // console.log(error)
       }
     } finally {
-      authStore.signinLoading = false
+      this.store.signinLoading = false
     }
   }
 
@@ -111,14 +116,13 @@ export default class AuthService {
       await this.api.logout()
       this.store.isAuth = false
       logoutUser()
-      new Router().go('/')
+      this.router.go('/')
     } catch (error: unknown) {
       if (error instanceof HTTPTransportResponseError) {
         const responseError: ISigninResponseError = error.response
         this.store.logoutError = responseError.reason
-        console.log(error)
       } else {
-        console.log(error)
+        // console.log(error)
       }
     } finally {
       this.store.logoutLoading = false

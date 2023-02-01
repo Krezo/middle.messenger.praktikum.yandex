@@ -2,7 +2,6 @@
 import { Error } from '../../components/error/error'
 import { DefaultLayout } from '../../layout/defaultLayout/defaultLayout'
 // Others
-import { h } from '../../modules/vdom'
 
 export default function () {
   return (

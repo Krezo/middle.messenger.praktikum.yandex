@@ -1,20 +1,14 @@
 // Components
 import { Button } from '../../components/button/buttonComponent'
 import { Input } from '../../components/input/input.component'
-import { Logo } from '../../components/logoComponent'
 import { DefaultLayout } from '../../layout/defaultLayout/defaultLayout'
 // Styles
 import style from './auth.page.module.css'
 import styles from '../../css/app.module.css'
 // Others
-import { h } from '../../modules/vdom'
+
 import { useForm } from '../../composibles/useForm'
-import {
-  maxLenght,
-  minLenght,
-  login,
-  password,
-} from '../../modules/validatorRules'
+import { maxLenght, minLenght } from '../../modules/validatorRules'
 import { RouterLink } from '../../modules/router/index'
 import AuthService from '../../services/authService'
 import { authStore } from '../../store/authStore'

@@ -1,11 +1,17 @@
 import { computed, reactive, watch, Ref } from '../modules/reactivity'
 import { IObserver } from '../modules/observer'
 
-interface FormData<FieldData> {
+export interface FormData<FieldData> {
   [key: string]: FieldData
 }
 
-interface FieldDataExt {
+export interface FormDataCompleted<
+  T = FieldData<unknown> & Partial<FieldDataExt>
+> {
+  [key: string]: T
+}
+
+export interface FieldDataExt {
   label: string
   errors: { [key: string]: boolean }
   valid: boolean
@@ -15,7 +21,7 @@ interface FieldDataExt {
   reassign: () => void
 }
 
-interface FieldData<V> {
+export interface FieldData<V> {
   value: V
   validators?: {
     [key: string]: (
@@ -37,7 +43,7 @@ export const useForm = <
   isValid: Ref<boolean>
 } => {
   const formData: any = reactive(init)
-  for (const [key, _] of Object.entries(formData)) {
+  for (const [key] of Object.entries(formData)) {
     const formField = formData[key]
     formField.errors = reactive({})
     formField.toched = false

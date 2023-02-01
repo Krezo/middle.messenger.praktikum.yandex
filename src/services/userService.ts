@@ -117,7 +117,8 @@ export default class UserService {
       return response
     } catch (error) {
       if (error instanceof HTTPTransportResponseError) {
-        const responseError: IApiError = error.response
+        const responseError = error.response
+        this.store.searchUserError = responseError
       }
       console.error(error)
     } finally {

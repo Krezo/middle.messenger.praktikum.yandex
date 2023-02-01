@@ -1,5 +1,5 @@
 import { IComponentProps, onUpdate } from '../../modules/components'
-import { h } from '../../modules/vdom'
+
 import { IChatMessage } from '../../store/chatStore'
 import { Spinner } from '../spinner/spinner.component'
 import style from './messageList.component.module.css'
@@ -16,6 +16,7 @@ export function MessageList(props: Props) {
     (message, newMessage) => (newMessage.time > message.time ? -1 : 1)
   )
 
+  // @ts-ignore
   onUpdate<Props>((component, oldProps, newProps) => {
     if (newProps.messages.size > 0) {
       const lastMessageElement = document.querySelector(

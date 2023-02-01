@@ -3,7 +3,7 @@ import { HTTPTransport } from '../modules/fetch'
 import { IApiError } from '../types/apiError'
 import { IUser } from '../types/user'
 
-const authApiInstance = new HTTPTransport(API_BASE_URL + '/auth', {
+const authApiInstance = new HTTPTransport(`${API_BASE_URL}/auth`, {
   withCredentials: true,
   headers: {
     Accept: 'application/json',
@@ -11,7 +11,8 @@ const authApiInstance = new HTTPTransport(API_BASE_URL + '/auth', {
   },
 })
 
-export interface ISignupParams extends Omit<IUser, 'id' | 'avatar'> {}
+export interface ISignupParams
+  extends Omit<IUser, 'id' | 'avatar' | 'display_name'> {}
 export interface ISignupResponseOK {
   id: number
 }

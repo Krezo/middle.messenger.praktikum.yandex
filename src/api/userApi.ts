@@ -2,9 +2,8 @@ import { API_BASE_URL } from '../consts'
 import { HTTPTransport } from '../modules/fetch'
 import { IApiError } from '../types/apiError'
 import { IUser } from '../types/user'
-import { createFormData } from '../utils/index'
 
-const userApiInstance = new HTTPTransport(API_BASE_URL + '/user', {
+const userApiInstance = new HTTPTransport(`${API_BASE_URL}/user`, {
   withCredentials: true,
   headers: {
     Accept: 'application/json',

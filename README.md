@@ -4,19 +4,23 @@
 
 Netlify: https://starlit-ganache-25683f.netlify.app/
 
+Render(Docker): https://yandex-practikum.onrender.com
+
 Figma: https://www.figma.com/file/81pEOmE0IPf2m6d1jedEfc/Yandex-Practicum-Messanger?node-id=0%3A1
 
 ## Запуск проекта
 
 - `npm run dev` - для разработки
 
+- `npm run hot` - разработка с HMR
+
 - `npm run start` - запуск проекта
 
-- `npm run build` - деплой
+- `npm run build` - билд проекта
 
-- `node_modules/.bin/eslint .` - eslinter
+- `npm run lint` - линтеры (eslinter,stylelint)
 
-- `npx stylelint ./src/**/*.css` - stylelint
+- `npm run test` - тесты
 
 ## Структура проекта
 
@@ -61,6 +65,10 @@ Figma: https://www.figma.com/file/81pEOmE0IPf2m6d1jedEfc/Yandex-Practicum-Messan
 **utils/\*** - утилиы
 
 ## Шаблонизатор
+
+**Тесты**
+
+- Все тесты находятся рядом с тестируемым файлами
 
 **Особенности**
 

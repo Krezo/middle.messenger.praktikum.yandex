@@ -4,7 +4,6 @@ import styles from '../../css/app.module.css'
 import { Button } from '../button/buttonComponent'
 import { Logo } from '../logoComponent'
 
-import { h } from '../../modules/vdom'
 import { RouterLink } from '../../modules/router/index'
 
 function Header() {

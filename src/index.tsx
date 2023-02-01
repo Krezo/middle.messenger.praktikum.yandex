@@ -1,10 +1,5 @@
-import {
-  RouteComponent,
-  Router,
-  RouterComponent,
-  activePage,
-} from './modules/router/index'
-import { createApp, h } from './modules/vdom'
+import { createApp } from './modules/vdom'
+import { RouteComponent, Router, RouterComponent } from './modules/router/index'
 import IndexPage from './pages/index/index.page'
 import SettingsPage from './pages/settings/settings.page'
 import AuthPage from './pages/auth/auth.page'
@@ -39,11 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         path="/sign-up"
         page={RegisterPage}
       />
-      <RouteComponent
-        title="Chat. Page not found"
-        path="/404"
-        page={Page404}
-      />
+      <RouteComponent title="Chat. Page not found" path="/404" page={Page404} />
       <RouteComponent title="Chat. Server error" path="/500" page={Page500} />
     </RouterComponent>
   ))
@@ -51,19 +42,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   app.mount()
 
   watchEffect(async () => {
-    if (!router.routeExist(activePage.value)) {
-      activePage.value = '/404'
+    if (!router.routeExist(router.activePage.value)) {
       new Router().go('/404')
       return
     }
-    if (activePage.value === '/') {
+    if (router.activePage.value === '/') {
       await authService.getUser()
       if (authService.isAuth()) {
         new Router().go('/messenger')
       }
       return
     }
-    if (activePage.value === '/settings' || activePage.value === '/messenger') {
+    if (
+      router.activePage.value === '/settings' ||
+      router.activePage.value === '/messenger'
+    ) {
       await authService.getUser()
       if (!authService.isAuth()) {
         authStore.signinError = 'Необходима авторизация'

@@ -1,6 +1,5 @@
 import { IComponentProps } from '../../components'
-import { h } from '../../vdom'
-import { Router, activePage } from '../index'
+import { Router } from '../index'
 
 interface RouteComponentProps extends IComponentProps {
   page: (props: RouteComponentProps) => JSX.Element
@@ -8,21 +7,24 @@ interface RouteComponentProps extends IComponentProps {
   title: string
 }
 
-const pageIsActive = (route: string) => activePage.value === route
 function RouteComponent(props: RouteComponentProps) {
   const { path, title, page } = props
+  const router = new Router()
+
   // Проверяем активна ли сейчас страница
-  const isActivePage = pageIsActive(path)
-  new Router().addRoute({
+  const isActivePage = router.pageIsActive(path)
+
+  router.addRoute({
     path,
     title,
   })
+
   if (isActivePage) {
     document.title = title
   }
   // Скрываем/отображаем страницу
   const display = isActivePage ? 'block' : 'none'
-  return <div style={`display : ${display}`}>{page(props)}</div>
+  return <div style={`display :${display}`}>{page(props)}</div>
 }
 
 export default RouteComponent

@@ -1,12 +1,12 @@
 {
-  "extends": "airbnb",
+  // "extends": "airbnb",
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
   "rules": {
     "max-len": [2, 100],
     "semi": "off",
     "import/extensions": [
-      "error",
+      "off",
       "ignorePackages",
       {
         "js": "never",

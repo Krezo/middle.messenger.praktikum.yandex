@@ -46,7 +46,7 @@ class HTTPTransport {
     private baseUrl: string = '',
     private options: HttpTransportOptions = {
       responseType: 'json',
-    }
+    },
   ) {
     this.baseUrl = baseUrl
   }
@@ -64,10 +64,6 @@ class HTTPTransport {
   }
 
   post<T>(url: string, options?: HttpTransportOptions) {
-    // Пока не реализовал доп. логику для работы с данными
-    // не ясно в каком формате требуется отправлять данные API
-    // как вариант передовавть и принимать все в JSON, но из форм придется брать
-    // например изображение аватара
     return this.request<T>(this.baseUrl + url, {
       ...(this.options || {}),
       ...options,
@@ -76,10 +72,6 @@ class HTTPTransport {
   }
 
   put<T>(url: string, options?: HttpTransportOptions) {
-    // Пока не реализовал доп. логику для работы с данными
-    // не ясно в каком формате требуется отправлять данные API
-    // как вариант передовавть и принимать все в JSON, но из форм придется брать
-    // например изображение аватара
     return this.request<T>(this.baseUrl + url, {
       ...(this.options || {}),
       ...options,
@@ -88,10 +80,6 @@ class HTTPTransport {
   }
 
   delete<T>(url: string, options?: HttpTransportOptions) {
-    // Пока не реализовал доп. логику для работы с данными
-    // не ясно в каком формате требуется отправлять данные API
-    // как вариант передовавть и принимать все в JSON, но из форм придется брать
-    // например изображение аватара
     return this.request<T>(this.baseUrl + url, {
       ...(this.options || {}),
       ...options,
@@ -101,9 +89,11 @@ class HTTPTransport {
 
   request<T>(
     url: string,
-    options: Options = { method: METHOD.GET }
+    options: Options = { method: METHOD.GET },
   ): Promise<XMLHttpRequestWithResponseType<T>> {
-    const { method, formData, data, headers, withCredentials } = options
+    const {
+      method, formData, data, headers, withCredentials,
+    } = options
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest()
@@ -120,7 +110,10 @@ class HTTPTransport {
         xhr.withCredentials = withCredentials
       }
 
-      xhr.onload = function () {
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState !== 4) {
+          return
+        }
         if (isErorStatusCode(xhr.status)) {
           reject(new HTTPTransportResponseError(xhr.status, xhr.response))
         }

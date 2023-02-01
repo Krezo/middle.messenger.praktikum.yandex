@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
-    "lib": ["ES2019", "DOM"],
-    "jsx": "react-jsx",
-    "target": "ES2019",
     "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "module": "es6",
+    "target": "ESNext",
+    "jsx": "preserve",
+    "removeComments": true,
+    "allowJs": true,
     "sourceMap": true,
-    "strictNullChecks": true
-  }
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "noUnusedParameters": false
+  },
+  "include": ["./src/**/*"]
 }

@@ -1,7 +1,6 @@
 // Components
-import { Logo } from '../../components/logoComponent'
 import { DefaultLayout } from '../../layout/defaultLayout/defaultLayout'
-import { h } from '../../modules/vdom'
+
 import { Input } from '../../components/input/input.component'
 import { Button } from '../../components/button/buttonComponent'
 // Styles
@@ -79,7 +78,6 @@ export default function () {
           className={style.registerForm}
           onSubmit={(event: Event) => {
             event.preventDefault()
-            console.log(registerFormValues.value)
             authService.signup(registerFormValues.value)
           }}
         >
